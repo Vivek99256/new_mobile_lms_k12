@@ -122,7 +122,7 @@ class HtmlBlock extends StatelessWidget {
         textStyle: style ?? const TextStyle(fontSize: 14, height: 1.45, color: Brand.text),
         onTapUrl: (u) async {
           final uri = Uri.tryParse(u);
-          if (uri != null) await launchUrl(uri, mode: LaunchMode.externalApplication);
+          if (isSafeLaunchUri(uri)) await launchUrl(uri!, mode: LaunchMode.externalApplication);
           return true;
         },
       );
@@ -165,7 +165,7 @@ class _LinkTextState extends State<LinkText> {
       final rec = TapGestureRecognizer()
         ..onTap = () {
           final u = Uri.tryParse(url);
-          if (u != null) launchUrl(u, mode: LaunchMode.externalApplication);
+          if (isSafeLaunchUri(u)) launchUrl(u!, mode: LaunchMode.externalApplication);
         };
       _recognizers.add(rec);
       spans.add(TextSpan(

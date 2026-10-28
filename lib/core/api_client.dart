@@ -20,6 +20,14 @@ class ApiException implements Exception {
 /// Thin JSON client for the Laravel ERP. Authenticated calls send the JWT both
 /// as a bearer header and as `token`, which is how the legacy `api.session`
 /// middleware (GenTux JwtToken) looks for it.
+/// True only for the ERP's own host. Exact match, so `erp.example.com.evil.net` and
+/// `evil-erp.example.com` do not pass.
+@visibleForTesting
+bool isTrustedErpHost(String host, {String? apiBase}) {
+  final trusted = Uri.tryParse(apiBase ?? AppConfig.apiBase)?.host.toLowerCase();
+  return trusted != null && trusted.isNotEmpty && host.toLowerCase() == trusted;
+}
+
 class ApiClient {
   ApiClient({http.Client? client}) : _client = client ?? http.Client();
 
@@ -46,7 +54,7 @@ class ApiClient {
   }) async {
     final uri = Uri.parse('${AppConfig.apiBase}$path').replace(queryParameters: {
       ...query,
-      'token': ?token,
+      // The token travels in the Authorization header only: a token in the URL lands in server logs.
     });
     return _send(() => _client.get(uri, headers: _headers(token)));
   }
@@ -63,6 +71,11 @@ class ApiClient {
   }) {
     final isAbsolute = RegExp(r'^https?://', caseSensitive: false).hasMatch(pathOrUrl);
     final base = Uri.parse(isAbsolute ? pathOrUrl : '${AppConfig.apiBase}$pathOrUrl');
+    // The session token and the user's ids go with every request, so an absolute URL (which a
+    // menu or page row can supply) may only point back at the ERP host, never at a third party.
+    if (isAbsolute && token != null && !isTrustedErpHost(base.host)) {
+      return Future.error(ApiException('This link points to an address the app does not trust.'));
+    }
     final uri = base.replace(queryParameters: {...base.queryParameters, ...query});
     final headers = _headers(token);
     final encoded = body == null ? null : jsonEncode(body);
@@ -120,7 +133,11 @@ class ApiClient {
 /// raw error so it shows in `flutter run` / logcat. A real "no network" stays friendly;
 /// anything else (TLS, DNS, a bug while building the request) is no longer disguised as one.
 ApiException transportError(Object error, [StackTrace? stack]) {
-  debugPrint('Network call failed: ${error.runtimeType}: $error');
+  // Only in debug builds, and with any token in the URL masked: the error text names the full request URL.
+  if (kDebugMode) {
+    final masked = '$error'.replaceAllMapped(RegExp(r'(token=)[^&\s]+', caseSensitive: false), (m) => '${m[1]}***');
+    debugPrint('Network call failed: ${error.runtimeType}: $masked');
+  }
   if (stack != null && kDebugMode) debugPrint('$stack');
   if (error is HandshakeException || error is TlsException) {
     return ApiException('A secure connection could not be made. Check the date and time on this device.');

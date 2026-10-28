@@ -71,9 +71,20 @@ Future<bool> confirm(BuildContext context, String title, String message, {String
   return r ?? false;
 }
 
+/// Links come from server data (menu rows, HTML content), so only web, mail and phone links open.
+/// `intent:`, `file:`, `javascript:` and app-specific schemes are never launched.
+bool isSafeLaunchUri(Uri? uri) {
+  if (uri == null) return false;
+  const allowed = {'http', 'https', 'mailto', 'tel'};
+  if (!allowed.contains(uri.scheme.toLowerCase())) return false;
+  // user:password@host is the classic look-alike trick.
+  if ((uri.scheme == 'http' || uri.scheme == 'https') && (uri.host.isEmpty || uri.userInfo.isNotEmpty)) return false;
+  return true;
+}
+
 Future<void> openUrl(BuildContext context, String url) async {
   final uri = Uri.tryParse(url.trim());
-  if (uri == null || !await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+  if (!isSafeLaunchUri(uri) || !await launchUrl(uri!, mode: LaunchMode.externalApplication)) {
     if (context.mounted) toast(context, 'Could not open this file.', error: true);
   }
 }
