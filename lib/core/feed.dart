@@ -1,3 +1,4 @@
+import '../screens/role_menu_screens.dart';
 import 'api_client.dart';
 import 'session.dart';
 
@@ -102,7 +103,9 @@ class FeedRepository {
         throw ApiException((res['message'] ?? 'Could not load your menu.').toString());
       }
       final data = res['data'];
-      return parse(data is Map ? data['menu'] : null);
+      // Only the menus granted in web Roles & Access -> Mobile (`role_menu`). The old
+      // mobile_homescreen `menu` is deliberately no longer shown.
+      return mergeRoleMenu(const [], data is Map ? data['role_menu'] : null);
     } on ApiException catch (e) {
       // Only a missing route means "old server"; auth and server errors must surface.
       if (e.statusCode != 404) rethrow;
@@ -126,6 +129,62 @@ class FeedRepository {
       throw ApiException((res['message'] ?? 'Could not load your menu.').toString());
     }
     return parse(res['data']);
+  }
+
+  /// Adds the Roles & Access "Mobile" menus (`role_menu.tree`) as extra sections: each level-2
+  /// module becomes a section of its mobile-enabled screens. A screen already on the home
+  /// menu (same label) is not repeated. `screen_name` carries the web link, so a screen the
+  /// app has no port for shows as enabled-but-"Soon" instead of silently missing.
+  static List<FeedSection> mergeRoleMenu(List<FeedSection> base, dynamic roleMenu) {
+    final tree = roleMenu is Map ? roleMenu['tree'] : null;
+    if (tree is! List) return base;
+    final seen = {for (final s in base) for (final i in s.items) i.label.toLowerCase()};
+    final extra = <FeedSection>[];
+
+    void walk(dynamic node, String sectionTitle) {
+      if (node is! Map) return;
+      final kids = node['children'];
+      final enabled = node['mobile_enabled'] == true;
+      final hasKids = kids is List && kids.isNotEmpty;
+      if (!hasKids) {
+        if (!enabled) return;
+        final label = _str(node['title']);
+        if (label.isEmpty) return;
+        // A tile needs either a hand-built native page, or a Laravel path the generic native
+        // screen can read. Pages that exist only on the Next.js web have neither, so are skipped.
+        if (isWebOnlyMenu(_str(node['link']))) return;
+        final path = _str(node['path']);
+        if (lookupRoleMenuScreen(_str(node['link'])) == null && path.isEmpty) return;
+        if (!seen.add(label.toLowerCase())) return;
+        final item = FeedItem(
+          label: label,
+          iconUrl: _str(node['icon']),
+          api: path,
+          apiParam: '',
+          screenName: _str(node['link']),
+          renderType: 'legacy',
+          webUrl: '',
+        );
+        final i = extra.indexWhere((s) => s.title == sectionTitle);
+        if (i >= 0) {
+          extra[i].items.add(item);
+        } else {
+          extra.add(FeedSection(title: sectionTitle, colorHex: '', backgroundImage: '', menuType: 'Grid', items: [item]));
+        }
+        return;
+      }
+      // A leaf-bearing node names its section; ancestors above it are only containers.
+      final hasLeafChild = kids.any((k) => k is Map && (k['children'] is! List || (k['children'] as List).isEmpty));
+      final title = hasLeafChild ? _str(node['title']) : sectionTitle;
+      for (final k in kids) {
+        walk(k, title);
+      }
+    }
+
+    for (final root in tree) {
+      walk(root, 'More');
+    }
+    return [...base, ...extra];
   }
 
   static List<FeedSection> parse(dynamic data) {

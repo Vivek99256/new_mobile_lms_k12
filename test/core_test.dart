@@ -63,25 +63,33 @@ void main() {
       token: 'jwt', userId: 9, subInstituteId: 1, clientId: 1, userProfileId: 3,
       userProfileName: 'Teacher', name: 'T', email: 't@x', schoolName: 'S',
     );
+    // The home menu now comes only from the menus ticked Mobile in Roles & Access (`role_menu`).
     final bootstrap = {
       'success': true,
       'data': {
         'user': {'id': 9},
-        'menu': [
-          {
-            'main_title': 'Teaching',
-            'menu_type': 'Menu',
-            'color': '#09518c',
-            'background_image': 'https://x/bg.png',
-            'contents': [
-              {'title': 'Attendance', 'icon': 'https://x/a.png', 'api': 'https://erp/att', 'api_param': null, 'screen_name': 't_take_attendance', 'render_type': 'native', 'web_url': null, 'open_mode': 'in_app'},
-            ],
-          },
-        ],
+        'menu': [], // the old mobile_homescreen menu is no longer shown
+        'role_menu': {
+          'menus': [],
+          'tree': [
+            {
+              'id': 1, 'title': 'Institute ERP', 'level': 1, 'mobile_enabled': false, 'link': 'javascript:void(0);', 'path': null,
+              'children': [
+                {
+                  'id': 173, 'title': 'Admission', 'level': 2, 'mobile_enabled': false, 'link': 'javascript:void(0);', 'path': null,
+                  'children': [
+                    {'id': 174, 'title': 'Admission Inquiry', 'level': 3, 'mobile_enabled': true, 'link': '/admissions/admission_enquiry/', 'path': '/admissions/admission_enquiry/', 'icon': null, 'children': []},
+                    {'id': 999, 'title': 'No Screen Yet', 'level': 3, 'mobile_enabled': true, 'link': 'javascript:void(0);', 'path': null, 'children': []},
+                  ],
+                },
+              ],
+            },
+          ],
+        },
       },
     };
 
-    test('reads the new keys from GET /api/mobile/bootstrap with the bearer token', () async {
+    test('builds the home menu from role_menu of GET /api/mobile/bootstrap with the bearer token', () async {
       late http.Request seen;
       final api = ApiClient(client: MockClient((req) async {
         seen = req;
@@ -91,14 +99,10 @@ void main() {
       expect(seen.method, 'GET');
       expect(seen.url.path, '/api/mobile/bootstrap');
       expect(seen.headers['Authorization'], 'Bearer jwt');
-      expect(sections.single.title, 'Teaching');
-      expect(sections.single.colorHex, '#09518c');
-      expect(sections.single.backgroundImage, 'https://x/bg.png');
-      final it = sections.single.items.single;
-      expect(it.label, 'Attendance');
-      expect(it.screenName, 't_take_attendance');
-      expect(it.apiParam, ''); // null is not the text "null"
-      expect(it.webUrl, '');
+      expect(sections.single.title, 'Admission'); // the level-2 module names the section
+      final it = sections.single.items.single; // a menu with no native screen and no path is skipped
+      expect(it.label, 'Admission Inquiry');
+      expect(it.screenName, '/admissions/admission_enquiry/');
     });
 
     test('an old server without the route falls back to the legacy menu call', () async {

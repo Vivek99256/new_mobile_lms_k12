@@ -283,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                                 const Spacer(),
                                 const SizedBox(height: 20),
                                 const Text(
-                                  'Your session ends after 30 minutes of inactivity.',
+                                  'You stay signed in on this device until you log out.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,

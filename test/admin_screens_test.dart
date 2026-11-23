@@ -14,7 +14,7 @@ import 'package:new_mobile_lms_k12/screens/admin/approve_leave.dart';
 import 'package:new_mobile_lms_k12/screens/admin/capture_attendance.dart';
 import 'package:new_mobile_lms_k12/screens/admin/circular.dart';
 import 'package:new_mobile_lms_k12/screens/admin/discipline.dart';
-import 'package:new_mobile_lms_k12/screens/admin/fee_details.dart';
+import 'package:new_mobile_lms_k12/presentation/admin/fees_collect/fees_details/fees_collect_details_screen.dart';
 import 'package:new_mobile_lms_k12/screens/admin/inward_outward.dart';
 import 'package:new_mobile_lms_k12/screens/admin/leave_requests.dart';
 import 'package:new_mobile_lms_k12/screens/admin/profiles.dart';
@@ -256,7 +256,7 @@ void main() {
           }),
       '/fees/get_online_receipt': (_) => {'status': '1', 'message': 'Paid', 'receipt_html': '<p>Receipt body</p>'},
     });
-    await _show(tester, FeeDetailsScreen(args: _args(c), student: const {'id': 5, 'student_name': 'Kiran'}));
+    await _show(tester, FeesCollectDetailsScreen(args: _args(c), student: const {'id': 5, 'student_name': 'Kiran'}));
     expect(find.text('Receipt #R-11'), findsOneWidget); // paid history is shown
     expect(find.byKey(const Key('fee-total')).evaluate().isNotEmpty, isTrue);
     expect(find.text('Rs 0'), findsOneWidget);
@@ -270,7 +270,7 @@ void main() {
     await tester.pumpAndSettle();
     final q = c.calls('/fees/get_online_receipt').single.url.queryParameters;
     expect(q['amount'], '300');
-    expect(q['token'], 'stu-tok');
+    expect(q['token'], 't0k'); // staff token, never the payer's own
     expect(q['transactionid'], 'TX1');
     expect(find.text('Fees receipt'), findsOneWidget);
   });
@@ -538,28 +538,38 @@ void main() {
         }),
       });
       await _show(tester, AdmissionListScreen(args: _argsFor(c), stage: AdmissionStage.enquiry));
-      expect(find.text('1. Neel Shah'), findsOneWidget);
-      expect(find.text('1'), findsWidgets);
+      expect(find.text('Neel Shah'), findsOneWidget);
       expect(c.calls('/admission/admission_enquiry'), isEmpty);
     });
 
-    testWidgets('confirmation list uses api/admission_registration', (tester) async {
+    testWidgets('confirmation list = enquiries whose registration detail status is OPEN (like the web)', (tester) async {
       final c = StatusClient({
-        '/api/admission_registration': _r(200, {
-          'status': 1,
+        '/api/admission_enquiry': _r(200, {
+          'status_code': 1,
           'data': [
-            {'id': 8, 'enquiry_no': '2025002', 'first_name': 'Riya', 'last_name': 'Jain', 'std_name': '3'}
+            {'id': 8, 'enquiry_no': '2025002', 'first_name': 'Riya', 'last_name': 'Jain', 'admission_standard': '36'},
+            {'id': 9, 'enquiry_no': '2025003', 'first_name': 'Closed', 'last_name': 'One', 'admission_standard': '36'},
           ]
+        }),
+        '/api/admission_registration/8/edit': _r(200, {
+          'status_code': 1,
+          'editData': {'id': 8, 'status': 'OPEN', 'admission_status': 'NO'}
+        }),
+        '/api/admission_registration/9/edit': _r(200, {
+          'status_code': 1,
+          'editData': {'id': 9, 'status': 'CLOSE'}
         }),
       });
       await _show(tester, AdmissionListScreen(args: _argsFor(c), stage: AdmissionStage.confirmation));
-      expect(find.text('1. Riya Jain'), findsOneWidget);
+      expect(find.text('Riya Jain'), findsOneWidget);
+      expect(find.text('Closed One'), findsNothing);
+      expect(find.text('Confirm admission'), findsOneWidget);
       expect(c.calls('/admission/admission_confirmation'), isEmpty);
     });
 
     testWidgets('registration list falls back to the legacy list when the new one is refused', (tester) async {
       final c = StatusClient({
-        '/api/admission_registration': _r(403, {'message': 'Forbidden'}),
+        '/api/admission_enquiry': _r(403, {'message': 'Forbidden'}),
         '/admission/admission_registration': _r(200, {
           'status_code': 1,
           'data': [
@@ -568,7 +578,7 @@ void main() {
         }),
       });
       await _show(tester, AdmissionListScreen(args: _argsFor(c), stage: AdmissionStage.registration));
-      expect(find.text('1. Old Row'), findsOneWidget);
+      expect(find.text('Old Row'), findsOneWidget);
       expect(c.calls('/admission/admission_registration'), hasLength(1));
     });
 

@@ -9,8 +9,8 @@ import 'session.dart';
 
 enum AuthStatus { unknown, signedOut, signedIn }
 
-/// Login, persistence and the same session rules lms_k12 enforces: a session
-/// ends after 30 minutes of inactivity and at the turn of the day.
+/// Login and persistence. A sign-in stays until the user logs out or the server's token expires
+/// (no idle timeout and no end-of-day logout on the phone).
 class AuthController extends ChangeNotifier with WidgetsBindingObserver {
   AuthController(this._api, {FlutterSecureStorage? storage})
       : _storage = storage ?? const FlutterSecureStorage() {
@@ -29,19 +29,10 @@ class AuthController extends ChangeNotifier with WidgetsBindingObserver {
 
   ApiClient get api => _api;
 
-  static String _today() => DateTime.now().toIso8601String().substring(0, 10);
-
   Future<void> restore() async {
     try {
       final raw = await _storage.read(key: _kSession);
-      final date = await _storage.read(key: _kSessionDate);
-      final last = int.tryParse(await _storage.read(key: _kLastActive) ?? '');
-      final idle = last == null
-          ? false
-          : DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(last)) >
-              AppConfig.inactivityTimeout;
-
-      if (raw != null && date == _today() && !idle) {
+      if (raw != null) {
         final s = Session.fromJson(jsonDecode(raw) as Map<String, dynamic>);
         if (s.token.isNotEmpty && s.userId > 0) {
           session = s;
@@ -75,7 +66,7 @@ class AuthController extends ChangeNotifier with WidgetsBindingObserver {
       session = s;
       status = AuthStatus.signedIn;
       await _storage.write(key: _kSession, value: jsonEncode(s.toJson()));
-      await _storage.write(key: _kSessionDate, value: _today());
+      await _storage.write(key: _kSessionDate, value: DateTime.now().toIso8601String().substring(0, 10));
       await touch();
       notifyListeners();
       return null;
@@ -119,9 +110,6 @@ class AuthController extends ChangeNotifier with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (status != AuthStatus.signedIn) return;
     if (state == AppLifecycleState.resumed) {
-      // Re-applies the idle and new-day rules after the app was in the background.
-      restore();
-    } else if (state == AppLifecycleState.paused) {
       touch();
     }
   }

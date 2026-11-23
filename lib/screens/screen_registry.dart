@@ -8,6 +8,8 @@ import '../core/legacy_api.dart';
 import '../core/native_target.dart';
 import '../core/session.dart';
 import '../ui/native_screens.dart';
+import 'admin/records_report.dart';
+import 'role_menu_screens.dart';
 import 'admin/admin_screens.dart';
 import 'student/student_screens.dart';
 import 'teacher/teacher_screens.dart';
@@ -44,7 +46,7 @@ Widget? resolveScreen(BuildContext context, FeedItem item) {
   if (session == null) return null;
   final args = ScreenArgs(item, session, LegacyApi(session));
 
-  final ported = lookupScreen(session.userProfileName, item.screenName);
+  final ported = lookupScreen(session.userProfileName, item.screenName) ?? lookupRoleMenuScreen(item.screenName);
   if (ported != null) return ported(args);
 
   // Mobile Page Builder routing hints.
@@ -54,6 +56,12 @@ Widget? resolveScreen(BuildContext context, FeedItem item) {
   }
   if (item.renderType == 'native_dynamic' && item.webUrl.isNotEmpty) {
     return DynamicPageScreen(pageKey: item.webUrl, title: item.label);
+  }
+
+  // A menu from Roles & Access with no hand-built page: read the ERP page's data (type=API) and
+  // draw it as native cards.
+  if (item.renderType == 'legacy' && item.api.isNotEmpty) {
+    return RecordsReportScreen(args: args, endpoint: item.api, auto: true, icon: Icons.dataset_outlined);
   }
 
   // Any other tile that carries an ERP endpoint: show what it returns, natively.
@@ -91,6 +99,7 @@ void openFeedItem(BuildContext context, FeedItem item) {
 bool hasScreen(BuildContext context, FeedItem item) {
   final profile = context.read<AuthController>().session?.userProfileName ?? '';
   return lookupScreen(profile, item.screenName) != null ||
+      lookupRoleMenuScreen(item.screenName) != null ||
       item.api.isNotEmpty ||
       (item.renderType == 'webview' && NativeTarget.fromWebUrl(item.webUrl) != null) ||
       (item.renderType == 'native_dynamic' && item.webUrl.isNotEmpty);

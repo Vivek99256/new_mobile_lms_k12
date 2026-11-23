@@ -6,6 +6,7 @@ import '../core/auth_controller.dart';
 import '../core/feed.dart';
 import '../core/menu_controller.dart';
 import '../core/updater.dart';
+import '../presentation/ai_chat/ai_chat_screen.dart';
 import '../screens/screen_registry.dart';
 import 'design.dart';
 import 'home_page.dart';
@@ -25,10 +26,17 @@ class _HomeShellState extends State<HomeShell>
     with SingleTickerProviderStateMixin {
   late final AnimationController _fade = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 260),
+    duration: const Duration(milliseconds: 320),
     value: 1,
   );
+
+  /// 0 = Home, 1 = Modules, 2.. = the pinned shortcuts (each keeps its own navigator, so the bottom bar stays
+  /// visible on the shortcut's pages and on anything it opens).
   int _tab = 0;
+  int _prev = 0; // the tab that is fading out
+  final Map<String, GlobalKey<NavigatorState>> _navKeys = {};
+  final Set<String> _visited = {};
+  List<FeedItem> _shortcuts = const [];
   int _dir = 1; // which way the incoming tab slides from
   String? _focus;
   int _focusGen = 0;
@@ -48,29 +56,125 @@ class _HomeShellState extends State<HomeShell>
     super.dispose();
   }
 
-  void _goTab(int i) {
-    if (_tab != i) {
-      _dir = i > _tab ? 1 : -1;
-      _fade.forward(from: 0);
+  void _goShortcut(int slot) {
+    final it = _shortcuts[slot];
+    if (!hasScreen(context, it)) {
+      openFeedItem(context, it); // explains that it is not available yet
+      return;
     }
-    setState(() => _tab = i);
+    final tab = slot + 2;
+    if (_tab == tab) {
+      _navKeys[it.label]?.currentState?.popUntil(
+        (r) => r.isFirst,
+      ); // tapping the active tab returns to its first page
+      return;
+    }
+    _visited.add(it.label);
+    _goTab(tab);
   }
 
-  void _openModules([String? section]) => setState(() {
-    if (_tab != 1) {
-      _dir = 1;
-      _fade.forward(from: 0);
+  /// Android back: close a page inside the shortcut tab, else go Home, else leave the app.
+  void _onBack() {
+    if (_tab >= 2 && _tab - 2 < _shortcuts.length) {
+      final nav = _navKeys[_shortcuts[_tab - 2].label]?.currentState;
+      if (nav != null && nav.canPop()) {
+        nav.pop();
+        return;
+      }
     }
-    _tab = 1;
-    _focus = section;
-    _focusGen++;
-  });
+    if (_tab != 0) {
+      _goTab(0);
+    } else {
+      SystemNavigator.pop();
+    }
+  }
+
+  Widget _shortcutTab(FeedItem it) {
+    final key = _navKeys.putIfAbsent(
+      it.label,
+      () => GlobalKey<NavigatorState>(),
+    );
+    return Navigator(
+      key: key,
+      onGenerateRoute: (_) => MaterialPageRoute(
+        builder: (ctx) => resolveScreen(ctx, it) ?? const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  /// Switches tab: the old tab fades/slides out while the new one fades/slides in. The new tab is built first
+  /// (invisible), and the animation starts on the next frame, so a heavy first build cannot make it stutter.
+  void _goTab(int i, {VoidCallback? also}) {
+    if (_tab == i) {
+      setState(() => also?.call());
+      return;
+    }
+    final reduce = MediaQuery.disableAnimationsOf(context);
+    _dir = i > _tab ? 1 : -1;
+    _prev = _tab;
+    _fade.value = reduce ? 1 : 0;
+    setState(() {
+      _tab = i;
+      also?.call();
+    });
+    if (!reduce) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _tab == i) _fade.forward(from: 0);
+      });
+    }
+  }
+
+  void _openModules([String? section]) => _goTab(
+    1,
+    also: () {
+      _focus = section;
+      _focusGen++;
+    },
+  );
+
+  /// One tab page, wrapped so it can fade and slide. Tabs that are not showing stay alive but are not drawn.
+  Widget _tabPage(int index, Widget child) {
+    return AnimatedBuilder(
+      animation: _fade,
+      child: RepaintBoundary(child: child),
+      builder: (context, child) {
+        final v = Curves.easeOutCubic.transform(_fade.value);
+        final animating = _fade.value < 1;
+        if (index == _tab) {
+          return TickerMode(
+            enabled: true,
+            child: Opacity(
+              opacity: v,
+              child: Transform.translate(
+                offset: Offset((1 - v) * 28 * _dir, 0),
+                child: child,
+              ),
+            ),
+          );
+        }
+        if (index == _prev && animating) {
+          final out = (1 - v * 1.6).clamp(0.0, 1.0);
+          return IgnorePointer(
+            child: Opacity(
+              opacity: out,
+              child: Transform.translate(
+                offset: Offset(-v * 20 * _dir, 0),
+                child: child,
+              ),
+            ),
+          );
+        }
+        return Offstage(child: TickerMode(enabled: false, child: child!));
+      },
+    );
+  }
 
   /// First tile whose name contains one of [keys] and that has a screen to open.
   FeedItem? _find(AppMenuController menu, List<String> keys) {
     for (final k in keys) {
       for (final e in menu.index) {
-        if (e.item.label.toLowerCase().contains(k) && hasScreen(context, e.item)) {
+        if (e.item.label.toLowerCase().contains(k) &&
+            hasScreen(context, e.item)) {
           return e.item;
         }
       }
@@ -106,73 +210,109 @@ class _HomeShellState extends State<HomeShell>
       }
     }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
-      child: Scaffold(
-        extendBody: true,
-        body: Column(
-          children: [
-            if (restart)
-              Container(
-                color: Brand.info0,
-                padding: EdgeInsets.fromLTRB(
-                  20,
-                  MediaQuery.paddingOf(context).top + 8,
-                  20,
-                  8,
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.system_update_alt, size: 16, color: Brand.info),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'An update is ready. Restart the app to apply it.',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Brand.info,
-                          fontWeight: FontWeight.w500,
+    _shortcuts = shortcuts;
+    if (_tab >= 2 + shortcuts.length) _tab = 0;
+    final navSelected = _tab == 0
+        ? 0
+        : (_tab == 1 ? shortcuts.length + 1 : _tab - 1);
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _onBack();
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          extendBody: true,
+          // The AI assistant, one tap away from Home and Modules (shortcut tabs keep their own Save bars clear).
+          floatingActionButton: _tab <= 1
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: FloatingActionButton.extended(
+                    heroTag: 'ai-chat',
+                    backgroundColor: Brand.primary,
+                    foregroundColor: Colors.white,
+                    elevation: 4,
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AiChatScreen())),
+                    icon: const Icon(Icons.auto_awesome_rounded, size: 20),
+                    label: const Text('Ask AI', style: TextStyle(fontWeight: FontWeight.w700)),
+                  ),
+                )
+              : null,
+          body: Column(
+            children: [
+              if (restart)
+                Container(
+                  color: Brand.info0,
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    MediaQuery.paddingOf(context).top + 8,
+                    20,
+                    8,
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.system_update_alt,
+                        size: 16,
+                        color: Brand.info,
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'An update is ready. Restart the app to apply it.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Brand.info,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            Expanded(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: restart,
-                child: AnimatedBuilder(
-                  animation: _fade,
-                  builder: (context, child) {
-                    final v = Curves.easeOutCubic.transform(_fade.value);
-                    final move = MediaQuery.disableAnimationsOf(context) ? 0.0 : (1 - v) * 28 * _dir;
-                    return Opacity(opacity: v, child: Transform.translate(offset: Offset(move, 0), child: child));
-                  },
-                  child: IndexedStack(
-                    index: _tab,
+              Expanded(
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: restart,
+                  child: Stack(
+                    fit: StackFit.expand,
                     children: [
-                      HomePage(onOpenModules: _openModules),
-                      ModulesPage(key: ValueKey(_focusGen), focusSection: _focus),
+                      _tabPage(0, HomePage(onOpenModules: _openModules)),
+                      _tabPage(
+                        1,
+                        ModulesPage(
+                          key: ValueKey(_focusGen),
+                          focusSection: _focus,
+                        ),
+                      ),
+                      for (var i = 0; i < shortcuts.length; i++)
+                        _tabPage(
+                          i + 2,
+                          _visited.contains(shortcuts[i].label)
+                              ? _shortcutTab(shortcuts[i])
+                              : const SizedBox.shrink(),
+                        ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNav(
-          selected: _tab == 0 ? 0 : shortcuts.length + 1,
-          items: [
-            NavItem(Icons.home_outlined, 'Home', () => _goTab(0)),
-            for (final it in shortcuts)
-              NavItem(
-                menuIcon(it.label, 2),
-                it.label,
-                () => openFeedItem(context, it),
-              ),
-            NavItem(Icons.grid_view_rounded, 'Modules', () => _openModules()),
-          ],
+            ],
+          ),
+          bottomNavigationBar: BottomNav(
+            selected: navSelected,
+            items: [
+              NavItem(Icons.home_outlined, 'Home', () => _goTab(0)),
+              for (var i = 0; i < shortcuts.length; i++)
+                NavItem(
+                  menuIcon(shortcuts[i].label, 2),
+                  shortcuts[i].label,
+                  () => _goShortcut(i),
+                ),
+              NavItem(Icons.grid_view_rounded, 'Modules', () => _openModules()),
+            ],
+          ),
         ),
       ),
     );

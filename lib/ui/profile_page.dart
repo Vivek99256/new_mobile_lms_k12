@@ -256,7 +256,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 row(
                   'Signed in on this device',
-                  'Ends after 30 min idle',
+                  'Stays until you log out',
                   last: true,
                 ),
               ],

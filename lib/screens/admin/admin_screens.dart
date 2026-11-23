@@ -5,7 +5,7 @@ import 'capture_attendance.dart';
 import 'capture_photos.dart';
 import 'circular.dart';
 import 'discipline.dart';
-import 'fees_collect.dart';
+import '../../presentation/admin/fees_collect/fees_collect_screen.dart';
 import 'homework.dart';
 import 'inward_outward.dart';
 import 'leave_requests.dart';
