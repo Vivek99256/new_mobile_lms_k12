@@ -11,6 +11,7 @@ import 'admin_common.dart';
 import 'admission_charts.dart';
 import 'admission_form.dart';
 import 'admission_registration_form.dart';
+import '../../ui/app_loader.dart';
 
 enum AdmissionStage { enquiry, registration, confirmation }
 
@@ -259,7 +260,7 @@ class _AdmissionListScreenState extends State<AdmissionListScreen> {
         label: const Text('Add student'),
       ),
       if (!canAdd)
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 6),
           child: Text('Please complete admission enquiry and registration before confirmation.', style: TextStyle(fontSize: 12.5, color: Brand.muted)),
         ),
@@ -331,7 +332,7 @@ class _AdmissionListScreenState extends State<AdmissionListScreen> {
       title: widget.args.item.label.isEmpty ? stage.title : widget.args.item.label,
       bottom: canAdd ? formBar(label: 'New enquiry', busy: false, onPressed: () => _open(null)) : null,
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null && _rows.isEmpty
               ? KitMessage(icon: Icons.error_outline, text: _error!, action: 'Retry', onAction: _reload)
               : RefreshIndicator(
@@ -366,10 +367,10 @@ class _AdmissionListScreenState extends State<AdmissionListScreen> {
                           hintText: 'Search name, mobile, email or number',
                           prefixIcon: const Icon(Icons.search_rounded),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Brand.card,
                           contentPadding: EdgeInsets.zero,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Brand.line)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Brand.line)),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Brand.line)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Brand.line)),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -386,7 +387,7 @@ class _AdmissionListScreenState extends State<AdmissionListScreen> {
                           child: Column(children: [
                             const IconTile(Icons.how_to_reg_outlined, size: 56),
                             const SizedBox(height: 12),
-                            Text(_rows.isEmpty ? stage.emptyText : 'No matches', style: const TextStyle(color: Brand.muted, fontSize: 15)),
+                            Text(_rows.isEmpty ? stage.emptyText : 'No matches', style: TextStyle(color: Brand.muted, fontSize: 15)),
                           ]),
                         ),
                       for (var i = 0; i < shown.length; i++)
@@ -494,7 +495,7 @@ class AdmissionCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Brand.card,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Brand.line),
         boxShadow: Brand.softShadow,
@@ -525,14 +526,14 @@ class AdmissionCard extends StatelessWidget {
                       Row(children: [
                         Expanded(
                           child: Text(name.isEmpty ? 'Unnamed enquiry' : name,
-                              maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
+                              maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
                         ),
                         if (status.isNotEmpty) ...[const SizedBox(width: 6), Tag.ok(status)],
                       ]),
                       if (meta.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
-                          child: Text(meta, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                          child: Text(meta, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12)),
                         ),
                     ]),
                   ),
@@ -540,7 +541,7 @@ class AdmissionCard extends StatelessWidget {
                 if (s(r['remarks']).isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Text(s(r['remarks']), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.ink2, fontSize: 12.5)),
+                    child: Text(s(r['remarks']), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.ink2, fontSize: 12.5)),
                   ),
                 const SizedBox(height: 8),
                 Row(children: [
@@ -565,7 +566,7 @@ class AdmissionCard extends StatelessWidget {
                           child: Row(mainAxisSize: MainAxisSize.min, children: [
                             const Icon(Icons.call_rounded, size: 14, color: Brand.primary),
                             const SizedBox(width: 4),
-                            Flexible(child: Text(mobile, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.primaryDark, fontWeight: FontWeight.w700, fontSize: 12.5))),
+                            Flexible(child: Text(mobile, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.primaryDark, fontWeight: FontWeight.w700, fontSize: 12.5))),
                           ]),
                         ),
                       ),

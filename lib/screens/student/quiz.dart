@@ -9,6 +9,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'quiz_reports.dart';
 import 'student_common.dart';
+import '../../ui/app_loader.dart';
 
 /// Parses studentQuestionPaperAPI: `data` is a map whose first value is a map of questions.
 List<Map<String, dynamic>> parseQuestions(dynamic d) {
@@ -182,7 +183,7 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _body() {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) return const AppLoader();
     if (_error != null) return KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load);
     if (_qs.isEmpty) return const KitMessage(icon: Icons.quiz_outlined, text: 'This test has no questions yet.');
     final q = _qs[_i];
@@ -202,7 +203,7 @@ class _QuizScreenState extends State<QuizScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: n == _i ? Brand.primary : (_chosen.containsKey(n) ? const Color(0xFFE8EDFC) : Colors.white),
+                color: n == _i ? Brand.primary : (_chosen.containsKey(n) ? Brand.tint : Colors.white),
                 border: Border.all(color: n == _i ? Brand.primary : Brand.border),
               ),
               child: Text('${n + 1}', style: TextStyle(fontWeight: FontWeight.w700, color: n == _i ? Colors.white : Brand.text)),
@@ -223,7 +224,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: _chosen[_i] == s(a['id']) ? const Color(0xFFE8EDFC) : Colors.white,
+                    color: _chosen[_i] == s(a['id']) ? Brand.tint : Colors.white,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: _chosen[_i] == s(a['id']) ? Brand.primary : Brand.border, width: 1.5),
                   ),

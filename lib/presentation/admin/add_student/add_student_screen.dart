@@ -7,6 +7,7 @@ import '../../../screens/screen_registry.dart';
 import '../../../ui/theme.dart';
 import '../student_module/student_ui.dart';
 import 'add_student_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Add Student: class, personal, family, contact and other details; the next GR number is filled in for you.
 class AddStudentScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   Widget build(BuildContext context) {
     final c = _con;
     final title = widget.args.item.label.isEmpty ? 'Add Student' : widget.args.item.label;
-    if (c.loading) return KitPage(title: title, child: const Center(child: CircularProgressIndicator()));
+    if (c.loading) return KitPage(title: title, child: const AppLoader());
     return KitPage(
       title: title,
       bottom: formBar(label: 'Save student', busy: c.saving, onPressed: _save),
@@ -119,7 +120,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
               DropdownField(label: 'Student quota *', options: c.quotas, value: c.quota, onChanged: c.setQuota),
               DropdownField(label: 'House', options: c.houses, value: c.house, onChanged: c.setHouse),
             ]),
-            const Text('Fields marked * are required. The student is enrolled in the current academic year.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text('Fields marked * are required. The student is enrolled in the current academic year.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           ]),
         ),
       ),

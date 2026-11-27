@@ -62,7 +62,7 @@ class _BreakoffMatrixViewState extends State<BreakoffMatrixView> {
     final allOpen = widget.quotas.every((q) => _open.contains(q.$1));
     return Column(children: [
       if (widget.quotas.isEmpty)
-        const Padding(padding: EdgeInsets.only(top: 20), child: Center(child: Text('No student quotas for this class.', style: TextStyle(color: Brand.muted)))),
+        Padding(padding: EdgeInsets.only(top: 20), child: Center(child: Text('No student quotas for this class.', style: TextStyle(color: Brand.muted)))),
       if (widget.quotas.isNotEmpty) ...[
         Row(children: [
           Expanded(
@@ -73,10 +73,10 @@ class _BreakoffMatrixViewState extends State<BreakoffMatrixView> {
                 isDense: true,
                 prefixIcon: const Icon(Icons.search_rounded, size: 20),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Brand.card,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
               ),
             ),
           ),
@@ -104,7 +104,7 @@ class _BreakoffMatrixViewState extends State<BreakoffMatrixView> {
         width: double.infinity,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Brand.card,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: isLocked ? const Color(0xFFFECDD3) : Brand.line),
           boxShadow: Brand.softShadow,
@@ -115,14 +115,14 @@ class _BreakoffMatrixViewState extends State<BreakoffMatrixView> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(14, 12, 6, 12),
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: isLocked ? const [Color(0xFFFFE4E6), Color(0xFFFFF1F2)] : const [Brand.tint1, Brand.tint]),
+                gradient: LinearGradient(colors: isLocked ? const [Color(0xFFFFE4E6), Color(0xFFFFF1F2)] : [Brand.tint1, Brand.tint]),
               ),
               child: Row(children: [
                 Icon(isLocked ? Icons.lock_rounded : Icons.groups_2_rounded, size: 19, color: isLocked ? Brand.err : Brand.primaryDark),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(q.$2, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: Brand.ink)),
+                    Text(q.$2, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: Brand.ink)),
                     Text(
                       isLocked ? 'Fees collected, locked' : '$filled of ${widget.titles.length} heads filled',
                       style: TextStyle(fontSize: 11.5, color: isLocked ? Brand.err : Brand.muted),
@@ -131,13 +131,13 @@ class _BreakoffMatrixViewState extends State<BreakoffMatrixView> {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
+                  decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(999)),
                   child: Text('Rs $total', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: isLocked ? Brand.err : Brand.primaryDark)),
                 ),
                 if (!isLocked)
                   PopupMenuButton<String>(
                     padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.more_vert_rounded, size: 20, color: Brand.ink3),
+                    icon: Icon(Icons.more_vert_rounded, size: 20, color: Brand.ink3),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     onSelected: (v) {
                       if (v == 'copy') _copyToAll(q.$1);
@@ -165,7 +165,7 @@ class _BreakoffMatrixViewState extends State<BreakoffMatrixView> {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
               child: _heads.isEmpty
-                  ? const Text('No fee head matches.', style: TextStyle(color: Brand.muted))
+                  ? Text('No fee head matches.', style: TextStyle(color: Brand.muted))
                   : LayoutBuilder(builder: (context, c) {
                       final w = (c.maxWidth - 10) / 2;
                       return Wrap(spacing: 10, runSpacing: 10, children: [

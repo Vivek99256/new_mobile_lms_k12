@@ -122,9 +122,9 @@ class _BRequestReportScreenState extends State<BRequestReportScreen> {
     final name = bStudentName(r);
     final cls = [s(r['standard']), s(r['division'])].where((e) => e.isNotEmpty).join(' · ');
     final tag = switch (st) {
-      'approved' => const Tag.ok('Approved'),
-      'rejected' => const Tag.err('Rejected'),
-      _ => const Tag.warn('Pending'),
+      'approved' => Tag.ok('Approved'),
+      'rejected' => Tag.err('Rejected'),
+      _ => Tag.warn('Pending'),
     };
     return SoftCard(
       radius: 18,
@@ -136,7 +136,7 @@ class _BRequestReportScreenState extends State<BRequestReportScreen> {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-              Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', if (cls.isNotEmpty) cls].join('  ·  '), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+              Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', if (cls.isNotEmpty) cls].join('  ·  '), style: TextStyle(color: Brand.muted, fontSize: 12)),
             ]),
           ),
           tag,

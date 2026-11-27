@@ -8,6 +8,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'api_migration.dart';
 import 'tk.dart';
+import '../../ui/app_loader.dart';
 
 /// t_marks: choose term, class, subject and exam, then enter marks per student.
 class MarksSelectorScreen extends StatefulWidget {
@@ -132,7 +133,7 @@ class _MarksSelectorScreenState extends State<MarksSelectorScreen> {
             onChanged: (v) => setState(() => examId = v),
           ),
           if (!loadingExams && exams.isEmpty && termId != null && sel.subId != null)
-            const Text('No exams have been created for this term and subject.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text('No exams have been created for this term and subject.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
         ]),
       ]),
     );
@@ -198,7 +199,7 @@ class _MarksEntryScreenState extends State<MarksEntryScreen> with BusyMixin {
           title: 'Enter marks',
           bottom: list == null || list.isEmpty ? null : PrimaryButton(label: 'Save marks', busy: busy, onPressed: () => _save(list)),
           child: snap.connectionState != ConnectionState.done
-              ? const Center(child: CircularProgressIndicator())
+              ? const AppLoader()
               : snap.hasError
                   ? KitMessage(icon: Icons.cloud_off_outlined, text: '${snap.error}', action: 'Go back', onAction: () => Navigator.pop(context))
                   : ListView(padding: const EdgeInsets.all(16), children: [
@@ -219,7 +220,7 @@ class _MarksEntryScreenState extends State<MarksEntryScreen> with BusyMixin {
                             Expanded(
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Text(s(st['student_name']), style: const TextStyle(fontWeight: FontWeight.w700)),
-                                Text('Roll ${s(st['roll_no'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                                Text('Roll ${s(st['roll_no'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                               ]),
                             ),
                             SizedBox(

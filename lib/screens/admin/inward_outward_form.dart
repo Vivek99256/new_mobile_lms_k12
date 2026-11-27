@@ -6,6 +6,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'admin_common.dart';
 import 'inward_outward.dart';
+import '../../ui/app_loader.dart';
 
 /// Add or edit an inward / outward entry. Pops with true after a save.
 class RegisterFormScreen extends StatefulWidget {
@@ -137,7 +138,7 @@ class _RegisterFormScreenState extends State<RegisterFormScreen> with SubmitGuar
         title: '${isEdit ? 'Update' : 'Add'} ${kind.word.toLowerCase()}',
         bottom: loading || error != null ? null : formBar(label: isEdit ? 'Update' : 'Save', busy: busy, onPressed: _save),
         child: loading
-            ? const Center(child: CircularProgressIndicator())
+            ? const AppLoader()
             : error != null
                 ? KitMessage(icon: Icons.cloud_off_outlined, text: error!, action: 'Try again', onAction: _loadOptions)
                 : ListView(padding: const EdgeInsets.all(16), children: [

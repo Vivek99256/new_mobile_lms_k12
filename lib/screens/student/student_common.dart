@@ -9,6 +9,7 @@ import '../../core/legacy_api.dart';
 import '../../ui/theme.dart';
 import '../kit/kit.dart';
 import '../screen_registry.dart';
+import '../../ui/app_loader.dart';
 
 /// Small helpers shared by every ported student screen.
 class Sx {
@@ -119,7 +120,7 @@ class HtmlBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) => HtmlWidget(
         html,
-        textStyle: style ?? const TextStyle(fontSize: 14, height: 1.45, color: Brand.text),
+        textStyle: style ?? TextStyle(fontSize: 14, height: 1.45, color: Brand.text),
         onTapUrl: (u) async {
           final uri = Uri.tryParse(u);
           if (isSafeLaunchUri(uri)) await launchUrl(uri!, mode: LaunchMode.externalApplication);
@@ -156,7 +157,7 @@ class _LinkTextState extends State<LinkText> {
       r.dispose();
     }
     _recognizers.clear();
-    final base = widget.style ?? const TextStyle(fontSize: 14, height: 1.4, color: Brand.text);
+    final base = widget.style ?? TextStyle(fontSize: 14, height: 1.4, color: Brand.text);
     final spans = <InlineSpan>[];
     var last = 0;
     for (final m in RegExp(r'(https?://[^\s]+)').allMatches(widget.text)) {
@@ -188,9 +189,9 @@ class InfoRows extends StatelessWidget {
   Widget build(BuildContext context) => KitCard(
         child: Column(children: [
           for (var i = 0; i < rowsData.length; i++) ...[
-            if (i > 0) const Divider(height: 14, color: Brand.border),
+            if (i > 0) Divider(height: 14, color: Brand.border),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(flex: 4, child: Text(rowsData[i].$1, style: const TextStyle(color: Brand.muted, fontSize: 13))),
+              Expanded(flex: 4, child: Text(rowsData[i].$1, style: TextStyle(color: Brand.muted, fontSize: 13))),
               Expanded(
                   flex: 6,
                   child: Text(rowsData[i].$2.isEmpty ? '-' : rowsData[i].$2,
@@ -326,7 +327,7 @@ class _AsyncBodyState<T> extends State<AsyncBody<T>> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading && _data == null) return const Center(child: CircularProgressIndicator());
+    if (_loading && _data == null) return const AppLoader();
     if (_error != null && _data == null) {
       return KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _run);
     }

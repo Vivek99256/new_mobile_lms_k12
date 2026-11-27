@@ -9,7 +9,10 @@ import 'theme.dart';
 
 /// Sign in: navy header with the mark, then a white sheet with the form.
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, this.onUseMobile});
+
+  /// Shown as "Sign in with mobile number" when the page is reached from the mobile + mPIN screen.
+  final VoidCallback? onUseMobile;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -69,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
     padding: const EdgeInsets.only(bottom: 6),
     child: Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 13,
         height: 1.38,
         fontWeight: FontWeight.w500,
@@ -140,8 +143,8 @@ class _LoginPageState extends State<LoginPage> {
                             24,
                             24 + MediaQuery.paddingOf(context).bottom,
                           ),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: Brand.card,
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(28),
                             ),
@@ -163,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text(
+                                Text(
                                   'Sign in to continue to your account.',
                                   style: TextStyle(color: Brand.ink2),
                                 ),
@@ -187,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Padding(
+                                          Padding(
                                             padding: EdgeInsets.only(top: 1),
                                             child: Icon(
                                               Icons.warning_amber_rounded,
@@ -199,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                                           Expanded(
                                             child: Text(
                                               _error!,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 color: Brand.err,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -280,9 +283,17 @@ class _LoginPageState extends State<LoginPage> {
                                         )
                                       : const Text('Sign in'),
                                 ),
+                                if (widget.onUseMobile != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: TextButton(
+                                      onPressed: _busy ? null : widget.onUseMobile,
+                                      child: const Text('Sign in with mobile number instead'),
+                                    ),
+                                  ),
                                 const Spacer(),
                                 const SizedBox(height: 20),
-                                const Text(
+                                Text(
                                   'You stay signed in on this device until you log out.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -375,11 +386,11 @@ class _ForgotPasswordSheetState extends State<_ForgotPasswordSheet> {
             _sent
                 ? 'If ${_email.text.trim()} matches an account, a reset link is on its way.'
                 : "Enter the email tied to your account and we'll send you a reset link.",
-            style: const TextStyle(color: Brand.ink2),
+            style: TextStyle(color: Brand.ink2),
           ),
           if (!_sent) ...[
             const SizedBox(height: 20),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 6),
               child: Text(
                 'Email address',
@@ -396,7 +407,7 @@ class _ForgotPasswordSheetState extends State<_ForgotPasswordSheet> {
               autofocus: true,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   Icons.mail_outline_rounded,
                   size: 18,
                   color: Brand.primaryDark,

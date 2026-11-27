@@ -23,7 +23,12 @@ class AlbumsScreen extends StatelessWidget {
           isEmpty: (d) => d.isEmpty,
           load: () async {
             final res = await Sx.call(args, Sx.url(args, '/studentPhotoVideoGalleryAPI'), body: {'action': video ? 'Video' : 'Photo'});
-            if (!LegacyApi.ok(res)) throw ApiException(LegacyApi.messageOf(res));
+            if (!LegacyApi.ok(res)) {
+              // The server answers "No Data Found" (status 0) for a school with no albums; that is an
+              // empty gallery, not a failure.
+              if (LegacyApi.messageOf(res).toLowerCase().contains('no data')) return const <List<Map<String, dynamic>>>[];
+              throw ApiException(LegacyApi.messageOf(res));
+            }
             final d = res['data'];
             final groups = d is Map ? d.values : (d is List ? [d] : const []);
             return [for (final g in groups) if (rows(g).isNotEmpty) rows(g)];
@@ -42,7 +47,7 @@ class AlbumsScreen extends StatelessWidget {
                     IconBubble(icon: video ? Icons.video_library_outlined : Icons.folder_outlined, accent: Brand.accent(i), size: 52),
                     const SizedBox(height: 10),
                     Text(s(items.first['album_title']), maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w700)),
-                    Text('${items.length} item${items.length == 1 ? '' : 's'}', style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    Text('${items.length} item${items.length == 1 ? '' : 's'}', style: TextStyle(color: Brand.muted, fontSize: 12)),
                   ]),
                 );
               },
@@ -117,7 +122,7 @@ class _AlbumViewScreenState extends State<AlbumViewScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Stack(fit: StackFit.expand, children: [
-                Image.network(_thumb(items[i], widget.video), fit: BoxFit.cover, errorBuilder: (_, _, _) => const ColoredBox(color: Brand.border, child: Icon(Icons.broken_image_outlined, color: Brand.muted))),
+                Image.network(_thumb(items[i], widget.video), fit: BoxFit.cover, errorBuilder: (_, _, _) => ColoredBox(color: Brand.border, child: Icon(Icons.broken_image_outlined, color: Brand.muted))),
                 if (widget.video) const Center(child: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 44)),
                 if (_sel.contains(i)) ColoredBox(color: Brand.primary.withValues(alpha: 0.45), child: const Icon(Icons.check_circle_rounded, color: Colors.white, size: 36)),
                 Positioned(

@@ -9,6 +9,7 @@ import '../../ui/theme.dart';
 import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'student_common.dart';
+import '../../ui/app_loader.dart';
 
 /// Parent communication: previous messages with replies, and a form to ask something new.
 class ParentCommunicationScreen extends StatefulWidget {
@@ -77,14 +78,14 @@ class _ParentCommunicationScreenState extends State<ParentCommunicationScreen> {
           itemBuilder: (c, r, i) => KitCard(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15.5)),
-              Text(fmtDate(r['created_at'], out: 'yyyy-MM-dd HH:mm'), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+              Text(fmtDate(r['created_at'], out: 'yyyy-MM-dd HH:mm'), style: TextStyle(color: Brand.muted, fontSize: 12)),
               const SizedBox(height: 6),
               Text(s(r['message'])),
               if (s(r['reply']).isNotEmpty && s(r['reply']).toLowerCase() != 'null') ...[
-                const Divider(height: 18, color: Brand.border),
+                Divider(height: 18, color: Brand.border),
                 Text('Reply: ${s(r['reply'])}', style: const TextStyle(color: Color(0xFF16A34A), fontWeight: FontWeight.w600)),
-                if (s(r['reply_by']).isNotEmpty) Text('By ${s(r['reply_by'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
-                if (s(r['reply_on']).isNotEmpty) Text('On ${s(r['reply_on'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                if (s(r['reply_by']).isNotEmpty) Text('By ${s(r['reply_by'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+                if (s(r['reply_on']).isNotEmpty) Text('On ${s(r['reply_on'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               ],
             ]),
           ),
@@ -182,7 +183,7 @@ class _FaceAttendanceScreenState extends State<FaceAttendanceScreen> {
       title: 'Attendance photos',
       bottom: _changed && _local.isNotEmpty ? PrimaryButton(label: 'Save', busy: _saving, onPressed: _save) : null,
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
               ? KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load)
               : ListView(padding: const EdgeInsets.all(16), children: [
@@ -193,13 +194,13 @@ class _FaceAttendanceScreenState extends State<FaceAttendanceScreen> {
                       Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(a.session.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                          Text([Sx.raw(a, 'std_name'), Sx.raw(a, 'division')].where((e) => e.isNotEmpty).join(' - '), style: const TextStyle(color: Brand.muted)),
+                          Text([Sx.raw(a, 'std_name'), Sx.raw(a, 'division')].where((e) => e.isNotEmpty).join(' - '), style: TextStyle(color: Brand.muted)),
                         ]),
                       ),
                     ]),
                   ),
                   const SizedBox(height: 6),
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Take clear photos of your face. They are used to mark your attendance.', style: TextStyle(color: Brand.muted, fontSize: 13))),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text('Take clear photos of your face. They are used to mark your attendance.', style: TextStyle(color: Brand.muted, fontSize: 13))),
                   GridView.count(
                     crossAxisCount: 2,
                     mainAxisSpacing: 12,
@@ -207,14 +208,14 @@ class _FaceAttendanceScreenState extends State<FaceAttendanceScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      for (final u in _remote) _tile(Image.network(u, fit: BoxFit.cover, errorBuilder: (_, _, _) => const ColoredBox(color: Brand.border, child: Icon(Icons.broken_image_outlined))), saved: true),
+                      for (final u in _remote) _tile(Image.network(u, fit: BoxFit.cover, errorBuilder: (_, _, _) => ColoredBox(color: Brand.border, child: Icon(Icons.broken_image_outlined))), saved: true),
                       for (var i = 0; i < _local.length; i++)
-                        _tile(Image.file(File(_local[i]), fit: BoxFit.cover, errorBuilder: (_, _, _) => const ColoredBox(color: Color(0xFFE8EDFC), child: Icon(Icons.image_outlined, color: Brand.primary, size: 40))), onRemove: () => setState(() => _local.removeAt(i))),
+                        _tile(Image.file(File(_local[i]), fit: BoxFit.cover, errorBuilder: (_, _, _) => ColoredBox(color: Brand.tint, child: Icon(Icons.image_outlined, color: Brand.primary, size: 40))), onRemove: () => setState(() => _local.removeAt(i))),
                       InkWell(
                         onTap: _capture,
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
-                          decoration: BoxDecoration(color: const Color(0xFFE8EDFC), borderRadius: BorderRadius.circular(16)),
+                          decoration: BoxDecoration(color: Brand.tint, borderRadius: BorderRadius.circular(16)),
                           child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                             Icon(Icons.photo_camera_outlined, color: Brand.primary, size: 36),
                             SizedBox(height: 6),

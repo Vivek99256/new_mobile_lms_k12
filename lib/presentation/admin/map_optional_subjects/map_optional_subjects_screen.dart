@@ -117,7 +117,7 @@ class _MapOptionalSubjectsScreenState extends State<MapOptionalSubjectsScreen> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text('Give a subject to everyone', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
           const SizedBox(height: 2),
-          const Text('Tap to tick or untick it for all students.', style: TextStyle(color: Brand.muted, fontSize: 12)),
+          Text('Tap to tick or untick it for all students.', style: TextStyle(color: Brand.muted, fontSize: 12)),
           const SizedBox(height: 10),
           Wrap(spacing: 8, runSpacing: 8, children: [
             for (final sub in _con.subjects)
@@ -138,7 +138,7 @@ class _MapOptionalSubjectsScreenState extends State<MapOptionalSubjectsScreen> {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(st.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
-              if (st.gr.isNotEmpty) Text('GR No. ${st.gr}', style: const TextStyle(color: Brand.muted, fontSize: 12)),
+              if (st.gr.isNotEmpty) Text('GR No. ${st.gr}', style: TextStyle(color: Brand.muted, fontSize: 12)),
             ]),
           ),
           Tag(count == 0 ? 'None' : '$count chosen', fg: count == 0 ? Brand.ink2 : Brand.primaryDark, bg: count == 0 ? Brand.field : Brand.tint),
@@ -191,7 +191,7 @@ class _MapOptionalSubjectsScreenState extends State<MapOptionalSubjectsScreen> {
           ),
           if (showResults) _summary() else _filters(),
           if (_con.error != null)
-            Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+            Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
           if (showResults) ...[gap(12), ..._results()],
         ]),
       ),

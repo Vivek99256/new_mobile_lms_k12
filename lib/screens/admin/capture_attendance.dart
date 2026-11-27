@@ -163,7 +163,7 @@ class _CaptureAttendanceScreenState extends State<CaptureAttendanceScreen> with 
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(s(r['student_name']), style: const TextStyle(fontWeight: FontWeight.w700)),
-                  Text('Roll ${s(r['roll_no'])}  |  GR ${s(r['enrollment_no'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text('Roll ${s(r['roll_no'])}  |  GR ${s(r['enrollment_no'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                 ]),
               ),
               SegmentedButton<String>(

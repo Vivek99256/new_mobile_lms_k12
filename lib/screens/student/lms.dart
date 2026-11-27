@@ -105,7 +105,7 @@ class ChapterList extends StatelessWidget {
             IconBubble(icon: Icons.auto_stories_outlined, accent: Brand.accent(i), size: 42),
             const SizedBox(width: 12),
             Expanded(child: Text(s(ch['chapter_name']), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15))),
-            const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+            Icon(Icons.chevron_right_rounded, color: Brand.muted),
           ]),
         ),
       );
@@ -123,8 +123,8 @@ class SubjectDetailScreen extends StatelessWidget {
         child: KitPage(
           title: _subjectTitle(args, subject),
           child: Column(children: [
-            const Material(
-              color: Colors.white,
+            Material(
+              color: Brand.card,
               child: TabBar(tabs: [Tab(text: 'Learn'), Tab(text: 'Test'), Tab(text: 'Report')]),
             ),
             Expanded(
@@ -160,7 +160,7 @@ class _PaperList extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(s(p['paper_name']), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                 if (s(p['time_allowed']).isNotEmpty && s(p['time_allowed']) != '0')
-                  Text('${s(p['time_allowed'])} min', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text('${s(p['time_allowed'])} min', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               ]),
             ),
             Container(
@@ -234,7 +234,7 @@ class ChapterDetailScreen extends StatelessWidget {
                       Expanded(child: Text(s(t['name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15.5))),
                     ]),
                     if (content.isEmpty)
-                      const Padding(padding: EdgeInsets.only(top: 8), child: Text('No files in this topic yet.', style: TextStyle(color: Brand.muted))),
+                      Padding(padding: EdgeInsets.only(top: 8), child: Text('No files in this topic yet.', style: TextStyle(color: Brand.muted))),
                     for (final item in content)
                       InkWell(
                         onTap: () => _open(c, item),
@@ -244,7 +244,7 @@ class ChapterDetailScreen extends StatelessWidget {
                             Icon(_icon(s(item['file_type'])), color: Brand.primary, size: 22),
                             const SizedBox(width: 10),
                             Expanded(child: Text(s(item['title']), style: const TextStyle(fontSize: 14))),
-                            const Icon(Icons.chevron_right_rounded, color: Brand.muted, size: 20),
+                            Icon(Icons.chevron_right_rounded, color: Brand.muted, size: 20),
                           ]),
                         ),
                       ),

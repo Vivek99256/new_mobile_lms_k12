@@ -7,6 +7,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../fees_collect/fees_details/online_receipt_view.dart';
 import 'fees_circular_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Fees Circular: choose a class, months and receipt book, find students and generate their fee circulars.
 class FeesCircularScreen extends StatefulWidget {
@@ -63,7 +64,7 @@ class _FeesCircularScreenState extends State<FeesCircularScreen> {
       title: widget.args.item.label.isEmpty ? 'Fees Circular' : widget.args.item.label,
       bottom: n == 0 ? null : formBar(label: 'Generate circular for $n', busy: _con.busy, onPressed: _generate),
       child: _con.loadingFilters
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _con.error != null && _con.months.isEmpty
               ? KitMessage(icon: Icons.error_outline, text: _con.error!, action: 'Retry', onAction: _con.loadFilters)
               : ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
@@ -102,9 +103,9 @@ class _FeesCircularScreenState extends State<FeesCircularScreen> {
                   const SizedBox(height: 14),
                   if (_con.busy) const LinearProgressIndicator(minHeight: 3),
                   if (_con.error != null && _con.searched)
-                    Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+                    Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
                   if (_con.searched && !_con.busy && _con.students.isEmpty && _con.error == null)
-                    const Padding(padding: EdgeInsets.only(top: 30), child: Center(child: Text('No students found.', style: TextStyle(color: Brand.muted)))),
+                    Padding(padding: EdgeInsets.only(top: 30), child: Center(child: Text('No students found.', style: TextStyle(color: Brand.muted)))),
                   if (_con.students.isNotEmpty) ...[
                     Row(children: [
                       Text('${_con.students.length} students', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
@@ -126,7 +127,7 @@ class _FeesCircularScreenState extends State<FeesCircularScreen> {
     final on = _con.selectedStudents.contains(st.id);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Brand.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: on ? Brand.primary : Brand.line, width: on ? 1.5 : 1),
         boxShadow: Brand.softShadow,
@@ -153,10 +154,10 @@ class _FeesCircularScreenState extends State<FeesCircularScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
                 const SizedBox(height: 2),
-                Text('GR ${st.enrollmentNo}${st.stdDiv.isEmpty ? '' : '  ·  ${st.stdDiv}'}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                Text('GR ${st.enrollmentNo}${st.stdDiv.isEmpty ? '' : '  ·  ${st.stdDiv}'}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               ]),
             ),
-            if (st.pending > 0) Tag.err('Due Rs ${st.pending}') else const Tag.ok('Clear'),
+            if (st.pending > 0) Tag.err('Due Rs ${st.pending}') else Tag.ok('Clear'),
           ]),
         ),
       ),
@@ -178,9 +179,9 @@ class _CircularResultScreen extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(color: Brand.ok0, borderRadius: BorderRadius.circular(14)),
             child: Row(children: [
-              const Icon(Icons.check_circle_rounded, color: Brand.ok),
+              Icon(Icons.check_circle_rounded, color: Brand.ok),
               const SizedBox(width: 10),
-              Expanded(child: Text(con.resultMessage, style: const TextStyle(color: Brand.ok, fontWeight: FontWeight.w700))),
+              Expanded(child: Text(con.resultMessage, style: TextStyle(color: Brand.ok, fontWeight: FontWeight.w700))),
             ]),
           ),
           const SizedBox(height: 12),
@@ -192,10 +193,10 @@ class _CircularResultScreen extends StatelessWidget {
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
                     Expanded(child: Text(g.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-                    Text('Rs ${g.total}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Brand.primaryDark)),
+                    Text('Rs ${g.total}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Brand.primaryDark)),
                   ]),
                   const SizedBox(height: 2),
-                  Text('GR ${g.enrollmentNo}${g.cls.isEmpty ? '' : '  ·  ${g.cls}'}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text('GR ${g.enrollmentNo}${g.cls.isEmpty ? '' : '  ·  ${g.cls}'}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   if (g.total == 0)
                     Container(
                       width: double.infinity,
@@ -206,7 +207,7 @@ class _CircularResultScreen extends StatelessWidget {
                         g.otherMonths.isEmpty
                             ? 'No fee is set for the selected months.'
                             : 'No fee in the selected months. This student has fees in: ${g.otherMonths.join(', ')}. Go back and select those months.',
-                        style: const TextStyle(color: Brand.warn, fontSize: 12.5, fontWeight: FontWeight.w600),
+                        style: TextStyle(color: Brand.warn, fontSize: 12.5, fontWeight: FontWeight.w600),
                       ),
                     ),
                   if (g.heads.isNotEmpty) ...[
@@ -215,7 +216,7 @@ class _CircularResultScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 3),
                         child: Row(children: [
-                          Expanded(child: Text(h.$1, style: const TextStyle(fontSize: 13.5, color: Brand.ink2))),
+                          Expanded(child: Text(h.$1, style: TextStyle(fontSize: 13.5, color: Brand.ink2))),
                           Text('Rs ${h.$2}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5)),
                         ]),
                       ),
@@ -223,7 +224,7 @@ class _CircularResultScreen extends StatelessWidget {
                 ]),
               ),
             ),
-          if (con.generated.isEmpty) const Center(child: Padding(padding: EdgeInsets.only(top: 40), child: Text('Circulars were generated.', style: TextStyle(color: Brand.muted)))),
+          if (con.generated.isEmpty) Center(child: Padding(padding: EdgeInsets.only(top: 40), child: Text('Circulars were generated.', style: TextStyle(color: Brand.muted)))),
         ]),
       );
 }

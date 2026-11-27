@@ -127,14 +127,14 @@ Widget healthDetailsScreen(ScreenArgs a) => SimpleList(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(file, width: 64, height: 64, fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => const SizedBox(width: 64, height: 64, child: Icon(Icons.image_not_supported_outlined, color: Brand.muted))),
+                      errorBuilder: (_, _, _) => SizedBox(width: 64, height: 64, child: Icon(Icons.image_not_supported_outlined, color: Brand.muted))),
                 ),
               ),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(s(r['doctor_name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-                Text('Date: ${s(r['date'])}', style: const TextStyle(color: Brand.muted, fontSize: 13)),
-                Text('Mobile: ${s(r['doctor_contact'])}', style: const TextStyle(color: Brand.muted, fontSize: 13)),
+                Text('Date: ${s(r['date'])}', style: TextStyle(color: Brand.muted, fontSize: 13)),
+                Text('Mobile: ${s(r['doctor_contact'])}', style: TextStyle(color: Brand.muted, fontSize: 13)),
                 if (s(r['remarks']).isNotEmpty) Text('Remarks: ${s(r['remarks'])}', style: const TextStyle(fontSize: 13)),
                 AttachmentButton(file),
               ]),

@@ -60,7 +60,7 @@ class _ReviewCard extends StatelessWidget {
           if (answered)
             _box(right ? 'You chose the right answer' : 'You chose the wrong answer', item.given, tone, right ? Icons.check_circle_rounded : Icons.cancel_rounded)
           else
-            const Text('You did not answer this question.', style: TextStyle(color: Brand.muted, fontStyle: FontStyle.italic)),
+            Text('You did not answer this question.', style: TextStyle(color: Brand.muted, fontStyle: FontStyle.italic)),
         ]),
       ),
     );
@@ -110,8 +110,8 @@ class TestReportListScreen extends StatelessWidget {
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(s(at['paper_name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                     const SizedBox(height: 4),
-                    Text('At ${s(at['created_at'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
-                    Text('Time ${s(at['start_time'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    Text('At ${s(at['created_at'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    Text('Time ${s(at['start_time'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   ]),
                 ),
                 Container(

@@ -9,6 +9,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_module/student_ui.dart';
 import 'report_common.dart';
+import '../../../ui/app_loader.dart';
 
 class StrengthRow {
   const StrengthRow(this.standard, this.division, this.total, this.boys, this.girls);
@@ -115,7 +116,7 @@ class _StrengthReportScreenState extends State<StrengthReportScreen> {
           onSelectionChanged: c.loading ? null : (v) => c.setDivisionWise(v.first),
         ),
         gap(14),
-        if (c.loading) const Padding(padding: EdgeInsets.only(top: 24), child: Center(child: CircularProgressIndicator())),
+        if (c.loading) const Padding(padding: EdgeInsets.only(top: 24), child: const AppLoader()),
         if (c.error != null) ...[Notice(c.error!, kind: NoticeKind.error), gap(8), Center(child: TextButton(onPressed: c.load, child: const Text('Try again')))],
         if (!c.loading && c.error == null && c.items.isEmpty) const KitMessage(icon: Icons.groups_outlined, text: 'No students are enrolled yet.'),
         for (final r in c.items) _card(r, max),
@@ -133,7 +134,7 @@ class _StrengthReportScreenState extends State<StrengthReportScreen> {
               const IconTile(Icons.groups_2_outlined, size: 32),
               const SizedBox(width: 10),
               Expanded(child: Text(r.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-              Text('${r.total}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: Brand.primaryDark)),
+              Text('${r.total}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: Brand.primaryDark)),
             ]),
             const SizedBox(height: 10),
             MiniBar(value: r.total, max: max),

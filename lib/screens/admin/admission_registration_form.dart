@@ -5,6 +5,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import '../teacher/api_migration.dart';
 import 'admin_common.dart';
+import '../../ui/app_loader.dart';
 
 /// Registration edit, built from the server like the web's side drawer: dropdown options come from
 /// `data_fields` (status, quota, payment mode, blood group, religion, caste, admission status),
@@ -273,7 +274,7 @@ class _AdmissionRegistrationFormScreenState extends State<AdmissionRegistrationF
         title: 'Update registration',
         bottom: _loading || _error != null ? null : formBar(label: 'Save changes', busy: busy, onPressed: _save),
         child: _loading
-            ? const Center(child: CircularProgressIndicator())
+            ? const AppLoader()
             : _error != null
                 ? KitMessage(icon: Icons.error_outline, text: _error!, action: 'Retry', onAction: _load)
                 : ListView(padding: const EdgeInsets.all(16), children: [

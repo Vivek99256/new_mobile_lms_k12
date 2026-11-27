@@ -47,7 +47,7 @@ class StudentDetailScreen extends StatelessWidget {
                 Wrap(spacing: 6, runSpacing: 4, children: [
                   if (st.cls.isNotEmpty) Tag(st.cls),
                   if (st.rollNo.isNotEmpty) Tag.neutral('Roll ${st.rollNo}'),
-                  if (st.inactive) const Tag.warn('Inactive'),
+                  if (st.inactive) Tag.warn('Inactive'),
                 ]),
               ]),
             ),
@@ -97,12 +97,12 @@ class StudentDetailScreen extends StatelessWidget {
             Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
           ]),
           const SizedBox(height: 10),
-          if (shown.isEmpty) const Text('Nothing recorded yet.', style: TextStyle(color: Brand.muted, fontSize: 13)),
+          if (shown.isEmpty) Text('Nothing recorded yet.', style: TextStyle(color: Brand.muted, fontSize: 13)),
           for (final it in shown)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(width: 112, child: Text(it.$1, style: const TextStyle(color: Brand.muted, fontSize: 13))),
+                SizedBox(width: 112, child: Text(it.$1, style: TextStyle(color: Brand.muted, fontSize: 13))),
                 Expanded(child: Text(it.$2, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5))),
               ]),
             ),
@@ -185,8 +185,8 @@ class _StudentEditScreenState extends State<StudentEditScreen> with SubmitGuard 
         filled: true,
         fillColor: Brand.surface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.primary, width: 1.6)),
       );
 
@@ -195,7 +195,7 @@ class _StudentEditScreenState extends State<StudentEditScreen> with SubmitGuard 
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+          decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(20), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [IconTile(icon, size: 30), const SizedBox(width: 10), Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))]),
             const SizedBox(height: 14),

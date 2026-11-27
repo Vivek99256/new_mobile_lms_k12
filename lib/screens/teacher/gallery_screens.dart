@@ -12,6 +12,7 @@ import '../../ui/theme.dart';
 import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'tk.dart';
+import '../../ui/app_loader.dart';
 
 /// Albums as `title -> items`, from either a map keyed by album or a flat list.
 List<MapEntry<String, List<Map<String, dynamic>>>> groupAlbums(dynamic data) {
@@ -124,7 +125,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ],
           gap(),
           if (loading)
-            const Padding(padding: EdgeInsets.all(40), child: Center(child: CircularProgressIndicator()))
+            const Padding(padding: EdgeInsets.all(40), child: const AppLoader())
           else if (error != null)
             KitMessage(icon: Icons.cloud_off_outlined, text: error!, action: 'Try again', onAction: _load)
           else if (albums.isEmpty)
@@ -167,7 +168,7 @@ class _AlbumTile extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Stack(fit: StackFit.expand, children: [
-          Container(color: const Color(0xFFE8EDFC)),
+          Container(color: Brand.tint),
           if (cover.isNotEmpty) Image.network(cover, fit: BoxFit.cover, errorBuilder: (_, _, _) => const SizedBox.shrink()),
           Container(decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, Color(0xCC0F172A)]))),
           Positioned(
@@ -289,7 +290,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Stack(fit: StackFit.expand, children: [
-                        Image.network(s(widget.items[i]['file_name']), fit: BoxFit.cover, errorBuilder: (_, _, _) => Container(color: const Color(0xFFE8EDFC), child: const Icon(Icons.broken_image_outlined))),
+                        Image.network(s(widget.items[i]['file_name']), fit: BoxFit.cover, errorBuilder: (_, _, _) => Container(color: Brand.tint, child: const Icon(Icons.broken_image_outlined))),
                         if (on) Container(color: Brand.primary.withValues(alpha: 0.35)),
                         if (on) const Positioned(top: 8, right: 8, child: CircleAvatar(radius: 12, backgroundColor: Brand.primary, child: Icon(Icons.check, size: 16, color: Colors.white))),
                       ]),
@@ -329,7 +330,7 @@ class _ZoomPhotoScreenState extends State<ZoomPhotoScreen> {
           pageController: PageController(initialPage: widget.index),
           onPageChanged: (i) => setState(() => current = i),
           builder: (c, i) => PhotoViewGalleryPageOptions(imageProvider: NetworkImage(widget.urls[i]), minScale: PhotoViewComputedScale.contained),
-          loadingBuilder: (_, _) => const Center(child: CircularProgressIndicator()),
+          loadingBuilder: (_, _) => const AppLoader(),
         ),
       );
 }

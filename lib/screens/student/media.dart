@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../kit/kit.dart';
+import '../../ui/app_loader.dart';
 
 /// Full-screen swipeable, pinch-zoom image pager.
 class ZoomGallery extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ZoomGalleryState extends State<ZoomGallery> {
               itemCount: urls.length,
               onPageChanged: (i) => setState(() => _i = i),
               backgroundDecoration: const BoxDecoration(color: Colors.black),
-              loadingBuilder: (_, _) => const Center(child: CircularProgressIndicator()),
+              loadingBuilder: (_, _) => const AppLoader(),
               builder: (c, i) => PhotoViewGalleryPageOptions(
                 imageProvider: NetworkImage(urls[i]),
                 minScale: PhotoViewComputedScale.contained,

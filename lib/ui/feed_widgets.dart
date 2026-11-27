@@ -64,7 +64,7 @@ class FeedSectionCard extends StatelessWidget {
     final titleColor = hexColor(section.colorHex) ?? Brand.text;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Brand.card,
         borderRadius: BorderRadius.circular(20),
         boxShadow: Brand.softShadow,
       ),
@@ -154,7 +154,7 @@ class FeedTile extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.clip,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: Brand.text,

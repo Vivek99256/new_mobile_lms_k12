@@ -14,6 +14,7 @@ class Session {
     this.logoUrl,
     this.imageUrl,
     this.mobileSyear,
+    this.academicYears = const [],
     this.raw = const {},
   });
 
@@ -29,7 +30,28 @@ class Session {
   final String? logoUrl;
   final String? imageUrl;
   final String? mobileSyear;
+
+  /// The school's academic years (newest first), for the year picker. Empty when the server sent none.
+  final List<String> academicYears;
   final Map<String, dynamic> raw;
+
+  /// The same session viewing another academic year. The year goes with every legacy call as `syear`.
+  Session copyWith({String? mobileSyear}) => Session(
+        token: token,
+        userId: userId,
+        subInstituteId: subInstituteId,
+        clientId: clientId,
+        userProfileId: userProfileId,
+        userProfileName: userProfileName,
+        name: name,
+        email: email,
+        schoolName: schoolName,
+        logoUrl: logoUrl,
+        imageUrl: imageUrl,
+        mobileSyear: mobileSyear ?? this.mobileSyear,
+        academicYears: academicYears,
+        raw: raw,
+      );
 
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
@@ -66,6 +88,16 @@ class Session {
         ? fullName
         : (str(data['user_name']).isNotEmpty ? str(data['user_name']) : email.split('@').first);
 
+    final years = <String>[];
+    final rawYears = response['academicYears'];
+    if (rawYears is List) {
+      for (final r in rawYears) {
+        final y = r is Map ? str(r['syear']).trim() : '';
+        if (y.isNotEmpty && !years.contains(y)) years.add(y);
+      }
+      years.sort((a, b) => b.compareTo(a));
+    }
+
     final hostName = str(data['host_name']).isNotEmpty ? str(data['host_name']) : host;
     final logo = str(data['logo']);
     final image = str(data['image']);
@@ -83,6 +115,7 @@ class Session {
       logoUrl: logo.isEmpty ? null : '$hostName/admin_dep/images/$logo',
       imageUrl: image.isEmpty ? null : image,
       mobileSyear: str(data['mobile_syear']).isEmpty ? null : str(data['mobile_syear']),
+      academicYears: years,
       raw: data,
     );
   }
@@ -100,6 +133,7 @@ class Session {
         'logoUrl': logoUrl,
         'imageUrl': imageUrl,
         'mobileSyear': mobileSyear,
+        'academicYears': academicYears,
       };
 
   factory Session.fromJson(Map<String, dynamic> j) => Session(
@@ -115,5 +149,6 @@ class Session {
         logoUrl: j['logoUrl'] as String?,
         imageUrl: j['imageUrl'] as String?,
         mobileSyear: j['mobileSyear'] as String?,
+        academicYears: [for (final y in (j['academicYears'] as List? ?? const [])) '$y'],
       );
 }

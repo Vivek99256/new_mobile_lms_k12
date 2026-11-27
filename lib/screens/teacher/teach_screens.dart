@@ -5,6 +5,7 @@ import '../../ui/theme.dart';
 import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'tk.dart';
+import '../../ui/app_loader.dart';
 
 /// t_teach: subjects of a standard -> chapters -> topics and their content.
 class TeachScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _TeachScreenState extends State<TeachScreen> {
           IconBubble(icon: Icons.auto_stories_rounded, accent: Brand.accent(i)),
           const SizedBox(width: 12),
           Expanded(child: Text(s(r['name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-          const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+          Icon(Icons.chevron_right_rounded, color: Brand.muted),
         ]),
       ),
     );
@@ -85,15 +86,15 @@ class ChapterListScreen extends StatelessWidget {
               }
             },
             child: Row(children: [
-              CircleAvatar(radius: 16, backgroundColor: const Color(0xFFE8EDFC), child: Text('${i + 1}', style: const TextStyle(color: Brand.primary, fontWeight: FontWeight.w800, fontSize: 13))),
+              CircleAvatar(radius: 16, backgroundColor: Brand.tint, child: Text('${i + 1}', style: const TextStyle(color: Brand.primary, fontWeight: FontWeight.w800, fontSize: 13))),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(s(r['chapter_name']), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
-                  Text('${topics.length} topic${topics.length == 1 ? '' : 's'}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text('${topics.length} topic${topics.length == 1 ? '' : 's'}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                 ]),
               ),
-              const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+              Icon(Icons.chevron_right_rounded, color: Brand.muted),
             ]),
           );
         },
@@ -140,21 +141,21 @@ class ChapterDetailScreen extends StatelessWidget {
     return KitPage(
       title: s(chapter['chapter_name']).isEmpty ? 'Chapter' : s(chapter['chapter_name']),
       child: ListView(padding: const EdgeInsets.all(16), children: [
-        if (s(chapter['chapter_desc']).isNotEmpty) ...[Text(s(chapter['chapter_desc']), style: const TextStyle(color: Brand.muted)), gap()],
+        if (s(chapter['chapter_desc']).isNotEmpty) ...[Text(s(chapter['chapter_desc']), style: TextStyle(color: Brand.muted)), gap()],
         if (topics.isEmpty) const KitMessage(icon: Icons.topic_outlined, text: 'No topics in this chapter.'),
         for (final t in topics) ...[
           KitCard(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(t['name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               gap(6),
-              if (rows(t['contentData']).isEmpty) const Text('No content yet.', style: TextStyle(color: Brand.muted)),
+              if (rows(t['contentData']).isEmpty) Text('No content yet.', style: TextStyle(color: Brand.muted)),
               for (final c in rows(t['contentData']))
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   minVerticalPadding: 8,
                   leading: Icon(_icon(s(c['file_type'])), color: Brand.primary),
                   title: Text(s(c['title']), style: const TextStyle(fontSize: 14)),
-                  trailing: const Icon(Icons.open_in_new_rounded, size: 18, color: Brand.muted),
+                  trailing: Icon(Icons.open_in_new_rounded, size: 18, color: Brand.muted),
                   onTap: () => _open(context, c),
                 ),
             ]),
@@ -207,7 +208,7 @@ class _VideoScreenState extends State<VideoScreen> {
       child: error != null
           ? KitMessage(icon: Icons.error_outline_rounded, text: error!, action: 'Open in browser', onAction: () => openUrl(context, widget.url))
           : !c.value.isInitialized
-              ? const Center(child: CircularProgressIndicator())
+              ? const AppLoader()
               : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                   AspectRatio(aspectRatio: c.value.aspectRatio, child: VideoPlayer(c)),
                   gap(),

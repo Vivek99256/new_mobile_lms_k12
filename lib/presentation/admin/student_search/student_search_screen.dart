@@ -87,9 +87,9 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
         ),
         const SizedBox(height: 12),
         if (_con.busy) const LinearProgressIndicator(minHeight: 3),
-        if (_con.error != null) Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
+        if (_con.error != null) Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
         if (_con.searched && !_con.busy && _con.error == null && _con.students.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 30), child: Center(child: Text('No students found.', style: TextStyle(color: Brand.muted)))),
+          Padding(padding: EdgeInsets.only(top: 30), child: Center(child: Text('No students found.', style: TextStyle(color: Brand.muted)))),
         if (_con.students.isNotEmpty) ...[
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -112,10 +112,10 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
               hintText: 'Filter by name, GR, roll or mobile',
               prefixIcon: const Icon(Icons.search_rounded),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Brand.card,
               contentPadding: EdgeInsets.zero,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
             ),
           ),
           const SizedBox(height: 12),
@@ -126,7 +126,7 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
   }
 
   Widget _card(StudentRecord st) => Container(
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+        decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
           onTap: () => _open(st),
@@ -137,14 +137,14 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
+                  Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
                   const SizedBox(height: 2),
-                  Text('GR ${st.enrollmentNo}${st.rollNo.isEmpty ? '' : '  ·  Roll ${st.rollNo}'}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text('GR ${st.enrollmentNo}${st.rollNo.isEmpty ? '' : '  ·  Roll ${st.rollNo}'}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   const SizedBox(height: 6),
                   Wrap(spacing: 6, runSpacing: 4, children: [
                     if (st.cls.isNotEmpty) Tag(st.cls),
                     if (st.genderLabel.isNotEmpty) Tag.neutral(st.genderLabel),
-                    if (st.inactive) const Tag.warn('Inactive'),
+                    if (st.inactive) Tag.warn('Inactive'),
                   ]),
                 ]),
               ),
@@ -154,7 +154,7 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                   onPressed: () => openUrl(context, 'tel:${st.mobile}'),
                   icon: const Icon(Icons.call_rounded, size: 18),
                 ),
-              const Icon(Icons.chevron_right_rounded, color: Brand.ink3),
+              Icon(Icons.chevron_right_rounded, color: Brand.ink3),
             ]),
           ),
         ),

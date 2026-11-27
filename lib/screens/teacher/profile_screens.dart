@@ -15,7 +15,7 @@ Widget _infoTile(IconData icon, String label, String value) => value.isEmpty
             const SizedBox(width: 12),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(label, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                Text(label, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                 Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
               ]),
             ),
@@ -38,7 +38,7 @@ class OwnProfileScreen extends StatelessWidget {
         Center(child: PersonAvatar(url: s(raw['image']).isNotEmpty ? s(raw['image']) : (se.imageUrl ?? ''), name: se.name, radius: 46)),
         gap(10),
         Center(child: Text(name.isEmpty ? se.name : name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800))),
-        Center(child: Text(se.userProfileName, style: const TextStyle(color: Brand.muted))),
+        Center(child: Text(se.userProfileName, style: TextStyle(color: Brand.muted))),
         gap(18),
         _infoTile(Icons.cake_outlined, 'Birthdate', s(raw['birthdate'])),
         _infoTile(Icons.phone_outlined, 'Contact details', s(raw['mobile'])),
@@ -118,7 +118,7 @@ class StudentProfileDetail extends StatelessWidget {
           gap(10),
           Center(child: Text(s(st['student_name']), style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800))),
           Center(
-            child: Text('Roll No. ${s(st['roll_no'])}  |  ${s(st['standard_name'])} - ${s(st['division_name'])}', style: const TextStyle(color: Brand.muted)),
+            child: Text('Roll No. ${s(st['roll_no'])}  |  ${s(st['standard_name'])} - ${s(st['division_name'])}', style: TextStyle(color: Brand.muted)),
           ),
           gap(18),
           _infoTile(Icons.badge_outlined, 'GR number', s(st['enrollment_no'])),

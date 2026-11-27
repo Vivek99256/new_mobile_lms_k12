@@ -7,6 +7,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_care/care_common.dart';
 import 'student_infirmary_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Student Infirmary: record medical visits (complaint, treatment, case closure) for students.
 class StudentInfirmaryScreen extends StatefulWidget {
@@ -70,7 +71,7 @@ class _StudentInfirmaryScreenState extends State<StudentInfirmaryScreen> {
           ? null
           : PrimaryButton(label: 'Add infirmary record', onPressed: () => _openForm()),
       child: _con.loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _con.error != null
               ? KitMessage(icon: Icons.error_outline_rounded, text: _con.error!, action: 'Try again', onAction: _con.load)
               : RefreshIndicator(
@@ -90,7 +91,7 @@ class _StudentInfirmaryScreenState extends State<StudentInfirmaryScreen> {
                     ]),
                     const SizedBox(height: 12),
                     if (shown.isEmpty)
-                      const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No infirmary records found.', style: TextStyle(color: Brand.muted)))),
+                      Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No infirmary records found.', style: TextStyle(color: Brand.muted)))),
                     for (final r in shown) Padding(padding: const EdgeInsets.only(bottom: 10), child: _card(r)),
                   ]),
                 ),
@@ -106,11 +107,11 @@ class _StudentInfirmaryScreenState extends State<StudentInfirmaryScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(r.studentName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
+                Text(r.studentName, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
                 const SizedBox(height: 4),
                 Wrap(spacing: 6, runSpacing: 4, children: [
                   Tag.neutral('Case ${r.caseNo}'),
-                  r.isOpen ? const Tag.warn('Open') : const Tag.ok('Closed'),
+                  r.isOpen ? Tag.warn('Open') : Tag.ok('Closed'),
                 ]),
               ]),
             ),
@@ -133,7 +134,7 @@ class _StudentInfirmaryScreenState extends State<StudentInfirmaryScreen> {
           if (r.doctorContact.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Text('Doctor contact  ${r.doctorContact}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              child: Text('Doctor contact  ${r.doctorContact}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             ),
         ]),
       );

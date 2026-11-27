@@ -6,6 +6,7 @@ import '../../../screens/screen_registry.dart';
 import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'document_standard_mapping_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Standardized Document Type: which student document types are required for which standards.
 class DocumentStandardMappingScreen extends StatefulWidget {
@@ -71,11 +72,11 @@ class _DocumentStandardMappingScreenState extends State<DocumentStandardMappingS
           const SizedBox(width: 10),
           Expanded(child: Text(m.documentType, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5))),
           Tag.info('${stds.length} std'),
-          const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+          Icon(Icons.chevron_right_rounded, color: Brand.muted),
         ]),
         if (m.grades.isNotEmpty) ...[
           gap(8),
-          Text(m.grades, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+          Text(m.grades, style: TextStyle(color: Brand.muted, fontSize: 12)),
         ],
         gap(8),
         Wrap(spacing: 6, runSpacing: 6, children: [for (final n in stds.take(12)) Tag(n), if (stds.length > 12) Tag.info('+${stds.length - 12}')]),
@@ -92,7 +93,7 @@ class _DocumentStandardMappingScreenState extends State<DocumentStandardMappingS
       child: RefreshIndicator(
         onRefresh: _con.load,
         child: _con.loading && _con.items.isEmpty
-            ? ListView(children: const [SizedBox(height: 200), Center(child: CircularProgressIndicator())])
+            ? ListView(children: const [SizedBox(height: 200), const AppLoader()])
             : ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
                 if (_con.error != null)
                   KitMessage(icon: Icons.error_outline, text: _con.error!, action: 'Try again', onAction: _con.load)
@@ -212,7 +213,7 @@ class _MappingFormState extends State<_MappingForm> {
       title: editing ? 'Edit mapping' : 'Add mapping',
       bottom: _loading || _error != null ? null : formBar(label: 'Save', busy: widget.con.busy, onPressed: _save),
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
               ? KitMessage(icon: Icons.error_outline, text: _error!, action: 'Try again', onAction: _init)
               : ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
@@ -233,7 +234,7 @@ class _MappingFormState extends State<_MappingForm> {
                     Tag.info('${_selected.length} selected'),
                   ]),
                   if (editing)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(bottom: 8),
                       child: Text('Ticking more standards adds them. Saving cannot un-map a standard that is already mapped.', style: TextStyle(color: Brand.muted, fontSize: 12)),
                     ),

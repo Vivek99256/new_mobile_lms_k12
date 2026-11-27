@@ -133,10 +133,10 @@ class _StudentShufflingScreenState extends State<StudentShufflingScreen> {
                   const IconTile(Icons.groups_2_outlined, size: 30),
                   const SizedBox(width: 10),
                   Expanded(child: Text('Division ${d.name}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-                  Text('${d.before}', style: const TextStyle(color: Brand.muted, fontWeight: FontWeight.w600)),
+                  Text('${d.before}', style: TextStyle(color: Brand.muted, fontWeight: FontWeight.w600)),
                   if (p.estimated) ...[
-                    const Padding(padding: EdgeInsets.symmetric(horizontal: 6), child: Icon(Icons.arrow_forward_rounded, size: 16, color: Brand.muted)),
-                    Text('${d.after}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Brand.primaryDark)),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 6), child: Icon(Icons.arrow_forward_rounded, size: 16, color: Brand.muted)),
+                    Text('${d.after}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Brand.primaryDark)),
                   ],
                 ]),
                 if (d.houses.isNotEmpty) ...[

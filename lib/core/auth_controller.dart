@@ -63,16 +63,67 @@ class AuthController extends ChangeNotifier with WidgetsBindingObserver {
         return (res['message'] ?? 'Your email or password is incorrect. Check them and try again.')
             .toString();
       }
-      session = s;
-      status = AuthStatus.signedIn;
-      await _storage.write(key: _kSession, value: jsonEncode(s.toJson()));
-      await _storage.write(key: _kSessionDate, value: DateTime.now().toIso8601String().substring(0, 10));
-      await touch();
-      notifyListeners();
+      await _establish(s);
       return null;
     } on ApiException catch (e) {
       return e.message;
     }
+  }
+
+  /// Opens one profile (a staff account or a student) on a number that was just proven with an mPIN or
+  /// biometrics. The server returns the same session api-login does. Returns an error message or null.
+  Future<String?> signInWithProfile(String ticket, String profileKey) async {
+    try {
+      final res = await _api.post('/api/mobile-auth/select', body: {'ticket': ticket, 'profile': profileKey});
+      final s = Session.fromLogin(res, '', AppConfig.apiBase);
+      if (s.token.isEmpty || s.userId == 0) {
+        return (res['message'] ?? 'Could not open this profile. Try again.').toString();
+      }
+      await _establish(s);
+      return null;
+    } on ApiException catch (e) {
+      return e.message;
+    }
+  }
+
+  /// Opens another profile on the same number (a sibling, or the parent's staff account). Moving up to a staff
+  /// profile needs the mPIN or the biometric device token. Returns an error message or null.
+  Future<String?> switchProfile({required String mobile, required String profileKey, String? pin, String? deviceToken}) async {
+    final current = session;
+    if (current == null) return 'Sign in again.';
+    try {
+      final res = await _api.post(
+        '/api/mobile-auth/switch',
+        body: {'mobile': mobile, 'profile': profileKey, 'pin': ?pin, 'device_token': ?deviceToken},
+        token: current.token,
+      );
+      final s = Session.fromLogin(res, '', AppConfig.apiBase);
+      if (s.token.isEmpty || s.userId == 0) return (res['message'] ?? 'Could not open this profile.').toString();
+      await _establish(s);
+      return null;
+    } on ApiException catch (e) {
+      return e.message;
+    }
+  }
+
+  /// Views another academic year: the year goes with every call from now on, until the app is closed.
+  ///
+  /// It is deliberately NOT saved. The saved session keeps the school's current year, so closing the app and opening
+  /// it again always comes back to the latest year, and a past year never stays selected by accident.
+  void setAcademicYear(String year) {
+    final s = session;
+    if (s == null || s.mobileSyear == year) return;
+    session = s.copyWith(mobileSyear: year);
+    notifyListeners();
+  }
+
+  Future<void> _establish(Session s) async {
+    session = s;
+    status = AuthStatus.signedIn;
+    await _storage.write(key: _kSession, value: jsonEncode(s.toJson()));
+    await _storage.write(key: _kSessionDate, value: DateTime.now().toIso8601String().substring(0, 10));
+    await touch();
+    notifyListeners();
   }
 
   /// POST /forget-password (a root route, not under /api). Returns an error or null.

@@ -8,6 +8,7 @@ import '../core/page_service.dart';
 import 'dashboard/dashboard_screen.dart';
 import 'sdui/page_renderer.dart';
 import 'theme.dart';
+import 'app_loader.dart';
 
 PageService? _service(BuildContext context) {
   final auth = context.read<AuthController>();
@@ -60,7 +61,7 @@ class _Failure extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.cloud_off_outlined, size: 40, color: Brand.muted),
+          Icon(Icons.cloud_off_outlined, size: 40, color: Brand.muted),
           const SizedBox(height: 12),
           Text(message, textAlign: TextAlign.center),
           const SizedBox(height: 16),
@@ -217,7 +218,7 @@ class _NativePageScreenState extends State<NativePageScreen> {
     return _ScreenFrame(
       title: title,
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null || layout == null || _svc == null
           ? _Failure(
               message: _error ?? 'This page is not available.',
@@ -360,7 +361,7 @@ class _DynamicPageScreenState extends State<DynamicPageScreen> {
     return _ScreenFrame(
       title: '${page?['title'] ?? widget.title}',
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
           ? _Failure(message: _error!, onRetry: _load)
           : RefreshIndicator(
@@ -397,7 +398,7 @@ class _DynamicPageScreenState extends State<DynamicPageScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Brand.card,
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: Brand.softShadow,
                       ),
@@ -407,7 +408,7 @@ class _DynamicPageScreenState extends State<DynamicPageScreen> {
                         children: [
                           Text(
                             '${t['label']}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Brand.muted,
                               fontSize: 12.5,
                               fontWeight: FontWeight.w600,
@@ -425,7 +426,7 @@ class _DynamicPageScreenState extends State<DynamicPageScreen> {
                             ),
                           ),
                           if (drill is String && drill.isNotEmpty)
-                            const Align(
+                            Align(
                               alignment: Alignment.centerRight,
                               child: Icon(
                                 Icons.chevron_right_rounded,
@@ -533,7 +534,7 @@ class _DataScreenState extends State<DataScreen> {
     return _ScreenFrame(
       title: widget.title,
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
           ? _Failure(message: _error!, onRetry: _load)
           : RefreshIndicator(
@@ -569,7 +570,7 @@ class _DataScreenState extends State<DataScreen> {
             ),
           ),
         if (shown.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(32),
             child: Center(
               child: Text(
@@ -621,7 +622,7 @@ class _DataScreenState extends State<DataScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Brand.card,
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: Brand.softShadow,
                   ),
@@ -631,7 +632,7 @@ class _DataScreenState extends State<DataScreen> {
                     children: [
                       Text(
                         humanize(scalars[i].key),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Brand.muted,
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
@@ -679,7 +680,7 @@ class _DataScreenState extends State<DataScreen> {
             _RowCard(row: Map<String, dynamic>.from(e.value as Map), index: 0),
         ],
         if (scalars.isEmpty && nested.isEmpty)
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(32),
             child: Center(
               child: Text(
@@ -747,7 +748,7 @@ class _RowCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Brand.card,
           borderRadius: BorderRadius.circular(16),
           boxShadow: Brand.softShadow,
         ),
@@ -769,7 +770,7 @@ class _RowCard extends StatelessWidget {
                       width: 118,
                       child: Text(
                         humanize(e.key),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Brand.muted,
                           fontSize: 12.5,
                         ),
@@ -834,7 +835,7 @@ class _RowCard extends StatelessWidget {
                       width: 130,
                       child: Text(
                         humanize(e.key),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Brand.muted,
                           fontSize: 13,
                         ),

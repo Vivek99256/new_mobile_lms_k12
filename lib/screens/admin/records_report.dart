@@ -10,6 +10,7 @@ import '../../presentation/admin/fees_master/fees_master_controller.dart';
 import '../../presentation/admin/fees_master/fees_master_form_screen.dart';
 import '../../presentation/admin/fees_master/fees_master_spec.dart';
 import 'admin_common.dart';
+import '../../ui/app_loader.dart';
 
 /// One field line on a record card.
 class RecField {
@@ -345,7 +346,7 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
               ? formBar(label: widget.addLabel ?? 'Add', busy: false, onPressed: _openAdd)
               : null),
       child: _loading && !widget.dateRange
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null && !widget.dateRange
               ? KitMessage(icon: Icons.error_outline, text: _error!, action: 'Retry', onAction: _load)
               : RefreshIndicator(
@@ -427,7 +428,7 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
                         ]),
                         if (_loading) const Padding(padding: EdgeInsets.only(top: 8), child: LinearProgressIndicator(minHeight: 3)),
                         if (_error != null)
-                          Padding(padding: const EdgeInsets.only(top: 8), child: Text(_error!, style: const TextStyle(color: Brand.err, fontSize: 13))),
+                          Padding(padding: const EdgeInsets.only(top: 8), child: Text(_error!, style: TextStyle(color: Brand.err, fontSize: 13))),
                       ],
                       const SizedBox(height: 14),
                       TextField(
@@ -436,10 +437,10 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
                           hintText: 'Search',
                           prefixIcon: const Icon(Icons.search_rounded),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Brand.card,
                           contentPadding: EdgeInsets.zero,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
                         ),
                       ),
                       const SizedBox(height: 14),
@@ -448,20 +449,20 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             const Text('This page returned no records', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                             const SizedBox(height: 4),
-                            const Text(
+                            Text(
                               'It probably needs a filter (class, date…) before it shows data. What the server sent:',
                               style: TextStyle(color: Brand.muted, fontSize: 13),
                             ),
                             const SizedBox(height: 8),
                             for (final line in _peek) KV(line.$1, line.$2),
                             const SizedBox(height: 8),
-                            Text(widget.endpoint, style: const TextStyle(color: Brand.muted, fontSize: 11.5)),
+                            Text(widget.endpoint, style: TextStyle(color: Brand.muted, fontSize: 11.5)),
                           ]),
                         )
                       else if (shown.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 48),
-                          child: Center(child: Text(_all.isEmpty ? widget.emptyText : 'No matches.', style: const TextStyle(color: Brand.muted))),
+                          child: Center(child: Text(_all.isEmpty ? widget.emptyText : 'No matches.', style: TextStyle(color: Brand.muted))),
                         ),
                       for (final r in shown)
                         Padding(
@@ -512,9 +513,9 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(color: Brand.surface, borderRadius: BorderRadius.circular(12)),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(it.$1, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11.5, color: Brand.muted)),
+                  Text(it.$1, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11.5, color: Brand.muted)),
                   const SizedBox(height: 2),
-                  Text(it.$2, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: Brand.ink)),
+                  Text(it.$2, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: Brand.ink)),
                 ]),
               ),
             ),
@@ -549,14 +550,14 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
               Text(title.isEmpty ? '—' : title, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               if (sub.isNotEmpty) ...[
                 const SizedBox(height: 2),
-                Text(sub, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 13)),
+                Text(sub, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 13)),
               ],
             ]),
           ),
           if (amount.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(left: 8),
-              child: Text(_money(num.tryParse(amount) ?? 0), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.primaryDark)),
+              child: Text(_money(num.tryParse(amount) ?? 0), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.primaryDark)),
             ),
           if (master != null && (master.canEdit || master.canDelete))
             SizedBox(
@@ -565,14 +566,14 @@ class _RecordsReportScreenState extends State<RecordsReportScreen> {
               child: PopupMenuButton<String>(
                 padding: EdgeInsets.zero,
                 tooltip: 'Actions',
-                icon: const Icon(Icons.more_vert_rounded, color: Brand.ink3),
+                icon: Icon(Icons.more_vert_rounded, color: Brand.ink3),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 onSelected: (v) => v == 'edit' ? _openForm(r) : _confirmDelete(r),
                 itemBuilder: (_) => [
                   if (master.canEdit)
                     const PopupMenuItem(value: 'edit', child: Row(children: [Icon(Icons.edit_rounded, size: 18), SizedBox(width: 10), Text('Edit')])),
                   if (master.canDelete)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
                       child: Row(children: [Icon(Icons.delete_outline_rounded, size: 18, color: Brand.err), SizedBox(width: 10), Text('Delete', style: TextStyle(color: Brand.err))]),
                     ),

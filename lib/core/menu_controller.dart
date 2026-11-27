@@ -35,6 +35,28 @@ class AppMenuController extends ChangeNotifier {
     }
   }
 
+  /// The rights fingerprint of what is on screen now.
+  String get version => _repo.version;
+
+  /// Reloads the menu without a spinner; used when the app comes back to the foreground so an
+  /// admin's change in Roles & Access shows up without signing out.
+  Future<void> refreshQuietly() async {
+    final s = _auth.session;
+    if (s == null || loading) return;
+    final before = _repo.version;
+    try {
+      final fresh = await _repo.load(s);
+      if (_repo.version != before || sections.isEmpty) {
+        sections = fresh;
+        index = buildFeedIndex(fresh);
+        error = null;
+        notifyListeners();
+      }
+    } on ApiException {
+      // Keep the menu the user already has; a failed refresh must not blank it.
+    }
+  }
+
   void clear() {
     sections = const [];
     index = const [];

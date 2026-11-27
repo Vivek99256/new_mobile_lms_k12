@@ -153,12 +153,12 @@ class _BYearlyAttendanceScreenState extends State<BYearlyAttendanceScreen> {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-                    if (st.gr.isNotEmpty) Text('GR ${st.gr}', style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    if (st.gr.isNotEmpty) Text('GR ${st.gr}', style: TextStyle(color: Brand.muted, fontSize: 12)),
                   ]),
                 ),
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Text('${(pct * 100).round()}%', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: tone)),
-                  Text('$present / $wt days', style: const TextStyle(color: Brand.muted, fontSize: 11.5)),
+                  Text('$present / $wt days', style: TextStyle(color: Brand.muted, fontSize: 11.5)),
                 ]),
                 Icon(open ? Icons.expand_less_rounded : Icons.expand_more_rounded, color: Brand.ink3),
               ]),
@@ -171,7 +171,7 @@ class _BYearlyAttendanceScreenState extends State<BYearlyAttendanceScreen> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
+            decoration: BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
             child: Wrap(spacing: 8, runSpacing: 8, children: [
               for (final m in _months) _month(m, st.perMonth[m] ?? 0, _working[m] ?? 0),
             ]),
@@ -185,9 +185,9 @@ class _BYearlyAttendanceScreenState extends State<BYearlyAttendanceScreen> {
     return Container(
       width: 92,
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: Brand.line)),
+      decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(12), border: Border.all(color: Brand.line)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(m >= 1 && m <= 12 ? bMonthsShort[m] : '$m', style: const TextStyle(color: Brand.muted, fontSize: 11.5, fontWeight: FontWeight.w600)),
+        Text(m >= 1 && m <= 12 ? bMonthsShort[m] : '$m', style: TextStyle(color: Brand.muted, fontSize: 11.5, fontWeight: FontWeight.w600)),
         const SizedBox(height: 2),
         Text('$present / $working', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
         const SizedBox(height: 6),

@@ -124,7 +124,7 @@ class SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 6, bottom: 8),
-        child: Text(text, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Brand.text)),
+        child: Text(text, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Brand.text)),
       );
 }
 
@@ -157,16 +157,16 @@ class StudentTile extends StatelessWidget {
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(s(student['student_name']), style: const TextStyle(fontWeight: FontWeight.w700)),
-            if (cls.isNotEmpty) Text(cls, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+            if (cls.isNotEmpty) Text(cls, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             Text(
               [
                 if (s(student['roll_no']).isNotEmpty) 'Roll No. ${s(student['roll_no'])}',
                 if (s(student['enrollment_no']).isNotEmpty) 'GR No. ${s(student['enrollment_no'])}',
               ].join('   '),
-              style: const TextStyle(color: Brand.muted, fontSize: 12.5),
+              style: TextStyle(color: Brand.muted, fontSize: 12.5),
             ),
             if (showMobile && s(student['mobile']).isNotEmpty)
-              Text('+91${s(student['mobile'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('+91${s(student['mobile'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           ]),
         ),
         ?trailing,
@@ -330,7 +330,7 @@ class _StudentPickerState extends State<StudentPicker> {
                       onPressed: widget.onOpen == null ? null : () => widget.onOpen!(st, sel),
                       child: Text(widget.openLabel!),
                     )
-                  : (widget.selectable ? null : const Icon(Icons.chevron_right_rounded, color: Brand.muted)),
+                  : (widget.selectable ? null : Icon(Icons.chevron_right_rounded, color: Brand.muted)),
             ),
           ),
       ],

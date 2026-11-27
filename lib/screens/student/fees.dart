@@ -8,6 +8,7 @@ import '../../ui/theme.dart';
 import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'student_common.dart';
+import '../../ui/app_loader.dart';
 
 /// Pending and paid fees with a receipt viewer.
 class FeesScreen extends StatefulWidget {
@@ -60,7 +61,7 @@ class _FeesScreenState extends State<FeesScreen> {
     return KitPage(
       title: titleOf(widget.args, 'Fees'),
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
               ? KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load)
               : RefreshIndicator(
@@ -75,7 +76,7 @@ class _FeesScreenState extends State<FeesScreen> {
                     const SizedBox(height: 14),
                     KitCard(
                       child: Column(children: [
-                        Text(_paid ? 'Total paid fees' : 'Total pending fees', style: const TextStyle(color: Brand.muted)),
+                        Text(_paid ? 'Total paid fees' : 'Total pending fees', style: TextStyle(color: Brand.muted)),
                         const SizedBox(height: 4),
                         Text(indian(total), style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: _paid ? const Color(0xFF16A34A) : const Color(0xFFE11D48))),
                       ]),

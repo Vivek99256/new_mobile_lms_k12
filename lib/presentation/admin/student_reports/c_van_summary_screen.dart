@@ -8,6 +8,7 @@ import '../../../screens/screen_registry.dart';
 import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'c_report_ui.dart';
+import '../../../ui/app_loader.dart';
 
 /// Van Summary Report: how many students ride each van and shift. Tap one to see who they are.
 /// `GET transportation/van_wise_students_detail_report` lists the vans; the students of one van come from
@@ -54,7 +55,7 @@ class _CVanSummaryScreenState extends State<CVanSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     final title = widget.args.item.label.isEmpty ? 'Van Summary Report' : widget.args.item.label;
-    if (_loading) return KitPage(title: title, child: const Center(child: CircularProgressIndicator()));
+    if (_loading) return KitPage(title: title, child: const AppLoader());
     if (_error != null) return KitPage(title: title, child: KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load));
     final q = _q.trim().toLowerCase();
     final shown = [for (final r in _vans) if (q.isEmpty || '${r['bus_name']} ${r['shift_title']}'.toLowerCase().contains(q)) r];
@@ -115,14 +116,14 @@ class _CVanSummaryScreenState extends State<CVanSummaryScreen> {
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(s(r['bus_name']), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-                Text(s(r['shift_title']), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                Text(s(r['shift_title']), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               ]),
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text('$n', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 22, color: Brand.primaryDark, height: 1)),
-              const Text('students', style: TextStyle(color: Brand.muted, fontSize: 11.5)),
+              Text('$n', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 22, color: Brand.primaryDark, height: 1)),
+              Text('students', style: TextStyle(color: Brand.muted, fontSize: 11.5)),
             ]),
-            const Icon(Icons.chevron_right_rounded, color: Brand.ink3),
+            Icon(Icons.chevron_right_rounded, color: Brand.ink3),
           ]),
           const SizedBox(height: 12),
           ClipRRect(
@@ -178,7 +179,7 @@ class _CVanStudentsScreenState extends State<CVanStudentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return KitPage(title: widget.title, child: const Center(child: CircularProgressIndicator()));
+    if (_loading) return KitPage(title: widget.title, child: const AppLoader());
     if (_error != null) return KitPage(title: widget.title, child: KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load));
     final q = _q.trim().toLowerCase();
     final shown = [for (final r in _students) if (q.isEmpty || '${r['student_name']} ${r['enrollment_no']} ${r['standard_name']}'.toLowerCase().contains(q)) r];
@@ -213,7 +214,7 @@ class _CVanStudentsScreenState extends State<CVanStudentsScreen> {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(s(r['student_name']), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
                       Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', cls].where((e) => e.isNotEmpty).join('  ·  '),
-                          style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                          style: TextStyle(color: Brand.muted, fontSize: 12)),
                     ]),
                   ),
                 ]),

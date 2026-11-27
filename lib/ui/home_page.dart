@@ -14,6 +14,7 @@ import 'design.dart';
 import 'native_screens.dart';
 import 'profile_page.dart';
 import 'theme.dart';
+import 'app_loader.dart';
 
 enum HomeRole { student, teacher, admin }
 
@@ -80,7 +81,9 @@ class _HomePageState extends State<HomePage> {
     }
     try {
       final res = await LegacyApi(session).get('/pending_fees');
-      if ('${res['api_status']}' == '1' && mounted) {
+      // `status` says the amounts were found; `api_status` only says whether online payment is on
+      // (the server sends status 1 with api_status 0), so keying off it hid real dues.
+      if (('${res['status']}' == '1' || '${res['api_status']}' == '1') && mounted) {
         setState(
           () => _fees = (
             previous: num.tryParse('${res['previous_fees'] ?? 0}') ?? 0,
@@ -191,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                   if (menu.loading && menu.sections.isEmpty)
                     const Padding(
                       padding: EdgeInsets.only(top: 48),
-                      child: Center(child: CircularProgressIndicator()),
+                      child: const AppLoader(),
                     )
                   else if (menu.sections.isEmpty)
                     _Empty(
@@ -383,7 +386,7 @@ class _Stats extends StatelessWidget {
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   height: 1.33,
                   fontWeight: FontWeight.w500,
@@ -401,9 +404,9 @@ class _Stats extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(child: cell('', 'Modules', count: menu.index.length)),
-            const VerticalDivider(width: 1, color: Brand.line),
+            VerticalDivider(width: 1, color: Brand.line),
             Expanded(child: cell('', 'Sections', count: menu.sections.length)),
-            const VerticalDivider(width: 1, color: Brand.line),
+            VerticalDivider(width: 1, color: Brand.line),
             Expanded(
               child: role == HomeRole.student
                   ? cell(
@@ -440,8 +443,8 @@ class _LinkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SoftCard(
     onTap: onTap,
-    color: warn ? const Color(0xFFFFFBEB) : Brand.tint,
-    borderColor: warn ? const Color(0xFFF3D9A4) : const Color(0xFFC3C8F3),
+    color: warn ? Brand.warn0 : Brand.tint,
+    borderColor: warn ? Brand.warn.withValues(alpha: .35) : Brand.border,
     padding: const EdgeInsets.all(16),
     child: Row(
       children: [
@@ -460,7 +463,7 @@ class _LinkCard extends StatelessWidget {
               Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
               Text(
                 sub,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   height: 1.33,
                   fontWeight: FontWeight.w500,
@@ -602,7 +605,7 @@ class ModuleRow extends StatelessWidget {
           decoration: BoxDecoration(
             border: last
                 ? null
-                : const Border(bottom: BorderSide(color: Brand.line)),
+                : Border(bottom: BorderSide(color: Brand.line)),
           ),
           child: Row(
             children: [
@@ -616,7 +619,7 @@ class ModuleRow extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: Brand.ink3),
+              Icon(Icons.chevron_right_rounded, color: Brand.ink3),
             ],
           ),
         ),
@@ -641,7 +644,7 @@ class _Empty extends StatelessWidget {
         Text(
           message,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: Brand.ink2),
+          style: TextStyle(color: Brand.ink2),
         ),
         const SizedBox(height: 12),
         OutlinedButton(onPressed: onRetry, child: const Text('Try again')),

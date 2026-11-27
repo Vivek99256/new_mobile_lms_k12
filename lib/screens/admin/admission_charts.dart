@@ -49,13 +49,13 @@ class _Panel extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Brand.card,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: Brand.line),
           boxShadow: Brand.softShadow,
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: Brand.ink)),
+          Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: Brand.ink)),
           const SizedBox(height: 12),
           child,
         ]),

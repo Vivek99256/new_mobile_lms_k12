@@ -8,6 +8,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'media.dart';
 import 'student_common.dart';
+import '../../ui/app_loader.dart';
 
 /// Card with a date line, optional attachment, a title and a message that expands.
 class ExpandCard extends StatefulWidget {
@@ -38,9 +39,9 @@ class _ExpandCardState extends State<ExpandCard> {
         onTap: () => setState(() => _open = !_open),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            const Icon(Icons.schedule, size: 15, color: Brand.muted),
+            Icon(Icons.schedule, size: 15, color: Brand.muted),
             const SizedBox(width: 6),
-            Expanded(child: Text(widget.dateLabel, style: const TextStyle(color: Brand.muted, fontSize: 12.5))),
+            Expanded(child: Text(widget.dateLabel, style: TextStyle(color: Brand.muted, fontSize: 12.5))),
             if (widget.attachment.isNotEmpty)
               IconButton(tooltip: 'Open attachment', constraints: const BoxConstraints(minWidth: 44, minHeight: 44), icon: const Icon(Icons.attach_file_rounded, color: Brand.primary), onPressed: _openAttachment),
           ]),
@@ -58,7 +59,7 @@ Widget circularEventsScreen(ScreenArgs a) => DefaultTabController(
       child: KitPage(
         title: 'Circular and events',
         child: Column(children: [
-          const Material(color: Colors.white, child: TabBar(tabs: [Tab(text: 'Circular'), Tab(text: 'Event')])),
+          Material(color: Brand.card, child: TabBar(tabs: [Tab(text: 'Circular'), Tab(text: 'Event')])),
           Expanded(child: TabBarView(children: [_circularTab(a, 'circular'), _circularTab(a, 'event')])),
         ]),
       ),
@@ -92,7 +93,7 @@ class PortfolioScreen extends StatelessWidget {
             return DefaultTabController(
               length: titles.length,
               child: Column(children: [
-                Material(color: Colors.white, child: TabBar(isScrollable: true, tabAlignment: TabAlignment.start, tabs: [for (final t in titles) Tab(text: t)])),
+                Material(color: Brand.card, child: TabBar(isScrollable: true, tabAlignment: TabAlignment.start, tabs: [for (final t in titles) Tab(text: t)])),
                 Expanded(
                   child: TabBarView(children: [
                     for (final t in titles)
@@ -161,7 +162,7 @@ class ResultPdfScreen extends StatelessWidget {
         title: titleOf(args, 'Results'),
         child: Column(children: [
           if (terms.length > 1)
-            Material(color: Colors.white, child: TabBar(isScrollable: true, tabAlignment: TabAlignment.start, tabs: [for (final t in terms) Tab(text: s(t['title']))])),
+            Material(color: Brand.card, child: TabBar(isScrollable: true, tabAlignment: TabAlignment.start, tabs: [for (final t in terms) Tab(text: s(t['title']))])),
           Expanded(
             child: TabBarView(children: [
               for (final t in terms)
@@ -257,7 +258,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
         ),
         Expanded(
           child: _loading
-              ? const Center(child: CircularProgressIndicator())
+              ? const AppLoader()
               : _error != null
                   ? KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load)
                   : RefreshIndicator(
@@ -279,12 +280,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                     Expanded(
                                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                         Text(s(r['subject_name']), style: const TextStyle(color: Brand.primary, fontWeight: FontWeight.w800, fontSize: 15.5)),
-                                        Text(s(r['teacher_name']), style: const TextStyle(color: Brand.muted, fontSize: 13)),
+                                        Text(s(r['teacher_name']), style: TextStyle(color: Brand.muted, fontSize: 13)),
                                         if (time.isNotEmpty) Text(time, style: const TextStyle(fontSize: 12.5)),
                                       ]),
                                     ),
                                     Column(children: [
-                                      const Text('Period', style: TextStyle(color: Brand.muted, fontSize: 11.5)),
+                                      Text('Period', style: TextStyle(color: Brand.muted, fontSize: 11.5)),
                                       Text(period, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                                     ]),
                                   ]),

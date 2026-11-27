@@ -8,6 +8,7 @@ import '../../../ui/theme.dart';
 import '../student_common/student_common.dart';
 import 'student_request_controller.dart';
 import 'student_request_form_screen.dart';
+import '../../../ui/app_loader.dart';
 
 /// Student Request: change requests raised for students, with approve / reject and a form to raise new ones.
 class StudentRequestScreen extends StatefulWidget {
@@ -65,7 +66,7 @@ class _StudentRequestScreenState extends State<StudentRequestScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Brand.card,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (c) => SafeArea(
         child: SingleChildScrollView(
@@ -77,7 +78,7 @@ class _StudentRequestScreenState extends State<StudentRequestScreen> {
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(r.student, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                  Text([r.cls, if (r.gr.isNotEmpty) 'GR ${r.gr}'].where((e) => e.isNotEmpty).join('  ·  '), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text([r.cls, if (r.gr.isNotEmpty) 'GR ${r.gr}'].where((e) => e.isNotEmpty).join('  ·  '), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                 ]),
               ),
               Tag(r.status, fg: fg, bg: bg),
@@ -107,7 +108,7 @@ class _StudentRequestScreenState extends State<StudentRequestScreen> {
               Row(children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(46), foregroundColor: Brand.err, side: const BorderSide(color: Brand.err)),
+                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(46), foregroundColor: Brand.err, side: BorderSide(color: Brand.err)),
                     onPressed: () => _decide(r, false),
                     icon: const Icon(Icons.close_rounded),
                     label: const Text('Reject'),
@@ -142,17 +143,17 @@ class _StudentRequestScreenState extends State<StudentRequestScreen> {
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(r.student, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-            Text([r.cls, if (r.gr.isNotEmpty) 'GR ${r.gr}'].where((e) => e.isNotEmpty).join('  ·  '), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+            Text([r.cls, if (r.gr.isNotEmpty) 'GR ${r.gr}'].where((e) => e.isNotEmpty).join('  ·  '), style: TextStyle(color: Brand.muted, fontSize: 12)),
             const SizedBox(height: 6),
-            Text(r.type.isEmpty ? 'Request' : r.type, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5, color: Brand.primaryDark)),
-            if (r.reason.isNotEmpty) Text(r.reason, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.ink2, fontSize: 12.5)),
+            Text(r.type.isEmpty ? 'Request' : r.type, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5, color: Brand.primaryDark)),
+            if (r.reason.isNotEmpty) Text(r.reason, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.ink2, fontSize: 12.5)),
           ]),
         ),
         const SizedBox(width: 8),
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Tag(r.status, fg: fg, bg: bg),
           const SizedBox(height: 6),
-          Text(fmtDate(r.createdOn, out: 'dd MMM'), style: const TextStyle(color: Brand.muted, fontSize: 11.5)),
+          Text(fmtDate(r.createdOn, out: 'dd MMM'), style: TextStyle(color: Brand.muted, fontSize: 11.5)),
         ]),
       ]),
     );
@@ -180,7 +181,7 @@ class _StudentRequestScreenState extends State<StudentRequestScreen> {
   Widget build(BuildContext context) {
     Widget body;
     if (_con.loading && _con.requests.isEmpty) {
-      body = const Center(child: CircularProgressIndicator());
+      body = const AppLoader();
     } else if (_con.error != null && _con.requests.isEmpty) {
       body = KitMessage(icon: Icons.cloud_off_outlined, text: _con.error!, action: 'Try again', onAction: _con.load);
     } else {

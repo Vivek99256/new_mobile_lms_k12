@@ -329,19 +329,21 @@ void main() {
     expect(find.text('6-B Maths'), findsOneWidget);
   });
 
-  testWidgets('my attendance reads the hrms_attendances table for the teacher', (t) async {
+  testWidgets('my attendance reads the month from api/attendance/my-attendance', (t) async {
     final c = FakeClient({
-      '/lms_data': {
-        'data': [
-          {'day': '2026-10-05', 'punchin_time': '2026-10-05 09:05:00', 'punchout_time': '2026-10-05 17:00:00'}
+      '/api/attendance/my-attendance': {
+        'status': 1,
+        'calendar': [
+          {'date': '2026-10-05', 'status': 'present', 'punchin_time': '2026-10-05 09:05:00', 'punchout_time': '2026-10-05 17:00:00'},
+          {'date': '2026-10-06', 'status': null, 'punchin_time': null, 'punchout_time': null},
         ]
       }
     });
     await show(t, c, 't_my_attendance');
-    expect(find.text('05 Oct 2026'), findsOneWidget);
-    final q = c.to('/lms_data').single.fields;
-    expect(q['table'], 'hrms_attendances');
-    expect(q['filters[user_id]'], '7');
+    // Only days that carry a status are listed; the unscheduled day is left out.
+    expect(find.textContaining('05 Oct 2026'), findsOneWidget);
+    expect(find.textContaining('06 Oct 2026'), findsNothing);
+    expect(c.to('/api/attendance/my-attendance'), hasLength(1));
   });
 
   group('api migration (teacher)', () {

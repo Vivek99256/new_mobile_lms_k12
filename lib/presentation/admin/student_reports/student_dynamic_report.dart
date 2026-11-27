@@ -10,6 +10,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_module/student_ui.dart';
 import 'report_common.dart';
+import '../../../ui/app_loader.dart';
 
 class ReportField {
   const ReportField(this.key, this.label);
@@ -368,7 +369,7 @@ class _StudentDynamicReportScreenState
     if (c.loading)
       return KitPage(
         title: _title,
-        child: const Center(child: CircularProgressIndicator()),
+        child: const AppLoader(),
       );
     if (c.groups.isEmpty) {
       return KitPage(
@@ -513,7 +514,7 @@ class _StudentDynamicReportScreenState
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
         ),
         const SizedBox(height: 4),
-        const Text(
+        Text(
           'Leave the class empty to include everyone.',
           style: TextStyle(color: Brand.muted, fontSize: 12.5),
         ),
@@ -722,7 +723,7 @@ class _StudentDynamicReportScreenState
                               : ''),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Brand.muted, fontSize: 12),
+                style: TextStyle(color: Brand.muted, fontSize: 12),
               ),
             ],
           ),
@@ -758,7 +759,7 @@ class _StudentDynamicReportScreenState
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Brand.card,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: open ? Brand.primary.withValues(alpha: 0.5) : Brand.line,
@@ -818,13 +819,13 @@ class _StudentDynamicReportScreenState
                                     children: [
                                       TextSpan(
                                         text: '${p.$1}: ',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Brand.muted,
                                         ),
                                       ),
                                       TextSpan(
                                         text: p.$2,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Brand.ink2,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -855,7 +856,7 @@ class _StudentDynamicReportScreenState
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Brand.surface,
                   border: Border(top: BorderSide(color: Brand.line)),
                 ),

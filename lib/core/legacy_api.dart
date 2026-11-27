@@ -107,6 +107,17 @@ class LegacyApi {
     }
     final map = decoded is Map<String, dynamic> ? decoded : <String, dynamic>{'data': decoded};
     final status = '${map['status'] ?? map['status_code'] ?? ''}';
+    // A 4xx with no status of its own (Laravel's 419 "CSRF token mismatch", 403, 404 bodies) is a
+    // refusal. Without this, `ok()` read the extra keys in such a body as "flat success data", so a
+    // refused save showed "sent" and a refused list showed an empty screen.
+    if (res.statusCode >= 400 && status.isEmpty && map['success'] == null) {
+      throw ApiException(
+        res.statusCode == 419
+            ? 'The server refused this request (419). Try again, or sign in again.'
+            : '${map['message'] ?? 'The server refused this request (${res.statusCode}).'}',
+        statusCode: res.statusCode,
+      );
+    }
     if (status == '2') {
       throw ApiException('${map['message'] ?? 'Your session has expired. Sign in again.'}', statusCode: 401);
     }
@@ -119,6 +130,11 @@ class LegacyApi {
   static bool ok(Map<String, dynamic> res) {
     final s = '${res['status'] ?? res['status_code'] ?? ''}'.toUpperCase();
     if (s == '1' || s == 'SUCCESS' || s == 'TRUE') return true;
+    // Many legacy list endpoints answer "No Record" / "No Data Found" with status 0 when there is simply
+    // nothing to show. That is an empty list, not a failure; callers read the missing data as empty.
+    if (s == '0' && RegExp(r'^\s*no\s+(record|data)', caseSensitive: false).hasMatch('${res['message'] ?? ''}')) {
+      return true;
+    }
     if (s.isNotEmpty) return false;
     if (res['success'] != null) return res['success'] == true || '${res['success']}' == '1';
     return res['data'] != null || res.keys.any((k) => k != 'message' && k != 'errors');

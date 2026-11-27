@@ -92,7 +92,7 @@ class _FeesDefaultersScreenState extends State<FeesDefaultersScreen> {
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           const Text('Choose class', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                           const SizedBox(height: 4),
-                          const Text('Pick a class to see who owes fees. (A whole school takes too long to calculate.)', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+                          Text('Pick a class to see who owes fees. (A whole school takes too long to calculate.)', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                           const SizedBox(height: 12),
                           CascadeFilter(api: widget.args.api, onChanged: (c) => _cascade = c),
                           gap(10),
@@ -104,7 +104,7 @@ class _FeesDefaultersScreenState extends State<FeesDefaultersScreen> {
                       ),
                       const SizedBox(height: 14),
                       if (_loading) const LinearProgressIndicator(minHeight: 3),
-                      if (_error != null) Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(_error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+                      if (_error != null) Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(_error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
                       if (_searched && !_loading && _error == null) ...[
                       _Summary(total: _money(total), count: _all.length),
                       const SizedBox(height: 14),
@@ -114,15 +114,15 @@ class _FeesDefaultersScreenState extends State<FeesDefaultersScreen> {
                           hintText: 'Search name, class or mobile',
                           prefixIcon: const Icon(Icons.search_rounded),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Brand.card,
                           contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
                         ),
                       ),
                       const SizedBox(height: 14),
                       if (shown.isEmpty)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 48),
                           child: Center(child: Text('No defaulters found.', style: TextStyle(color: Brand.muted))),
                         ),
@@ -219,7 +219,7 @@ class _DefaulterCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(color: Brand.err0, borderRadius: BorderRadius.circular(10)),
-            child: Text(amount, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w800, fontSize: 14)),
+            child: Text(amount, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w800, fontSize: 14)),
           ),
         ]),
       );

@@ -191,7 +191,7 @@ class _MissingDocumentsReportScreenState extends State<MissingDocumentsReportScr
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Text('Choose class', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
             const SizedBox(height: 4),
-            const Text('The documents needed depend on the standard.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text('The documents needed depend on the standard.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             const SizedBox(height: 12),
             CascadeFilter(api: widget.args.api, onChanged: c.setCascade),
             gap(12),
@@ -229,7 +229,7 @@ class _MissingDocumentsReportScreenState extends State<MissingDocumentsReportScr
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+        decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
         child: Column(children: [
           InkWell(
             onTap: () => setState(() => open ? _open.remove(index) : _open.add(index)),
@@ -241,10 +241,10 @@ class _MissingDocumentsReportScreenState extends State<MissingDocumentsReportScr
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-                    Text('GR ${st.enrollmentNo}${st.cls.isEmpty ? '' : '  ·  ${st.cls}'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    Text('GR ${st.enrollmentNo}${st.cls.isEmpty ? '' : '  ·  ${st.cls}'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   ]),
                 ),
-                st.complete ? const Tag.ok('Complete') : Tag.warn('${st.missing.length} missing'),
+                st.complete ? Tag.ok('Complete') : Tag.warn('${st.missing.length} missing'),
                 Icon(open ? Icons.expand_less_rounded : Icons.expand_more_rounded, color: Brand.ink3),
               ]),
             ),
@@ -253,20 +253,20 @@ class _MissingDocumentsReportScreenState extends State<MissingDocumentsReportScr
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-              decoration: const BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
+              decoration: BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 if (st.missing.isNotEmpty) ...[
-                  const Text('Missing', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5, color: Brand.warn)),
+                  Text('Missing', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5, color: Brand.warn)),
                   const SizedBox(height: 6),
                   Wrap(spacing: 6, runSpacing: 6, children: [for (final d in st.missing) Tag.warn(d)]),
                 ],
                 if (st.have.isNotEmpty) ...[
                   if (st.missing.isNotEmpty) const SizedBox(height: 12),
-                  const Text('Received', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5, color: Brand.ok)),
+                  Text('Received', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5, color: Brand.ok)),
                   const SizedBox(height: 6),
                   Wrap(spacing: 6, runSpacing: 6, children: [for (final d in st.have) Tag.ok(d)]),
                 ],
-                if (st.missing.isEmpty && st.have.isEmpty) const Text('No documents are expected for this class.', style: TextStyle(color: Brand.muted, fontSize: 13)),
+                if (st.missing.isEmpty && st.have.isEmpty) Text('No documents are expected for this class.', style: TextStyle(color: Brand.muted, fontSize: 13)),
               ]),
             ),
         ]),

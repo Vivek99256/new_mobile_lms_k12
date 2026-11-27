@@ -12,10 +12,10 @@ Widget reportSearchField({required ValueChanged<String> onChanged, String hint =
         isDense: true,
         prefixIcon: const Icon(Icons.search_rounded, size: 20),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Brand.card,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
       ),
     );
 
@@ -38,7 +38,7 @@ Widget labelValueGrid(List<(String, String)> items) {
 }
 
 Widget _labelValue(String label, String value) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label, style: const TextStyle(color: Brand.muted, fontSize: 11.5)),
+      Text(label, style: TextStyle(color: Brand.muted, fontSize: 11.5)),
       const SizedBox(height: 2),
       Text(value.isEmpty ? '—' : value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5)),
     ]);

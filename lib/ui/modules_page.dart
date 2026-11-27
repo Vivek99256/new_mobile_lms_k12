@@ -6,6 +6,7 @@ import '../core/menu_controller.dart';
 import '../screens/screen_registry.dart';
 import 'design.dart';
 import 'theme.dart';
+import 'app_loader.dart';
 
 /// "All modules": everything the account's menu rights allow, searchable, one expandable
 /// row per module (level 1) with its screens (level 2) underneath.
@@ -103,7 +104,7 @@ class _ModulesPageState extends State<ModulesPage> {
               if (menu.loading && menu.sections.isEmpty)
                 const Padding(
                   padding: EdgeInsets.only(top: 60),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: const AppLoader(),
                 )
               else if (visible.isEmpty)
                 Padding(
@@ -114,7 +115,7 @@ class _ModulesPageState extends State<ModulesPage> {
                               'No modules are enabled for your account.')
                         : 'Nothing matches "$_query".',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Brand.ink3),
+                    style: TextStyle(color: Brand.ink3),
                   ),
                 )
               else
@@ -145,7 +146,7 @@ class _ModulesPageState extends State<ModulesPage> {
                   ),
                 ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 "Menus come from your school's access rights.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -205,7 +206,7 @@ class _ModuleGroup extends StatelessWidget {
                     turns: expanded ? .5 : 0,
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeOut,
-                    child: const Icon(
+                    child: Icon(
                       Icons.keyboard_arrow_down_rounded,
                       color: Brand.ink3,
                     ),
@@ -242,7 +243,7 @@ class _ScreenRow extends StatelessWidget {
         child: Container(
           constraints: const BoxConstraints(minHeight: 52),
           padding: const EdgeInsets.fromLTRB(68, 8, 16, 8),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(top: BorderSide(color: Brand.line)),
           ),
           child: Row(
@@ -253,7 +254,7 @@ class _ScreenRow extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
                 size: 18,
                 color: Brand.ink3,

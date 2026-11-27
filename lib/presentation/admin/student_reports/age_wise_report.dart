@@ -9,6 +9,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_module/student_ui.dart';
 import 'report_common.dart';
+import '../../../ui/app_loader.dart';
 
 class AgeClassCount {
   const AgeClassCount(this.className, this.boys, this.girls);
@@ -155,7 +156,7 @@ class _AgeWiseReportScreenState extends State<AgeWiseReportScreen> {
           gap(14),
           _filterCard(c),
           gap(12),
-          if (c.loading) const Padding(padding: EdgeInsets.only(top: 24), child: Center(child: CircularProgressIndicator())),
+          if (c.loading) const Padding(padding: EdgeInsets.only(top: 24), child: const AppLoader()),
           if (c.error != null) Notice(c.error!, kind: NoticeKind.error),
           if (!c.loading && c.error == null && c.ages.isEmpty) const KitMessage(icon: Icons.bar_chart_rounded, text: 'No students with a date of birth and gender were found.'),
           if (c.ages.isNotEmpty) ...[
@@ -211,7 +212,7 @@ class _AgeWiseReportScreenState extends State<AgeWiseReportScreen> {
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+        decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
         child: Column(children: [
           InkWell(
             onTap: () => setState(() => open ? _open.remove(a.label) : _open.add(a.label)),
@@ -220,7 +221,7 @@ class _AgeWiseReportScreenState extends State<AgeWiseReportScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   Expanded(child: Text(AgeWiseReportController.ageTitle(a.label), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-                  Text('${a.total}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Brand.primaryDark)),
+                  Text('${a.total}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Brand.primaryDark)),
                   const SizedBox(width: 4),
                   Icon(open ? Icons.expand_less_rounded : Icons.expand_more_rounded, color: Brand.ink3),
                 ]),
@@ -235,7 +236,7 @@ class _AgeWiseReportScreenState extends State<AgeWiseReportScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-              decoration: const BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
+              decoration: BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
               child: Wrap(spacing: 8, runSpacing: 8, children: [
                 for (final k in a.classes) _classPill(k),
               ]),
@@ -247,11 +248,11 @@ class _AgeWiseReportScreenState extends State<AgeWiseReportScreen> {
 
   Widget _classPill(AgeClassCount k) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: Brand.line)),
+        decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(12), border: Border.all(color: Brand.line)),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(k.className, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
           const SizedBox(width: 8),
-          Text('M ${k.boys}', style: const TextStyle(color: Brand.info, fontSize: 12, fontWeight: FontWeight.w700)),
+          Text('M ${k.boys}', style: TextStyle(color: Brand.info, fontSize: 12, fontWeight: FontWeight.w700)),
           const SizedBox(width: 6),
           Text('F ${k.girls}', style: const TextStyle(color: Color(0xFFBE185D), fontSize: 12, fontWeight: FontWeight.w700)),
         ]),
@@ -265,7 +266,7 @@ class _AgeWiseReportScreenState extends State<AgeWiseReportScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               Expanded(child: Text(k.className, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-              Text('${k.total}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Brand.primaryDark)),
+              Text('${k.total}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Brand.primaryDark)),
             ]),
             const SizedBox(height: 8),
             MiniBar(value: k.total, max: max),

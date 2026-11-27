@@ -8,10 +8,10 @@ InputDecorationTheme studentInputTheme() => InputDecorationTheme(
       filled: true,
       fillColor: Brand.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.primary, width: 1.6)),
-      labelStyle: const TextStyle(color: Brand.ink3, fontSize: 14),
+      labelStyle: TextStyle(color: Brand.ink3, fontSize: 14),
     );
 
 /// Navy gradient hero: icon, title, subtitle and an optional row of small stat tiles.

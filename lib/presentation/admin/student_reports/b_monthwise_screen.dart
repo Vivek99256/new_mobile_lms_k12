@@ -159,7 +159,7 @@ class _BMonthwiseAttendanceScreenState extends State<BMonthwiseAttendanceScreen>
     ]);
   }
 
-  Widget _legend() => Wrap(spacing: 8, runSpacing: 6, children: const [
+  Widget _legend() => Wrap(spacing: 8, runSpacing: 6, children: [
         Tag.ok('P present'),
         Tag.err('A absent'),
         Tag.warn('Other'),
@@ -188,7 +188,7 @@ class _BMonthwiseAttendanceScreenState extends State<BMonthwiseAttendanceScreen>
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-                    if (st.gr.isNotEmpty) Text('GR ${st.gr}', style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    if (st.gr.isNotEmpty) Text('GR ${st.gr}', style: TextStyle(color: Brand.muted, fontSize: 12)),
                   ]),
                 ),
                 Icon(open ? Icons.expand_less_rounded : Icons.expand_more_rounded, color: Brand.ink3),
@@ -211,7 +211,7 @@ class _BMonthwiseAttendanceScreenState extends State<BMonthwiseAttendanceScreen>
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
+            decoration: BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
             child: Wrap(spacing: 5, runSpacing: 5, children: [for (var d = 1; d <= _daysInMonth; d++) _day(d, st.days[d])]),
           ),
       ]),
@@ -242,7 +242,7 @@ class _BMonthwiseAttendanceScreenState extends State<BMonthwiseAttendanceScreen>
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8), border: Border.all(color: Brand.line)),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Text('$d', style: const TextStyle(fontSize: 10, color: Brand.muted, height: 1.1)),
+        Text('$d', style: TextStyle(fontSize: 10, color: Brand.muted, height: 1.1)),
         Text(label, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: fg, height: 1.2)),
       ]),
     );

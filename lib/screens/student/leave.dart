@@ -106,7 +106,7 @@ class _LeaveScreenState extends State<LeaveScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) => KitPage(
         title: 'Leave application',
         child: Column(children: [
-          Material(color: Colors.white, child: TabBar(controller: _tabs, tabs: const [Tab(text: 'Apply'), Tab(text: 'Status')])),
+          Material(color: Brand.card, child: TabBar(controller: _tabs, tabs: const [Tab(text: 'Apply'), Tab(text: 'Status')])),
           Expanded(child: TabBarView(controller: _tabs, children: [_form(), _statusList()])),
         ]),
       );
@@ -120,7 +120,7 @@ class _LeaveScreenState extends State<LeaveScreen> with SingleTickerProviderStat
           })),
       const SizedBox(height: 12),
       if (_from == null)
-        const InputDecorator(decoration: InputDecoration(labelText: 'To date', suffixIcon: Icon(Icons.calendar_today_outlined, size: 20)), child: Text('Choose from date first', style: TextStyle(color: Brand.muted)))
+        InputDecorator(decoration: InputDecoration(labelText: 'To date', suffixIcon: Icon(Icons.calendar_today_outlined, size: 20)), child: Text('Choose from date first', style: TextStyle(color: Brand.muted)))
       else
         DateField(label: 'To date', value: _to, first: _from, onChanged: (d) => setState(() => _to = d)),
       const SizedBox(height: 12),
@@ -168,10 +168,10 @@ class _LeaveScreenState extends State<LeaveScreen> with SingleTickerProviderStat
               ]),
               const SizedBox(height: 4),
               Text('${fmtDate(r['from_date'], out: 'dd MMM')} to ${fmtDate(r['to_date'], out: 'dd MMM yyyy')}', style: const TextStyle(color: Brand.primary, fontWeight: FontWeight.w600)),
-              Text('Applied ${fmtDate(r['apply_date'], out: 'yyyy-MM-dd')}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('Applied ${fmtDate(r['apply_date'], out: 'yyyy-MM-dd')}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               if (s(r['message']).isNotEmpty) Padding(padding: const EdgeInsets.only(top: 6), child: Text('Note: ${s(r['message'])}', maxLines: 3, overflow: TextOverflow.ellipsis)),
               if (s(r['reply']).isNotEmpty) Padding(padding: const EdgeInsets.only(top: 6), child: Text('Reply: ${s(r['reply'])}', style: const TextStyle(color: Color(0xFF16A34A)))),
-              if (s(r['reply_on']).isNotEmpty) Text(s(r['reply_on']), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+              if (s(r['reply_on']).isNotEmpty) Text(s(r['reply_on']), style: TextStyle(color: Brand.muted, fontSize: 12)),
             ]),
           );
         },

@@ -127,7 +127,7 @@ class _FeesCancelRefundScreenState extends State<FeesCancelRefundScreen> {
         const SizedBox(height: 14),
         if (_con.busy) const LinearProgressIndicator(minHeight: 3),
         if (_con.searched && !_con.busy && _con.receipts.isEmpty && _con.message == null)
-          const Padding(padding: EdgeInsets.only(top: 30), child: Center(child: Text('No receipts found.', style: TextStyle(color: Brand.muted)))),
+          Padding(padding: EdgeInsets.only(top: 30), child: Center(child: Text('No receipts found.', style: TextStyle(color: Brand.muted)))),
         for (final r in _con.receipts) Padding(padding: const EdgeInsets.only(bottom: 10), child: _receiptCard(r)),
       ];
 
@@ -136,7 +136,7 @@ class _FeesCancelRefundScreenState extends State<FeesCancelRefundScreen> {
     final cls = [r.standard, r.division].where((e) => e.isNotEmpty).join(' - ');
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Brand.card,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: on ? Brand.err : Brand.line, width: on ? 1.5 : 1),
         boxShadow: Brand.softShadow,
@@ -169,12 +169,12 @@ class _FeesCancelRefundScreenState extends State<FeesCancelRefundScreen> {
                     Tag.neutral('Receipt ${r.receiptNo}'),
                     if (cls.isNotEmpty) Tag(cls),
                     if (r.paymentMode.isNotEmpty) Tag.info(r.paymentMode),
-                    if (r.feesType == 'OTHER') const Tag.warn('Other fees'),
+                    if (r.feesType == 'OTHER') Tag.warn('Other fees'),
                   ]),
                   const SizedBox(height: 6),
-                  Text('GR ${r.enrollmentNo}  ·  ${fmtDate(r.receiptDate)}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text('GR ${r.enrollmentNo}  ·  ${fmtDate(r.receiptDate)}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   if (!r.cancellable)
-                    const Padding(padding: EdgeInsets.only(top: 6), child: Text('Paid via the online portal, so it cannot be cancelled here.', style: TextStyle(color: Brand.warn, fontSize: 12))),
+                    Padding(padding: EdgeInsets.only(top: 6), child: Text('Paid via the online portal, so it cannot be cancelled here.', style: TextStyle(color: Brand.warn, fontSize: 12))),
                 ]),
               ),
               Text('Rs ${r.totalAmount}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
@@ -224,17 +224,17 @@ class _FeesCancelRefundScreenState extends State<FeesCancelRefundScreen> {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(st['name'] ?? '', style: const TextStyle(fontWeight: FontWeight.w700)),
-                    Text('GR ${st['enrollment']}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    Text('GR ${st['enrollment']}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   ]),
                 ),
-                const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+                Icon(Icons.chevron_right_rounded, color: Brand.muted),
               ]),
             ),
           ),
         if (_con.refundStudent != null) ...[
           const SizedBox(height: 6),
           SectionLabel('Refund for ${_con.refundStudent!['name']}'),
-          if (_con.heads.isEmpty) const KitCard(child: Text('No paid fee heads to refund.', style: TextStyle(color: Brand.muted))),
+          if (_con.heads.isEmpty) KitCard(child: Text('No paid fee heads to refund.', style: TextStyle(color: Brand.muted))),
           for (final h in _con.heads)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),

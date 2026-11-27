@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/api_client.dart';
 import '../../core/legacy_api.dart';
 import '../../ui/theme.dart';
+import '../../ui/app_loader.dart';
 
 /// Shared building blocks for the ported screens: a page frame, async loading, form fields
 /// and the cascading Section > Standard > Division filter the old app used everywhere.
@@ -38,7 +39,7 @@ class KitPage extends StatelessWidget {
             ? null
             : Container(
                 padding: EdgeInsets.fromLTRB(16, 12, 16, MediaQuery.paddingOf(context).bottom + 12),
-                decoration: const BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: Brand.line))),
+                decoration: BoxDecoration(color: Brand.card, border: Border(top: BorderSide(color: Brand.line))),
                 child: bottom,
               ),
       );
@@ -164,7 +165,7 @@ class _AsyncListState extends State<AsyncList> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading && _items == null) return const Center(child: CircularProgressIndicator());
+    if (_loading && _items == null) return const AppLoader();
     if (_error != null && _items == null) return KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _run);
     final items = _items ?? const [];
     return RefreshIndicator(
@@ -203,9 +204,9 @@ class KitMessage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Icon(icon, size: 44, color: const Color(0xFFC9CDE3)),
+            Icon(icon, size: 44, color: Brand.border),
             const SizedBox(height: 12),
-            Text(text, textAlign: TextAlign.center, style: const TextStyle(color: Brand.muted)),
+            Text(text, textAlign: TextAlign.center, style: TextStyle(color: Brand.muted)),
             if (action != null) ...[
               const SizedBox(height: 14),
               FilledButton(style: FilledButton.styleFrom(minimumSize: const Size(140, 44)), onPressed: onAction, child: Text(action!)),
@@ -232,7 +233,7 @@ class KitCard extends StatelessWidget {
         child: Container(
           width: double.infinity,
           padding: padding,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+          decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(16), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
           child: child,
         ),
       );
@@ -262,7 +263,7 @@ class KV extends StatelessWidget {
       : Padding(
           padding: const EdgeInsets.only(top: 3),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SizedBox(width: 104, child: Text(label, style: const TextStyle(color: Brand.muted, fontSize: 12.5))),
+            SizedBox(width: 104, child: Text(label, style: TextStyle(color: Brand.muted, fontSize: 12.5))),
             Expanded(child: Text(value, style: const TextStyle(fontSize: 13.5))),
           ]),
         );
@@ -284,7 +285,7 @@ class PersonAvatar extends StatelessWidget {
       width: d,
       height: d,
       clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(color: Brand.tint1, shape: BoxShape.circle),
+      decoration: BoxDecoration(color: Brand.tint1, shape: BoxShape.circle),
       child: url.isEmpty ? fallback : Image.network(url, fit: BoxFit.cover, errorBuilder: (_, _, _) => fallback),
     );
   }
@@ -336,11 +337,18 @@ class DateField extends StatelessWidget {
   Widget build(BuildContext context) => InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () async {
+          final firstDate = first ?? DateTime(1950);
+          final lastDate = last ?? DateTime(2101);
+          // initialDate must lie inside [firstDate, lastDate], or showDatePicker throws and
+          // the picker never opens (e.g. "To date" when "From date" is after today).
+          var initial = value ?? DateTime.now();
+          if (initial.isBefore(firstDate)) initial = firstDate;
+          if (initial.isAfter(lastDate)) initial = lastDate;
           final d = await showDatePicker(
             context: context,
-            initialDate: value ?? DateTime.now(),
-            firstDate: first ?? DateTime(1950),
-            lastDate: last ?? DateTime(2101),
+            initialDate: initial,
+            firstDate: firstDate,
+            lastDate: lastDate,
           );
           if (d != null) onChanged(d);
         },

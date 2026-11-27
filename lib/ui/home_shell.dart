@@ -10,7 +10,7 @@ import '../presentation/ai_chat/ai_chat_screen.dart';
 import '../screens/screen_registry.dart';
 import 'design.dart';
 import 'home_page.dart';
-import 'modules_page.dart';
+import 'menu_sheet.dart';
 import 'theme.dart';
 
 /// The frame after sign-in: Home and All modules as tabs under the bottom nav, with two
@@ -23,7 +23,7 @@ class HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<HomeShell>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _fade = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 320),
@@ -38,12 +38,19 @@ class _HomeShellState extends State<HomeShell>
   final Set<String> _visited = {};
   List<FeedItem> _shortcuts = const [];
   int _dir = 1; // which way the incoming tab slides from
-  String? _focus;
-  int _focusGen = 0;
+
+  /// An admin's change in Roles & Access reaches an open app when it comes back to the foreground.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      context.read<AppMenuController>().refreshQuietly();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AppMenuController>().load();
       context.read<UpdateService>().checkAndDownload();
@@ -52,6 +59,7 @@ class _HomeShellState extends State<HomeShell>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _fade.dispose();
     super.dispose();
   }
@@ -124,13 +132,8 @@ class _HomeShellState extends State<HomeShell>
     }
   }
 
-  void _openModules([String? section]) => _goTab(
-    1,
-    also: () {
-      _focus = section;
-      _focusGen++;
-    },
-  );
+  /// The menu is a bottom sheet over whichever tab is showing.
+  void _openModules([String? section]) => showMenuSheet(context, section: section);
 
   /// One tab page, wrapped so it can fade and slide. Tabs that are not showing stay alive but are not drawn.
   Widget _tabPage(int index, Widget child) {
@@ -251,7 +254,7 @@ class _HomeShellState extends State<HomeShell>
                     20,
                     8,
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Icon(
                         Icons.system_update_alt,
@@ -282,10 +285,7 @@ class _HomeShellState extends State<HomeShell>
                       _tabPage(0, HomePage(onOpenModules: _openModules)),
                       _tabPage(
                         1,
-                        ModulesPage(
-                          key: ValueKey(_focusGen),
-                          focusSection: _focus,
-                        ),
+                        const SizedBox.shrink(),
                       ),
                       for (var i = 0; i < shortcuts.length; i++)
                         _tabPage(
@@ -310,7 +310,7 @@ class _HomeShellState extends State<HomeShell>
                   shortcuts[i].label,
                   () => _goShortcut(i),
                 ),
-              NavItem(Icons.grid_view_rounded, 'Modules', () => _openModules()),
+              NavItem(Icons.apps_rounded, 'Menu', () => _openModules()),
             ],
           ),
         ),

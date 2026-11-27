@@ -96,16 +96,19 @@ class SoftCard extends StatelessWidget {
     this.onTap,
     this.radius = 16,
     this.clip = false,
-    this.color = Colors.white,
-    this.borderColor = Brand.line,
-  });
+    Color? color,
+    Color? borderColor,
+  }) : _color = color,
+       _borderColor = borderColor;
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final VoidCallback? onTap;
   final double radius;
   final bool clip;
-  final Color color;
-  final Color borderColor;
+  final Color? _color;
+  final Color? _borderColor;
+  Color get color => _color ?? Brand.card;
+  Color get borderColor => _borderColor ?? Brand.line;
 
   @override
   Widget build(BuildContext context) {
@@ -132,21 +135,44 @@ class SoftCard extends StatelessWidget {
 
 /// Status badge: always a word, never colour alone.
 class Tag extends StatelessWidget {
-  const Tag(
-    this.text, {
-    super.key,
-    this.fg = Brand.primaryDark,
-    this.bg = Brand.tint,
-  });
-  final String text;
-  final Color fg;
-  final Color bg;
+  const Tag(this.text, {super.key, Color? fg, Color? bg})
+    : _fg = fg,
+      _bg = bg,
+      _kind = _TagKind.brand;
 
-  const Tag.ok(this.text, {super.key}) : fg = Brand.ok, bg = Brand.ok0;
-  const Tag.warn(this.text, {super.key}) : fg = Brand.warn, bg = Brand.warn0;
-  const Tag.err(this.text, {super.key}) : fg = Brand.err, bg = Brand.err0;
-  const Tag.info(this.text, {super.key}) : fg = Brand.info, bg = Brand.info0;
-  const Tag.neutral(this.text, {super.key}) : fg = Brand.ink2, bg = Brand.field;
+  // The status colours follow the light / dark palette, so they are read when the tag is built.
+  const Tag.ok(this.text, {super.key}) : _fg = null, _bg = null, _kind = _TagKind.ok;
+  const Tag.warn(this.text, {super.key}) : _fg = null, _bg = null, _kind = _TagKind.warn;
+  const Tag.err(this.text, {super.key}) : _fg = null, _bg = null, _kind = _TagKind.err;
+  const Tag.info(this.text, {super.key}) : _fg = null, _bg = null, _kind = _TagKind.info;
+  const Tag.neutral(this.text, {super.key}) : _fg = null, _bg = null, _kind = _TagKind.neutral;
+
+  final String text;
+  final Color? _fg;
+  final Color? _bg;
+  final _TagKind _kind;
+
+  Color get fg =>
+      _fg ??
+      switch (_kind) {
+        _TagKind.ok => Brand.ok,
+        _TagKind.warn => Brand.warn,
+        _TagKind.err => Brand.err,
+        _TagKind.info => Brand.info,
+        _TagKind.neutral => Brand.ink2,
+        _TagKind.brand => Brand.primaryDark,
+      };
+
+  Color get bg =>
+      _bg ??
+      switch (_kind) {
+        _TagKind.ok => Brand.ok0,
+        _TagKind.warn => Brand.warn0,
+        _TagKind.err => Brand.err0,
+        _TagKind.info => Brand.info0,
+        _TagKind.neutral => Brand.field,
+        _TagKind.brand => Brand.tint,
+      };
 
   @override
   Widget build(BuildContext context) => Container(
@@ -171,20 +197,25 @@ class Tag extends StatelessWidget {
   );
 }
 
+enum _TagKind { brand, ok, warn, err, info, neutral }
+
 /// A rounded-square icon tile (indigo tint by default).
 class IconTile extends StatelessWidget {
   const IconTile(
     this.icon, {
     super.key,
     this.size = 40,
-    this.fg = Brand.primaryDark,
-    this.bg = Brand.tint,
+    Color? fg,
+    Color? bg,
     this.radius,
-  });
+  }) : _fg = fg,
+       _bg = bg;
   final IconData icon;
   final double size;
-  final Color fg;
-  final Color bg;
+  final Color? _fg;
+  final Color? _bg;
+  Color get fg => _fg ?? Brand.primaryDark;
+  Color get bg => _bg ?? Brand.tint;
   final double? radius;
 
   @override
@@ -210,7 +241,7 @@ class ProgressBar extends StatelessWidget {
     child: LinearProgressIndicator(
       value: value.clamp(0, 1).toDouble(),
       minHeight: 6,
-      backgroundColor: const Color(0xFFE7EAF3),
+      backgroundColor: Brand.line,
       color: color,
     ),
   );
@@ -223,14 +254,15 @@ class RingProgress extends StatelessWidget {
     this.size = 64,
     this.stroke = 7,
     this.color = Brand.primary,
-    this.track = const Color(0xFFE7EAF3),
+    Color? track,
     this.child,
-  });
+  }) : _track = track;
   final double value;
   final double size;
   final double stroke;
   final Color color;
-  final Color track;
+  final Color? _track;
+  Color get track => _track ?? Brand.line;
   final Widget? child;
 
   @override
@@ -286,7 +318,7 @@ class SectionHeading extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               height: 1.375,
               fontWeight: FontWeight.w600,
@@ -304,7 +336,7 @@ class SectionHeading extends StatelessWidget {
                 widthFactor: 1,
                 child: Text(
                   action!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Brand.primaryDark,
                   ),
@@ -327,7 +359,7 @@ class GroupLabel extends StatelessWidget {
     padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
     child: Text(
       text.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 12,
         height: 1.33,
         fontWeight: FontWeight.w600,
@@ -503,9 +535,9 @@ class BottomNav extends StatelessWidget {
               height: 68,
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: .72),
+                color: Brand.card.withValues(alpha: Brand.dark ? .88 : .72),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: Colors.white.withValues(alpha: .8)),
+                border: Border.all(color: Brand.dark ? Brand.line : Colors.white.withValues(alpha: .8)),
               ),
               child: LayoutBuilder(
                 builder: (context, box) {

@@ -70,20 +70,21 @@ class CSearchBox extends StatelessWidget {
           isDense: true,
           prefixIcon: const Icon(Icons.search_rounded, size: 20),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Brand.card,
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
         ),
       );
 }
 
 /// An icon + one line of text (hidden when the text is empty).
 class CInfoLine extends StatelessWidget {
-  const CInfoLine(this.icon, this.text, {super.key, this.color = Brand.ink2});
+  const CInfoLine(this.icon, this.text, {super.key, Color? color}) : _color = color;
   final IconData icon;
   final String text;
-  final Color color;
+  final Color? _color;
+  Color get color => _color ?? Brand.ink2;
 
   @override
   Widget build(BuildContext context) => text.isEmpty

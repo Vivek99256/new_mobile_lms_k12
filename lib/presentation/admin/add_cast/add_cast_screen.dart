@@ -8,6 +8,7 @@ import '../../../ui/theme.dart';
 import '../student_common/student_common.dart';
 import '../student_module/student_ui.dart' show ControllerScope;
 import 'add_cast_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Add Cast: the list of castes of the school with add, edit and delete.
 class AddCastScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _AddCastScreenState extends State<AddCastScreen> {
     final ok = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Brand.card,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (c) => ControllerScope(
         controllers: [title, order],
@@ -108,12 +109,12 @@ class _AddCastScreenState extends State<AddCastScreen> {
             height: 34,
             alignment: Alignment.center,
             decoration: BoxDecoration(color: Brand.tint, borderRadius: BorderRadius.circular(10)),
-            child: Text(c.sortOrder.isEmpty ? '-' : c.sortOrder, style: const TextStyle(color: Brand.primaryDark, fontWeight: FontWeight.w800, fontSize: 13)),
+            child: Text(c.sortOrder.isEmpty ? '-' : c.sortOrder, style: TextStyle(color: Brand.primaryDark, fontWeight: FontWeight.w800, fontSize: 13)),
           ),
           const SizedBox(width: 12),
           Expanded(child: Text(c.title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5))),
-          IconButton(tooltip: 'Edit', onPressed: () => _form(c), icon: const Icon(Icons.edit_outlined, color: Brand.primaryDark)),
-          IconButton(tooltip: 'Delete', onPressed: () => _delete(c), icon: const Icon(Icons.delete_outline_rounded, color: Brand.err)),
+          IconButton(tooltip: 'Edit', onPressed: () => _form(c), icon: Icon(Icons.edit_outlined, color: Brand.primaryDark)),
+          IconButton(tooltip: 'Delete', onPressed: () => _delete(c), icon: Icon(Icons.delete_outline_rounded, color: Brand.err)),
         ]),
       );
 
@@ -121,7 +122,7 @@ class _AddCastScreenState extends State<AddCastScreen> {
   Widget build(BuildContext context) {
     Widget body;
     if (_con.loading && _con.casts.isEmpty) {
-      body = const Center(child: CircularProgressIndicator());
+      body = const AppLoader();
     } else if (_con.error != null && _con.casts.isEmpty) {
       body = KitMessage(icon: Icons.cloud_off_outlined, text: _con.error!, action: 'Try again', onAction: _con.load);
     } else {

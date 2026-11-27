@@ -8,6 +8,7 @@ import '../../ui/theme.dart';
 import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'student_common.dart';
+import '../../ui/app_loader.dart';
 
 const _green = Color(0xFF16A34A);
 const _red = Color(0xFFE11D48);
@@ -143,7 +144,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     return KitPage(
       title: titleOf(widget.args, 'Attendance'),
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
               ? KitMessage(icon: Icons.event_busy_outlined, text: _error!, action: 'Retry', onAction: _load)
               : RefreshIndicator(
@@ -238,7 +239,7 @@ class _AcademicCalendarScreenState extends State<AcademicCalendarScreen> {
     return KitPage(
       title: titleOf(widget.args, 'Academic calendar'),
       child: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
               ? KitMessage(icon: Icons.event_busy_outlined, text: _error!, action: 'Retry', onAction: _load)
               : RefreshIndicator(
@@ -255,7 +256,7 @@ class _AcademicCalendarScreenState extends State<AcademicCalendarScreen> {
                     ),
                     const SizedBox(height: 14),
                     if (_day != null && entries.isEmpty)
-                      Padding(padding: const EdgeInsets.all(8), child: Text('Nothing is scheduled on ${DateFormat('dd MMM yyyy').format(_day!)}.', textAlign: TextAlign.center, style: const TextStyle(color: Brand.muted))),
+                      Padding(padding: const EdgeInsets.all(8), child: Text('Nothing is scheduled on ${DateFormat('dd MMM yyyy').format(_day!)}.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted))),
                     for (final e in entries)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
@@ -266,7 +267,7 @@ class _AcademicCalendarScreenState extends State<AcademicCalendarScreen> {
                             Expanded(
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Text(s(e['title']), style: const TextStyle(fontWeight: FontWeight.w800)),
-                                if (s(e['description']).isNotEmpty) Text(s(e['description']), style: const TextStyle(color: Brand.muted)),
+                                if (s(e['description']).isNotEmpty) Text(s(e['description']), style: TextStyle(color: Brand.muted)),
                               ]),
                             ),
                             Pill(s(e['event_type']), color: _typeColor(s(e['event_type'])) ?? Brand.muted),

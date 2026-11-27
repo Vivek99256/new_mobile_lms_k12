@@ -138,7 +138,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('Find students', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               const SizedBox(height: 4),
-              const Text('Search by class, name, unique ID, mobile or GR no.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('Search by class, name, unique ID, mobile or GR no.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               gap(12),
               _searchFields(c.issueSearch),
               gap(14),
@@ -154,7 +154,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
           ),
         ),
       if (c.issueMessage != null)
-        Padding(padding: const EdgeInsets.only(top: 12), child: Text(c.issueMessage!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+        Padding(padding: const EdgeInsets.only(top: 12), child: Text(c.issueMessage!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
       if (c.students.isNotEmpty) ...[
         gap(12),
         SoftCard(
@@ -163,7 +163,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
           child: Column(children: [
             DropdownField(label: 'Certificate template', options: c.templates, value: c.template, loading: c.loadingTemplates, onChanged: c.setTemplate),
             if (c.templateError != null)
-              Padding(padding: const EdgeInsets.only(top: 6), child: Text(c.templateError!, style: const TextStyle(color: Brand.err, fontSize: 12.5))),
+              Padding(padding: const EdgeInsets.only(top: 6), child: Text(c.templateError!, style: TextStyle(color: Brand.err, fontSize: 12.5))),
             gap(12),
             TextInput(label: 'Certificate reason', controller: c.reason, hint: 'Optional'),
           ]),
@@ -191,7 +191,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(st.name.isEmpty ? '-' : st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
                     Text([if (st.enrollmentNo.isNotEmpty) 'GR ${st.enrollmentNo}', st.classLabel].where((e) => e.isNotEmpty).join('  ·  '),
-                        style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                        style: TextStyle(color: Brand.muted, fontSize: 12)),
                   ]),
                 ),
               ]),
@@ -243,7 +243,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
         ]),
       ),
       if (c.historyMessage != null)
-        Padding(padding: const EdgeInsets.only(top: 12), child: Text(c.historyMessage!, style: const TextStyle(color: Brand.muted, fontWeight: FontWeight.w600))),
+        Padding(padding: const EdgeInsets.only(top: 12), child: Text(c.historyMessage!, style: TextStyle(color: Brand.muted, fontWeight: FontWeight.w600))),
       if (c.history.isNotEmpty) ...[
         gap(12),
         TextField(onChanged: c.setHistoryQuery, decoration: const InputDecoration(hintText: 'Filter results', prefixIcon: Icon(Icons.search_rounded))),
@@ -262,7 +262,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(r.name.isEmpty ? '-' : r.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
                     Text([if (r.enrollmentNo.isNotEmpty) 'GR ${r.enrollmentNo}', r.classLabel].where((e) => e.isNotEmpty).join('  ·  '),
-                        style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                        style: TextStyle(color: Brand.muted, fontSize: 12)),
                     const SizedBox(height: 6),
                     Wrap(spacing: 6, runSpacing: 4, children: [
                       if (r.type.isNotEmpty) Tag(r.type),
@@ -271,7 +271,7 @@ class _StudentCertificateScreenState extends State<StudentCertificateScreen> {
                     ]),
                   ]),
                 ),
-                if (r.html.isNotEmpty) const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+                if (r.html.isNotEmpty) Icon(Icons.chevron_right_rounded, color: Brand.muted),
               ]),
             ),
           ),

@@ -123,7 +123,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
         const SizedBox(height: 16),
         const Text('How can I help?', textAlign: TextAlign.center, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
-        const Text('Ask in English, Hindi or Gujarati.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted, fontSize: 13.5)),
+        Text('Ask in English, Hindi or Gujarati.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted, fontSize: 13.5)),
         const SizedBox(height: 22),
         for (final s in _suggestions)
           Padding(
@@ -133,12 +133,12 @@ class _AiChatScreenState extends State<AiChatScreen> {
               onTap: () => _send(s),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: Brand.line)),
+                decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(16), border: Border.all(color: Brand.line)),
                 child: Row(children: [
                   const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: Brand.primary),
                   const SizedBox(width: 12),
                   Expanded(child: Text(s, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14))),
-                  const Icon(Icons.north_east_rounded, size: 16, color: Brand.ink3),
+                  Icon(Icons.north_east_rounded, size: 16, color: Brand.ink3),
                 ]),
               ),
             ),
@@ -147,7 +147,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
   Widget _composer() => Container(
         padding: EdgeInsets.fromLTRB(12, 10, 12, MediaQuery.paddingOf(context).bottom + 10),
-        decoration: const BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: Brand.line))),
+        decoration: BoxDecoration(color: Brand.card, border: Border(top: BorderSide(color: Brand.line))),
         child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Expanded(
             child: TextField(
@@ -240,7 +240,7 @@ class _BotBubble extends StatelessWidget {
               child: Wrap(spacing: 8, runSpacing: 8, children: [
                 for (final f in m.followUps)
                   ActionChip(
-                    label: Text(f, style: const TextStyle(fontSize: 12.5, color: Brand.primaryDark, fontWeight: FontWeight.w600)),
+                    label: Text(f, style: TextStyle(fontSize: 12.5, color: Brand.primaryDark, fontWeight: FontWeight.w600)),
                     backgroundColor: Brand.tint,
                     side: BorderSide.none,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -256,14 +256,14 @@ class _BotBubble extends StatelessWidget {
   Widget _section(ChatSection s) => Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          if (s.title.isNotEmpty) Text(s.title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Brand.primaryDark)),
-          if (s.body.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 2), child: SelectableText(s.body, style: const TextStyle(fontSize: 14, height: 1.45, color: Brand.ink2))),
+          if (s.title.isNotEmpty) Text(s.title, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Brand.primaryDark)),
+          if (s.body.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 2), child: SelectableText(s.body, style: TextStyle(fontSize: 14, height: 1.45, color: Brand.ink2))),
           for (final i in s.items)
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Padding(padding: EdgeInsets.only(top: 7, right: 8), child: Icon(Icons.circle, size: 5, color: Brand.primary)),
-                Expanded(child: SelectableText(i, style: const TextStyle(fontSize: 14, height: 1.4, color: Brand.ink2))),
+                Expanded(child: SelectableText(i, style: TextStyle(fontSize: 14, height: 1.4, color: Brand.ink2))),
               ]),
             ),
           for (final r in s.rows)
@@ -272,7 +272,7 @@ class _BotBubble extends StatelessWidget {
               margin: const EdgeInsets.only(top: 6),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(color: Brand.surface, borderRadius: BorderRadius.circular(10)),
-              child: SelectableText(r, style: const TextStyle(fontSize: 13, height: 1.35, color: Brand.ink2)),
+              child: SelectableText(r, style: TextStyle(fontSize: 13, height: 1.35, color: Brand.ink2)),
             ),
         ]),
       );
@@ -301,7 +301,7 @@ class _TypingState extends State<_Typing> with SingleTickerProviderStateMixin {
         child: Container(
           margin: const EdgeInsets.only(bottom: 10),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line)),
+          decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line)),
           child: AnimatedBuilder(
             animation: _c,
             builder: (_, _) => Row(mainAxisSize: MainAxisSize.min, children: [

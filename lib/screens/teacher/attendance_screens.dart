@@ -107,7 +107,7 @@ class _TakeAttendanceScreenState extends State<TakeAttendanceScreen>
                             : marked == list.length
                             ? 'Ready to save'
                             : 'Not saved yet · ${list.length - marked} unmarked',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           height: 1.33,
                           fontWeight: FontWeight.w500,
@@ -173,12 +173,12 @@ class _TakeAttendanceScreenState extends State<TakeAttendanceScreen>
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.info_outline, size: 18, color: Brand.warn),
+                  Icon(Icons.info_outline, size: 18, color: Brand.warn),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       savedNote!,
-                      style: const TextStyle(color: Brand.warn, fontWeight: FontWeight.w500),
+                      style: TextStyle(color: Brand.warn, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -199,7 +199,7 @@ class _TakeAttendanceScreenState extends State<TakeAttendanceScreen>
                 const Spacer(),
                 Text(
                   '${sel.classLabel} · ${list.length}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     height: 1.33,
                     fontWeight: FontWeight.w500,
@@ -241,7 +241,7 @@ class _TakeAttendanceScreenState extends State<TakeAttendanceScreen>
                       decoration: BoxDecoration(
                         border: i == list.length - 1
                             ? null
-                            : const Border(
+                            : Border(
                                 bottom: BorderSide(color: Brand.line),
                               ),
                       ),
@@ -259,7 +259,7 @@ class _TakeAttendanceScreenState extends State<TakeAttendanceScreen>
                               s(list[i]['roll_no']).isEmpty
                                   ? '${i + 1}'
                                   : s(list[i]['roll_no']),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                                 color: Brand.ink2,
@@ -281,7 +281,7 @@ class _TakeAttendanceScreenState extends State<TakeAttendanceScreen>
                                 ),
                                 Text(
                                   'GR no. ${s(list[i]['enrollment_no'])}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     height: 1.33,
                                     fontWeight: FontWeight.w500,

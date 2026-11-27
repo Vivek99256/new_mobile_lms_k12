@@ -7,6 +7,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'admin_common.dart';
 import 'camera_helper.dart';
+import '../../ui/app_loader.dart';
 
 /// Reference photos of one student. The first new photo replaces the stored set; Save
 /// uploads the new set.
@@ -78,7 +79,7 @@ class _StudentAttendancePhotosScreenState extends State<StudentAttendancePhotosS
       title: 'Student attendance photos',
       bottom: fresh.isEmpty ? null : formBar(label: 'Save photos', busy: busy, onPressed: _save),
       child: loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : error != null
               ? KitMessage(icon: Icons.cloud_off_outlined, text: error!, action: 'Try again', onAction: _load)
               : RefreshIndicator(
@@ -91,8 +92,8 @@ class _StudentAttendancePhotosScreenState extends State<StudentAttendancePhotosS
                         Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Text(s(st['student_name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                            Text('Roll No. ${s(st['roll_no'])}  |  $cls', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
-                            if (widget.sectionName.isNotEmpty) Text(widget.sectionName, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                            Text('Roll No. ${s(st['roll_no'])}  |  $cls', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+                            if (widget.sectionName.isNotEmpty) Text(widget.sectionName, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                           ]),
                         ),
                       ]),
@@ -100,7 +101,7 @@ class _StudentAttendancePhotosScreenState extends State<StudentAttendancePhotosS
                     gap(16),
                     SectionLabel(fresh.isEmpty ? 'Stored photos' : 'New photos (replace the stored set)'),
                     if (saved.isEmpty && fresh.isEmpty)
-                      const Padding(padding: EdgeInsets.only(bottom: 10), child: Text('No reference photos yet. Add some below.', style: TextStyle(color: Brand.muted))),
+                      Padding(padding: EdgeInsets.only(bottom: 10), child: Text('No reference photos yet. Add some below.', style: TextStyle(color: Brand.muted))),
                     GridView.count(
                       crossAxisCount: 2,
                       shrinkWrap: true,

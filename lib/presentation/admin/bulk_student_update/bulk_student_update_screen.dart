@@ -7,6 +7,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_module/student_ui.dart';
 import 'bulk_student_update_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Bulk Student Update: pick a class and the fields to change, edit students one by one (or fill a value into
 /// everyone at once), and save only what changed.
@@ -141,7 +142,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
   Widget build(BuildContext context) {
     final c = _con;
     final title = widget.args.item.label.isEmpty ? 'Bulk Student Update' : widget.args.item.label;
-    if (c.loading) return KitPage(title: title, child: const Center(child: CircularProgressIndicator()));
+    if (c.loading) return KitPage(title: title, child: const AppLoader());
     if (c.fields.isEmpty) {
       return KitPage(title: title, child: KitMessage(icon: Icons.cloud_off_outlined, text: c.error ?? 'Nothing to update.', action: 'Try again', onAction: c.init));
     }
@@ -240,7 +241,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           _stepTitle('1', 'Choose students'),
           const SizedBox(height: 4),
-          const Text('Pick a class. (Leaving it empty loads the whole school, which is slow.)', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+          Text('Pick a class. (Leaving it empty loads the whole school, which is slow.)', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           const SizedBox(height: 12),
           CascadeFilter(api: widget.args.api, onChanged: c.setCascade),
           gap(12),
@@ -328,7 +329,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(_classLabel(), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
               Text(c.searchedDefs.map((f) => f.label).take(4).join(', ') + (c.searchedDefs.length > 4 ? ' +${c.searchedDefs.length - 4}' : ''),
-                  maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                  maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12)),
             ]),
           ),
           TextButton(
@@ -346,7 +347,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
   Widget _quickFill(BulkStudentUpdateController c, List<Map<String, String>> visible) {
     final def = _fillField == null ? null : c.fieldOf(_fillField!);
     return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+      decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
       child: Column(children: [
         InkWell(
           borderRadius: BorderRadius.circular(18),
@@ -354,9 +355,9 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
             child: Row(children: [
-              const IconTile(Icons.bolt_rounded, size: 32, fg: Color(0xFFB45309), bg: Brand.warn0),
+              IconTile(Icons.bolt_rounded, size: 32, fg: Color(0xFFB45309), bg: Brand.warn0),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Quick fill', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
                   Text('Put one value into a field for everyone shown', style: TextStyle(color: Brand.muted, fontSize: 12)),
@@ -414,10 +415,10 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
             isDense: true,
             prefixIcon: const Icon(Icons.search_rounded, size: 20),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Brand.card,
             contentPadding: const EdgeInsets.symmetric(vertical: 12),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
           ),
         ),
         const SizedBox(height: 10),
@@ -461,7 +462,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Brand.card,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: edited ? Brand.primary : Brand.line, width: edited ? 1.4 : 1),
           boxShadow: Brand.softShadow,
@@ -478,7 +479,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(row['student_name'] ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-                    if (summary.isNotEmpty) Text(summary, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    if (summary.isNotEmpty) Text(summary, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12)),
                   ]),
                 ),
                 if (edited) const Padding(padding: EdgeInsets.only(right: 6), child: Tag('Edited')),
@@ -490,7 +491,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-              decoration: const BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
+              decoration: BoxDecoration(color: Brand.surface, border: Border(top: BorderSide(color: Brand.line))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 for (final pair in _pairs(c.searchedDefs))
                   Padding(
@@ -572,7 +573,7 @@ class _BulkStudentUpdateScreenState extends State<BulkStudentUpdateScreen> {
       Expanded(
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(n == 0 ? 'No changes yet' : '$n student${n == 1 ? '' : 's'} changed', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: n == 0 ? Brand.muted : Brand.ink)),
-          Text(n == 0 ? 'Edit a student to enable saving' : 'Only these will be saved', style: const TextStyle(color: Brand.muted, fontSize: 12)),
+          Text(n == 0 ? 'Edit a student to enable saving' : 'Only these will be saved', style: TextStyle(color: Brand.muted, fontSize: 12)),
         ]),
       ),
       const SizedBox(width: 12),

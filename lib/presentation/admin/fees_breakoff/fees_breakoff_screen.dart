@@ -7,6 +7,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../update_fees_breakoff/breakoff_matrix_view.dart';
 import 'fees_breakoff_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Add a Fees BreakOff structure: choose sections, standards and months, then fill the amounts per student
 /// quota and fee head for new and old students. Pops with true after a save.
@@ -79,7 +80,7 @@ class _FeesBreakoffAddScreenState extends State<FeesBreakoffAddScreen> {
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
           const SizedBox(height: 8),
-          if (opts.isEmpty && empty != null) Text(empty, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+          if (opts.isEmpty && empty != null) Text(empty, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           Wrap(spacing: 8, runSpacing: 8, children: [
             for (final o in opts)
               ChoiceChip(
@@ -104,7 +105,7 @@ class _FeesBreakoffAddScreenState extends State<FeesBreakoffAddScreen> {
         title: 'Add fee structure',
         bottom: _con.generated ? formBar(label: 'Save fee structure', busy: _con.busy, onPressed: _save) : null,
         child: _con.loading
-            ? const Center(child: CircularProgressIndicator())
+            ? const AppLoader()
             : ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
                 BreakoffHero(
                   title: 'Add fee structure',
@@ -147,7 +148,7 @@ class _FeesBreakoffAddScreenState extends State<FeesBreakoffAddScreen> {
                   ]),
                 ),
                 if (_con.error != null)
-                  Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+                  Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
                 if (_con.generated) ...[
                   const SizedBox(height: 14),
                   SegmentedButton<int>(

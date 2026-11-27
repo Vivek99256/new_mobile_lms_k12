@@ -96,7 +96,7 @@ Widget attachmentButton(BuildContext context, String url, {String label = 'Attac
       );
 
 Widget titleRow(String title, {Widget? trailing}) => Row(children: [
-      Expanded(child: Text(title, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w800, color: Brand.text))),
+      Expanded(child: Text(title, style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w800, color: Brand.text))),
       ?trailing,
     ]);
 
@@ -291,7 +291,7 @@ class _ClassPickerState extends State<ClassPicker> {
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Text(_error ?? (widget.admin ? 'No standards found for this section.' : 'No classes are linked to your timetable yet.'),
-                style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           ),
         if (widget.withDivision) ...[
           gap(),
@@ -396,12 +396,12 @@ class StudentTile extends StatelessWidget {
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(s(st['student_name']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-            if (cls.isNotEmpty) Text(cls, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+            if (cls.isNotEmpty) Text(cls, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             Text([
               if (s(st['roll_no']).isNotEmpty) 'Roll No. ${s(st['roll_no'])}',
               if (s(st['enrollment_no']).isNotEmpty) 'GR No. ${s(st['enrollment_no'])}',
-            ].join('  |  '), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
-            if (s(st['mobile']).isNotEmpty) Text('+91${s(st['mobile'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+            ].join('  |  '), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+            if (s(st['mobile']).isNotEmpty) Text('+91${s(st['mobile'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           ]),
         ),
         ?trailing,

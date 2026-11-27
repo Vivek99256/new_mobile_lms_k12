@@ -38,9 +38,9 @@ Widget notificationHubScreen(ScreenArgs a) => SimpleList(
                 LinkText(s(r['NOTIFICATION_DESCRIPTION'])),
                 const SizedBox(height: 6),
                 Row(children: [
-                  const Icon(Icons.schedule, size: 14, color: Brand.muted),
+                  Icon(Icons.schedule, size: 14, color: Brand.muted),
                   const SizedBox(width: 4),
-                  Text(relativeTime(r['NOTIFICATION_DATE']), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                  Text(relativeTime(r['NOTIFICATION_DATE']), style: TextStyle(color: Brand.muted, fontSize: 12)),
                 ]),
               ]),
             ),
@@ -64,10 +64,10 @@ Widget virtualClassroomScreen(ScreenArgs a) => SimpleList(
         return KitCard(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              Expanded(child: Text('By ${s(r['teacher_name'])}', style: const TextStyle(color: Brand.muted, fontSize: 13))),
-              const Icon(Icons.schedule, size: 15, color: Brand.muted),
+              Expanded(child: Text('By ${s(r['teacher_name'])}', style: TextStyle(color: Brand.muted, fontSize: 13))),
+              Icon(Icons.schedule, size: 15, color: Brand.muted),
               const SizedBox(width: 4),
-              Text(time12(r['to_time']), style: const TextStyle(color: Brand.muted, fontSize: 13)),
+              Text(time12(r['to_time']), style: TextStyle(color: Brand.muted, fontSize: 13)),
             ]),
             const SizedBox(height: 8),
             Row(children: [
@@ -82,7 +82,7 @@ Widget virtualClassroomScreen(ScreenArgs a) => SimpleList(
             Text('${fmtDate(r['event_date'], out: 'dd-MM-yyyy')} ${time12(r['from_time'])}'.trim(),
                 style: const TextStyle(color: Brand.primary, fontWeight: FontWeight.w600)),
             if (s(r['chapter_name']).isNotEmpty || s(r['topic_name']).isNotEmpty) ...[
-              const Divider(height: 18, color: Brand.border),
+              Divider(height: 18, color: Brand.border),
               Text('Chapter: ${s(r['chapter_name'])}', style: const TextStyle(fontSize: 13)),
               if (s(r['topic_name']).isNotEmpty) Text('Topic: ${s(r['topic_name'])}', style: const TextStyle(fontSize: 13)),
             ],
@@ -178,19 +178,19 @@ class _DoubtCardState extends State<_DoubtCard> {
     return KitCard(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Expanded(child: Text(s(r['created_at']), style: const TextStyle(color: Brand.muted, fontSize: 12, fontStyle: FontStyle.italic))),
+          Expanded(child: Text(s(r['created_at']), style: TextStyle(color: Brand.muted, fontSize: 12, fontStyle: FontStyle.italic))),
           AttachmentButton(s(r['file_name'])),
         ]),
         Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
         if (s(r['description']).isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: LinkText(s(r['description']))),
         for (final c in convo) ...[
-          const Divider(height: 20, color: Brand.border),
+          Divider(height: 20, color: Brand.border),
           Text(s(c['message']), textAlign: TextAlign.right, maxLines: 4, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 4),
-          Text('${s(c['created_at'])}  |  By ${s(c['student_name'])}', style: const TextStyle(color: Brand.muted, fontSize: 12)),
+          Text('${s(c['created_at'])}  |  By ${s(c['student_name'])}', style: TextStyle(color: Brand.muted, fontSize: 12)),
         ],
         if (_lazy) ...[
-          if (_failed) const Padding(padding: EdgeInsets.only(top: 6), child: Text('Could not load the replies.', style: TextStyle(color: Brand.muted, fontSize: 12))),
+          if (_failed) Padding(padding: EdgeInsets.only(top: 6), child: Text('Could not load the replies.', style: TextStyle(color: Brand.muted, fontSize: 12))),
           if (_loading)
             const Padding(padding: EdgeInsets.only(top: 8), child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)))
           else if (_comments != null || count > 0)
@@ -260,8 +260,8 @@ Widget leaderboardScreen(ScreenArgs a) => KitPage(
               const SizedBox(width: 14),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(s(r['type']), style: const TextStyle(color: Brand.muted, fontSize: 13)),
-                  Text(label, style: const TextStyle(fontSize: 12, color: Brand.muted)),
+                  Text(s(r['type']), style: TextStyle(color: Brand.muted, fontSize: 13)),
+                  Text(label, style: TextStyle(fontSize: 12, color: Brand.muted)),
                 ]),
               ),
               Text(value.isEmpty ? '-' : value, style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: accent.$1)),
@@ -285,9 +285,9 @@ Widget disciplineScreen(ScreenArgs a) => SimpleList(
           Text(s(r['message']), style: const TextStyle(fontSize: 15, height: 1.4)),
           const SizedBox(height: 8),
           Row(children: [
-            const Icon(Icons.calendar_today_outlined, size: 14, color: Brand.muted),
+            Icon(Icons.calendar_today_outlined, size: 14, color: Brand.muted),
             const SizedBox(width: 6),
-            Expanded(child: Text(fmtDate(r['discipline_date'], out: 'dd MMMM yyyy'), style: const TextStyle(color: Brand.muted, fontSize: 13))),
+            Expanded(child: Text(fmtDate(r['discipline_date'], out: 'dd MMMM yyyy'), style: TextStyle(color: Brand.muted, fontSize: 13))),
             if (s(r['discipline']).isNotEmpty) Pill(s(r['discipline']), color: const Color(0xFF16A34A)),
           ]),
         ]),
@@ -325,7 +325,7 @@ Widget holidayListScreen(ScreenArgs a) => SimpleList(
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-              if (s(r['description']).isNotEmpty) Text(s(r['description']), style: const TextStyle(color: Brand.muted)),
+              if (s(r['description']).isNotEmpty) Text(s(r['description']), style: TextStyle(color: Brand.muted)),
             ]),
           ),
           const SizedBox(width: 8),
@@ -384,7 +384,7 @@ Widget homeworkScreen(ScreenArgs a) => SimpleList(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               if (s(r['subject_name']).isNotEmpty) Text(s(r['subject_name']), style: const TextStyle(color: Brand.primary, fontSize: 12.5)),
-              Text(s(r['date']), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+              Text(s(r['date']), style: TextStyle(color: Brand.muted, fontSize: 12)),
               const SizedBox(height: 6),
               LinkText(s(r['description']), maxLines: 20),
               AttachmentButton(s(r['file_name']), label: 'Open attachment'),

@@ -117,7 +117,7 @@ class _BDaywiseAttendanceScreenState extends State<BDaywiseAttendanceScreen> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           Expanded(child: Text(r.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-          r.taken ? const Tag.ok('Taken') : const Tag.warn('Not taken'),
+          r.taken ? Tag.ok('Taken') : Tag.warn('Not taken'),
         ]),
         const SizedBox(height: 10),
         Row(children: [
@@ -130,7 +130,7 @@ class _BDaywiseAttendanceScreenState extends State<BDaywiseAttendanceScreen> {
           Row(children: [
             Expanded(child: BBar(pct)),
             const SizedBox(width: 10),
-            Text('${(pct * 100).round()}% present', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: Brand.ink2)),
+            Text('${(pct * 100).round()}% present', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: Brand.ink2)),
           ]),
         ],
       ]),
@@ -157,6 +157,6 @@ class _BDaywiseAttendanceScreenState extends State<BDaywiseAttendanceScreen> {
 
   Widget _num(String v, String label, Color c) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(v, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: c, height: 1.1)),
-        Text(label, style: const TextStyle(fontSize: 11, color: Brand.ink2)),
+        Text(label, style: TextStyle(fontSize: 11, color: Brand.ink2)),
       ]);
 }

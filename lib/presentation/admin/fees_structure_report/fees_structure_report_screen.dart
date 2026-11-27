@@ -59,11 +59,11 @@ class _FeesStructureReportScreenState extends State<FeesStructureReportScreen> {
           ),
           const SizedBox(height: 12),
           if (_con.busy) const LinearProgressIndicator(minHeight: 3),
-          if (_con.error != null) Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
+          if (_con.error != null) Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
           if (_con.searched && !_con.busy && _con.error == null && _con.standards.isEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 30),
-              child: Center(child: Text(_con.message?.isNotEmpty == true ? _con.message! : 'No fee structure found.', textAlign: TextAlign.center, style: const TextStyle(color: Brand.muted))),
+              child: Center(child: Text(_con.message?.isNotEmpty == true ? _con.message! : 'No fee structure found.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted))),
             ),
           if (_con.standards.isNotEmpty) ...[
             SegmentedButton<bool>(
@@ -100,26 +100,26 @@ class _FeesStructureReportScreenState extends State<FeesStructureReportScreen> {
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+        decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-            decoration: const BoxDecoration(gradient: LinearGradient(colors: [Brand.tint1, Brand.tint])),
+            decoration: BoxDecoration(gradient: LinearGradient(colors: [Brand.tint1, Brand.tint])),
             child: Row(children: [
-              const Icon(Icons.groups_2_rounded, size: 19, color: Brand.primaryDark),
+              Icon(Icons.groups_2_rounded, size: 19, color: Brand.primaryDark),
               const SizedBox(width: 10),
               Expanded(child: Text(q.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5))),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(999)),
-                child: Text('Rs $total', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Brand.primaryDark)),
+                decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(999)),
+                child: Text('Rs $total', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Brand.primaryDark)),
               ),
             ]),
           ),
           Padding(
             padding: const EdgeInsets.all(12),
             child: order.isEmpty
-                ? const Text('No amounts set.', style: TextStyle(color: Brand.muted))
+                ? Text('No amounts set.', style: TextStyle(color: Brand.muted))
                 : LayoutBuilder(builder: (context, c) {
                     final w = (c.maxWidth - 8) / 2;
                     return Wrap(spacing: 8, runSpacing: 8, children: [
@@ -130,7 +130,7 @@ class _FeesStructureReportScreenState extends State<FeesStructureReportScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             decoration: BoxDecoration(color: Brand.surface, borderRadius: BorderRadius.circular(12)),
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              Text(_con.monthLabel(id), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11.5, color: Brand.muted)),
+                              Text(_con.monthLabel(id), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11.5, color: Brand.muted)),
                               const SizedBox(height: 2),
                               Text('Rs ${byMonth[id]}', style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                             ]),

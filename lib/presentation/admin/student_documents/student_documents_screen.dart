@@ -6,6 +6,7 @@ import '../../../screens/screen_registry.dart';
 import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'student_documents_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Student Documents: how complete each student's document set is, with class filters,
 /// status tabs, search, and a per-student list of what is on file and what is missing.
@@ -47,7 +48,7 @@ class _StudentDocumentsScreenState extends State<StudentDocumentsScreen> {
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Brand.card,
       builder: (c) => DraggableScrollableSheet(
         expand: false,
         initialChildSize: .65,
@@ -60,21 +61,21 @@ class _StudentDocumentsScreenState extends State<StudentDocumentsScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(r.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                 Text([if (r.enrollmentNo.isNotEmpty) 'GR ${r.enrollmentNo}', r.classLabel].where((e) => e.isNotEmpty).join('  ·  '),
-                    style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               ]),
             ),
           ]),
           gap(14),
           if (r.missingNames.isNotEmpty) ...[
-            Text('Missing (${r.missingNames.length})', style: const TextStyle(fontWeight: FontWeight.w800, color: Brand.err)),
+            Text('Missing (${r.missingNames.length})', style: TextStyle(fontWeight: FontWeight.w800, color: Brand.err)),
             gap(8),
             Wrap(spacing: 6, runSpacing: 6, children: [for (final n in r.missingNames) Tag.err(n)]),
             gap(16),
           ],
-          Text('On file (${r.haveNames.length})', style: const TextStyle(fontWeight: FontWeight.w800, color: Brand.ok)),
+          Text('On file (${r.haveNames.length})', style: TextStyle(fontWeight: FontWeight.w800, color: Brand.ok)),
           gap(8),
           if (r.haveNames.isEmpty)
-            const Text('No documents submitted yet.', style: TextStyle(color: Brand.muted))
+            Text('No documents submitted yet.', style: TextStyle(color: Brand.muted))
           else
             Wrap(spacing: 6, runSpacing: 6, children: [for (final n in r.haveNames) Tag.ok(n)]),
         ]),
@@ -162,7 +163,7 @@ class _StudentDocumentsScreenState extends State<StudentDocumentsScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(r.name.isEmpty ? '-' : r.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
             Text([if (r.enrollmentNo.isNotEmpty) 'GR ${r.enrollmentNo}', r.classLabel].where((e) => e.isNotEmpty).join('  ·  '),
-                maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12)),
             const SizedBox(height: 7),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -175,9 +176,9 @@ class _StudentDocumentsScreenState extends State<StudentDocumentsScreen> {
           Text('${r.have}/${r.total}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
           const SizedBox(height: 4),
           switch (r.status) {
-            DocStatus.complete => const Tag.ok('Complete'),
-            DocStatus.partial => const Tag.warn('Pending'),
-            DocStatus.missing => const Tag.err('Missing'),
+            DocStatus.complete => Tag.ok('Complete'),
+            DocStatus.partial => Tag.warn('Pending'),
+            DocStatus.missing => Tag.err('Missing'),
           },
         ]),
       ]),
@@ -199,7 +200,7 @@ class _StudentDocumentsScreenState extends State<StudentDocumentsScreen> {
       child: RefreshIndicator(
         onRefresh: _con.load,
         child: _con.loading && _con.all.isEmpty
-            ? ListView(children: const [SizedBox(height: 200), Center(child: CircularProgressIndicator())])
+            ? ListView(children: const [SizedBox(height: 200), const AppLoader()])
             : ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
                 if (_con.error != null)
                   KitMessage(icon: Icons.error_outline, text: _con.error!, action: 'Try again', onAction: _con.load)
@@ -218,7 +219,7 @@ class _StudentDocumentsScreenState extends State<StudentDocumentsScreen> {
                       child: Row(children: [
                         PillChip(label: 'Showing ${_label(_con.statusFilter!)}', selected: true, onTap: () => _con.setStatus(_con.statusFilter), leading: Icons.close_rounded),
                         const SizedBox(width: 8),
-                        Text('${list.length} students', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                        Text('${list.length} students', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                       ]),
                     ),
                   if (list.isEmpty)

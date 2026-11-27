@@ -12,7 +12,7 @@ import 'tk.dart';
 const _green = Color(0xFF047857);
 const _red = Color(0xFFDC2626);
 
-Widget _t(String t) => Text(t, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Brand.text));
+Widget _t(String t) => Text(t, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Brand.text));
 
 Future<void> _push(BuildContext c, Widget w) => Navigator.push(c, MaterialPageRoute(builder: (_) => w));
 
@@ -139,7 +139,7 @@ class _AddRequisitionScreenState extends State<AddRequisitionScreen> with BusyMi
       ),
       child: ListView(padding: const EdgeInsets.all(16), children: [
         FormCard(children: [
-          Text('Requisition by ${a.session.name}', style: const TextStyle(color: Brand.muted)),
+          Text('Requisition by ${a.session.name}', style: TextStyle(color: Brand.muted)),
           DropdownField(label: 'Item', options: items, value: item, loading: loading, onChanged: (v) => setState(() => item = v)),
           if (loadError != null) TextButton(onPressed: _load, child: Text('$loadError Tap to retry.')),
           TextInput(label: 'Quantity', controller: qty, keyboard: TextInputType.number),

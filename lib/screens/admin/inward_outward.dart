@@ -90,7 +90,7 @@ class _RegisterListScreenState extends State<RegisterListScreen> {
                   icon: const Icon(Icons.delete_outline, color: Color(0xFFDC2626)),
                 ),
               ]),
-              Text('#${s(r[kind.numberKey])}', style: const TextStyle(color: Brand.muted)),
+              Text('#${s(r[kind.numberKey])}', style: TextStyle(color: Brand.muted)),
               if (s(r['attachment']).isNotEmpty)
                 TextButton.icon(
                   style: TextButton.styleFrom(minimumSize: const Size(44, 44), padding: EdgeInsets.zero),

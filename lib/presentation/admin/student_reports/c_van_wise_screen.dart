@@ -8,6 +8,7 @@ import '../../../screens/screen_registry.dart';
 import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'c_report_ui.dart';
+import '../../../ui/app_loader.dart';
 
 /// Van Wise Report: the students on each van, for the pickup or the drop run. The pickers (van / shift / route)
 /// come from `GET transportation/van_wise_report`; the list from `GET transportation/van_wise_report/create`.
@@ -100,7 +101,7 @@ class _CVanWiseScreenState extends State<CVanWiseScreen> {
   @override
   Widget build(BuildContext context) {
     final title = widget.args.item.label.isEmpty ? 'Van Wise Report' : widget.args.item.label;
-    if (_metaLoading) return KitPage(title: title, child: const Center(child: CircularProgressIndicator()));
+    if (_metaLoading) return KitPage(title: title, child: const AppLoader());
     if (_error != null && !_searched && _vans.isEmpty && _shifts.isEmpty) {
       return KitPage(title: title, child: KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _meta));
     }
@@ -127,7 +128,7 @@ class _CVanWiseScreenState extends State<CVanWiseScreen> {
               gap(12),
             ]);
           }
-          if (_loading) return const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()));
+          if (_loading) return const Padding(padding: EdgeInsets.only(top: 40), child: const AppLoader());
           if (_error != null) return KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _show);
           if (!_searched) return const Padding(padding: EdgeInsets.only(top: 30), child: KitMessage(icon: Icons.directions_bus_outlined, text: 'Choose a van, shift or route (or leave them empty for all) and tap Show.'));
           if (shown.isEmpty) return const Padding(padding: EdgeInsets.only(top: 30), child: KitMessage(icon: Icons.people_outline, text: 'No students found.'));
@@ -219,10 +220,10 @@ class _CVanWiseScreenState extends State<CVanWiseScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(s(r['name']), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
                 Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', s(r['stddiv'])].where((e) => e.isNotEmpty).join('  ·  '),
-                    maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12)),
               ]),
             ),
-            if (amount > 0) Text('₹${amount.toStringAsFixed(amount == amount.roundToDouble() ? 0 : 2)}', style: const TextStyle(fontWeight: FontWeight.w800, color: Brand.primaryDark)),
+            if (amount > 0) Text('₹${amount.toStringAsFixed(amount == amount.roundToDouble() ? 0 : 2)}', style: TextStyle(fontWeight: FontWeight.w800, color: Brand.primaryDark)),
           ]),
           const SizedBox(height: 6),
           CInfoLine(Icons.alt_route_rounded, s(r['route_name'])),

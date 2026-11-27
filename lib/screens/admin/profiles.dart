@@ -28,7 +28,7 @@ class ProfileDetailScreen extends StatelessWidget {
             PersonAvatar(url: image, name: name, radius: 44),
             gap(10),
             Text(name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-            if (subtitle.isNotEmpty) Text(subtitle, style: const TextStyle(color: Brand.muted)),
+            if (subtitle.isNotEmpty) Text(subtitle, style: TextStyle(color: Brand.muted)),
           ]),
         ),
         gap(),
@@ -42,7 +42,7 @@ class ProfileDetailScreen extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(f.$2, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    Text(f.$2, style: TextStyle(color: Brand.muted, fontSize: 12)),
                     Text(f.$3, style: const TextStyle(fontWeight: FontWeight.w600)),
                   ]),
                 ),
@@ -109,12 +109,12 @@ class _TeacherProfileListScreenState extends State<TeacherProfileListScreen> {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                    if (s(t['user_profile_name']).isNotEmpty) Text(s(t['user_profile_name']), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    if (s(t['user_profile_name']).isNotEmpty) Text(s(t['user_profile_name']), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                     if (s(t['mobile']).isNotEmpty) Text(s(t['mobile']), style: const TextStyle(color: Brand.primary, fontSize: 12.5)),
-                    if (s(t['birthdate']).isNotEmpty) Text('D.O.B: ${fmtDate(t['birthdate'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    if (s(t['birthdate']).isNotEmpty) Text('D.O.B: ${fmtDate(t['birthdate'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   ]),
                 ),
-                const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+                Icon(Icons.chevron_right_rounded, color: Brand.muted),
               ]),
             );
           },

@@ -94,6 +94,10 @@ class FeedRepository {
   FeedRepository(this._api);
   final ApiClient _api;
 
+  /// Fingerprint of the role's rights from the last load. The app compares it on resume so a
+  /// change an admin made reaches an app that is already open.
+  String version = '';
+
   static bool isStudentProfile(String profileName) => profileName.trim().toLowerCase() == 'student';
 
   Future<List<FeedSection>> load(Session s) async {
@@ -103,9 +107,14 @@ class FeedRepository {
         throw ApiException((res['message'] ?? 'Could not load your menu.').toString());
       }
       final data = res['data'];
-      // Only the menus granted in web Roles & Access -> Mobile (`role_menu`). The old
-      // mobile_homescreen `menu` is deliberately no longer shown.
-      return mergeRoleMenu(const [], data is Map ? data['role_menu'] : null);
+      version = data is Map ? '${data['rights_version'] ?? ''}' : '';
+      // Everything comes from web Roles & Access: native app screens granted under Mobile app
+      // (`app_modules`) plus web menus ticked Mobile (`role_menu`). The old mobile_homescreen
+      // `menu` is deliberately no longer shown.
+      return mergeRoleMenu(
+        parseAppModules(data is Map ? data['app_modules'] : null),
+        data is Map ? data['role_menu'] : null,
+      );
     } on ApiException catch (e) {
       // Only a missing route means "old server"; auth and server errors must surface.
       if (e.statusCode != 404) rethrow;
@@ -185,6 +194,34 @@ class FeedRepository {
       walk(root, 'More');
     }
     return [...base, ...extra];
+  }
+
+  /// `app_modules`: sections of native screens, each item keyed by the app's own screen name.
+  static List<FeedSection> parseAppModules(dynamic data) {
+    if (data is! List) return [];
+    return [
+      for (final raw in data)
+        if (raw is Map && raw['items'] is List)
+          FeedSection(
+            title: _str(raw['title']),
+            colorHex: '',
+            backgroundImage: '',
+            menuType: 'Grid',
+            items: [
+              for (final i in raw['items'] as List)
+                if (i is Map)
+                  FeedItem(
+                    label: _str(i['title']),
+                    iconUrl: '',
+                    api: '',
+                    apiParam: '',
+                    screenName: _str(i['key']),
+                    renderType: 'native',
+                    webUrl: '',
+                  ),
+            ],
+          ),
+    ].where((s) => s.items.isNotEmpty).toList();
   }
 
   static List<FeedSection> parse(dynamic data) {

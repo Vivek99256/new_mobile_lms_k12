@@ -7,6 +7,7 @@ import '../../../../ui/design.dart';
 import '../../../../ui/theme.dart';
 import 'fees_collect_details_controller.dart';
 import 'online_receipt_view.dart';
+import '../../../../ui/app_loader.dart';
 
 /// Pending installments (tick to pay), bank + transaction id, Pay Now; plus paid history.
 class FeesCollectDetailsScreen extends StatefulWidget {
@@ -70,7 +71,7 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
           ? null
           : Row(children: [
               Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Grand total', style: TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w500, color: Brand.ink3)),
+                Text('Grand total', style: TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w500, color: Brand.ink3)),
                 Text('Rs ${_con.totalRemain}',
                     key: const Key('fee-total'),
                     style: const TextStyle(fontSize: 18, height: 1.44, fontWeight: FontWeight.w600, fontFeatures: [FontFeature.tabularFigures()])),
@@ -85,7 +86,7 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
               ),
             ]),
       child: _con.isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _con.error != null
               ? KitMessage(icon: Icons.cloud_off_outlined, text: _con.error!, action: 'Try again', onAction: _con.callService)
               : RefreshIndicator(
@@ -102,9 +103,9 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                               Text(s(st['student_name']), style: const TextStyle(fontWeight: FontWeight.w600)),
                               Text('GR no. ${s(st['enrollment_no'])} · $cls · Roll ${s(st['roll_no'])}',
-                                  style: const TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w500, color: Brand.ink3)),
+                                  style: TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w500, color: Brand.ink3)),
                               if (s(st['mobile']).isNotEmpty)
-                                Text(s(st['mobile']), style: const TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w500, color: Brand.ink3)),
+                                Text(s(st['mobile']), style: TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w500, color: Brand.ink3)),
                             ]),
                           ),
                           if (pending.isNotEmpty) Tag.err('Due Rs ${_con.totalDue}'),
@@ -113,7 +114,7 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
                       gap(16),
                       const SectionLabel('Pending installments'),
                       if (pending.isEmpty)
-                        const KitCard(child: Text('No pending fees. Everything is paid.', style: TextStyle(color: Brand.muted))),
+                        KitCard(child: Text('No pending fees. Everything is paid.', style: TextStyle(color: Brand.muted))),
                       if (pending.isNotEmpty)
                         SoftCard(
                           clip: true,
@@ -124,7 +125,7 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
                                 child: Container(
                                   constraints: const BoxConstraints(minHeight: 60),
                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(border: i == pending.length - 1 ? null : const Border(bottom: BorderSide(color: Brand.line))),
+                                  decoration: BoxDecoration(border: i == pending.length - 1 ? null : Border(bottom: BorderSide(color: Brand.line))),
                                   child: Row(children: [
                                     AnimatedContainer(
                                       duration: const Duration(milliseconds: 160),
@@ -158,7 +159,7 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
                       ],
                       gap(20),
                       const SectionLabel('Payment history'),
-                      if (_con.paid.isEmpty) const KitCard(child: Text('No payments recorded yet.', style: TextStyle(color: Brand.muted))),
+                      if (_con.paid.isEmpty) KitCard(child: Text('No payments recorded yet.', style: TextStyle(color: Brand.muted))),
                       for (final p in _con.paid)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
@@ -170,12 +171,12 @@ class _FeesCollectDetailsScreenState extends State<FeesCollectDetailsScreen> wit
                                   Text('Receipt #${s(p['receipt_no'])}', style: const TextStyle(fontWeight: FontWeight.w700)),
                                   Text(
                                     [fmtDate(p['receiptdate']), s(p['payment_mode']), s(p['bank_name'])].where((e) => e.isNotEmpty).join('  |  '),
-                                    style: const TextStyle(color: Brand.muted, fontSize: 12.5),
+                                    style: TextStyle(color: Brand.muted, fontSize: 12.5),
                                   ),
                                 ]),
                               ),
                               Text('Rs ${_con.amountOf(p['paid_amount'])}', style: const TextStyle(fontWeight: FontWeight.w800)),
-                              if (s(p['fees_html']).isNotEmpty) const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+                              if (s(p['fees_html']).isNotEmpty) Icon(Icons.chevron_right_rounded, color: Brand.muted),
                             ]),
                           ),
                         ),

@@ -180,7 +180,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.cloud_off_outlined,
                           size: 40,
                           color: Brand.muted,
@@ -500,7 +500,7 @@ class _Kpis extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Brand.card,
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: Brand.softShadow,
               ),
@@ -519,7 +519,7 @@ class _Kpis extends StatelessWidget {
                             k.money
                                 ? '₹${formatIndian(v, decimals: v % 1 == 0 ? 0 : 2)}'
                                 : formatIndian(v),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 21,
                               fontWeight: FontWeight.w800,
                               color: Brand.text,
@@ -530,7 +530,7 @@ class _Kpis extends StatelessWidget {
                           k.label,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             color: Brand.muted,
                           ),
@@ -565,7 +565,7 @@ class _Section extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16.5,
               fontWeight: FontWeight.w800,
               color: Brand.text,
@@ -588,7 +588,7 @@ class _Card extends StatelessWidget {
     width: double.infinity,
     padding: padding,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: Brand.card,
       borderRadius: BorderRadius.circular(18),
       boxShadow: Brand.softShadow,
     ),
@@ -607,7 +607,7 @@ class _Empty extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Text(
           text,
-          style: const TextStyle(color: Brand.muted, fontSize: 13),
+          style: TextStyle(color: Brand.muted, fontSize: 13),
         ),
       ),
     ),
@@ -634,7 +634,7 @@ class _TrendBars extends StatelessWidget {
             '₹${formatIndian(total)}',
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
           ),
-          const Text(
+          Text(
             'collected in the last 7 days',
             style: TextStyle(color: Brand.muted, fontSize: 12.5),
           ),
@@ -661,7 +661,7 @@ class _TrendBars extends StatelessWidget {
                           if (_n(rows[i]['amount']) > 0 && t > 0.15)
                             Text(
                               _short(_n(rows[i]['amount'])),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 10,
                                 color: Brand.muted,
                               ),
@@ -678,7 +678,7 @@ class _TrendBars extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             _s(rows[i]['label']),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               color: Brand.muted,
                             ),
@@ -758,7 +758,7 @@ class _HBarsState extends State<_HBars> {
                         child: LinearProgressIndicator(
                           value: t,
                           minHeight: 10,
-                          backgroundColor: const Color(0xFFE8EDFC),
+                          backgroundColor: Brand.tint,
                           color: Brand.accent(i).$1,
                         ),
                       ),
@@ -946,7 +946,7 @@ class _Birthdays extends StatelessWidget {
               ),
               trailing: Text(
                 _s(rows[i]['dob']),
-                style: const TextStyle(fontSize: 12, color: Brand.muted),
+                style: TextStyle(fontSize: 12, color: Brand.muted),
               ),
             ),
         ],
@@ -1074,7 +1074,7 @@ class _SkeletonState extends State<_Skeleton>
   Widget _box(double h) => Container(
     height: h,
     decoration: BoxDecoration(
-      color: const Color(0xFFE2E8F0),
+      color: Brand.line,
       borderRadius: BorderRadius.circular(18),
     ),
   );

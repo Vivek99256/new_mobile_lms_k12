@@ -8,6 +8,7 @@ import '../../../screens/screen_registry.dart';
 import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'c_report_ui.dart';
+import '../../../ui/app_loader.dart';
 
 /// Student Homework Submission Report: who handed in which homework. Filter by class / subject / dates on the
 /// server (`POST student/student_homework_submission_report`), then narrow by Submitted / Pending and search here.
@@ -94,7 +95,7 @@ class _CSubmissionReportScreenState extends State<CSubmissionReportScreen> {
           itemCount: 1 + (_loading || _error != null || shown.isEmpty ? 1 : shown.length),
           itemBuilder: (_, i) {
             if (i == 0) return _top(done, pct);
-            if (_loading) return const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()));
+            if (_loading) return const Padding(padding: EdgeInsets.only(top: 40), child: const AppLoader());
             if (_error != null) return KitMessage(icon: Icons.cloud_off_outlined, text: _error!, action: 'Try again', onAction: _load);
             if (shown.isEmpty) {
               return const Padding(padding: EdgeInsets.only(top: 30), child: KitMessage(icon: Icons.assignment_turned_in_outlined, text: 'No homework submissions match this filter.'));
@@ -203,10 +204,10 @@ class _CSubmissionReportScreenState extends State<CSubmissionReportScreen> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(s(r['student_name']), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
                 Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', s(r['std_div'])].where((e) => e.isNotEmpty).join('  ·  '),
-                    maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                    maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12)),
               ]),
             ),
-            done ? const Tag.ok('Submitted') : const Tag.warn('Pending'),
+            done ? Tag.ok('Submitted') : Tag.warn('Pending'),
           ]),
           const SizedBox(height: 10),
           Text(s(r['title']).isEmpty ? 'Homework' : s(r['title']), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),

@@ -5,7 +5,7 @@ import '../kit/kit.dart';
 import '../screen_registry.dart';
 import 'tk.dart';
 
-Widget _t(String t) => Text(t, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Brand.text));
+Widget _t(String t) => Text(t, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Brand.text));
 
 // ---------------------------------------------------------------------------------------
 // Homework
@@ -34,11 +34,11 @@ class HomeworkListScreen extends StatelessWidget {
             Row(children: [
               if (s(r['subject_name']).isNotEmpty) Pill(s(r['subject_name'])),
               const SizedBox(width: 8),
-              Text('${s(r['standard_name'])} - ${s(r['division_name'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('${s(r['standard_name'])} - ${s(r['division_name'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             ]),
             gap(8),
             Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w700)),
-            Text(s(r['date']), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text(s(r['date']), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             if (s(r['description']).isNotEmpty) ...[gap(4), Text(s(r['description']))],
           ]),
         ),
@@ -195,7 +195,7 @@ class _CircularListScreenState extends State<CircularListScreen> {
             Expanded(child: _t('${s(r['std_name'])} - ${s(r['title'])}')),
             attachmentButton(c, s(r['file_name'])),
           ]),
-          Text(s(r['date_']), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+          Text(s(r['date_']), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           gap(6),
           Text(s(r['message'])),
         ]),
@@ -296,7 +296,7 @@ class ExamScheduleScreen extends StatelessWidget {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               _t(s(r['title'])),
-              Text(fmtDate(r['date_'], out: 'dd MMM, yyyy'), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text(fmtDate(r['date_'], out: 'dd MMM, yyyy'), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             ]),
           ),
           attachmentButton(c, s(r['file_name'])),

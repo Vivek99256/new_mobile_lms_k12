@@ -167,10 +167,10 @@ class _BCertificateReportScreenState extends State<BCertificateReportScreen> {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
-              Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', if (cls.isNotEmpty) cls].join('  ·  '), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+              Text([if (s(r['enrollment_no']).isNotEmpty) 'GR ${s(r['enrollment_no'])}', if (cls.isNotEmpty) cls].join('  ·  '), style: TextStyle(color: Brand.muted, fontSize: 12)),
             ]),
           ),
-          const Icon(Icons.chevron_right_rounded, color: Brand.ink3),
+          Icon(Icons.chevron_right_rounded, color: Brand.ink3),
         ]),
         const SizedBox(height: 10),
         Wrap(spacing: 6, runSpacing: 6, children: [

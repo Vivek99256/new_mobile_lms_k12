@@ -157,10 +157,10 @@ class BSearchBox extends StatelessWidget {
           isDense: true,
           prefixIcon: const Icon(Icons.search_rounded, size: 20),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Brand.card,
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
         ),
       );
 }
@@ -175,7 +175,7 @@ class BKeyValue extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(width: 104, child: Text(label, style: const TextStyle(color: Brand.muted, fontSize: 12.5))),
+          SizedBox(width: 104, child: Text(label, style: TextStyle(color: Brand.muted, fontSize: 12.5))),
           Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13))),
         ]),
       );
@@ -183,9 +183,10 @@ class BKeyValue extends StatelessWidget {
 
 /// Present-share bar: green over a light track.
 class BBar extends StatelessWidget {
-  const BBar(this.fraction, {super.key, this.color = Brand.ok});
+  const BBar(this.fraction, {super.key, Color? color}) : _color = color;
   final double fraction;
-  final Color color;
+  final Color? _color;
+  Color get color => _color ?? Brand.ok;
 
   @override
   Widget build(BuildContext context) => ClipRRect(

@@ -8,6 +8,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_module/student_ui.dart';
 import 'add_house_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Add House: the list of houses with add, edit and delete.
 class AddHouseScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _AddHouseScreenState extends State<AddHouseScreen> {
     final saved = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Brand.card,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (ctx) => ControllerScope(
         controllers: [name, sort],
@@ -109,7 +110,7 @@ class _AddHouseScreenState extends State<AddHouseScreen> {
       title: title,
       bottom: c.loading || c.error != null ? null : formBar(label: 'Add house', busy: false, onPressed: () => _edit()),
       child: c.loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : c.error != null
               ? KitMessage(icon: Icons.cloud_off_outlined, text: c.error!, action: 'Try again', onAction: c.load)
               : RefreshIndicator(
@@ -138,7 +139,7 @@ class _AddHouseScreenState extends State<AddHouseScreen> {
             ]),
           ),
           IconButton(tooltip: 'Edit', onPressed: () => _edit(h), icon: const Icon(Icons.edit_outlined, color: Brand.primary)),
-          IconButton(tooltip: 'Delete', onPressed: () => _delete(h), icon: const Icon(Icons.delete_outline_rounded, color: Brand.err)),
+          IconButton(tooltip: 'Delete', onPressed: () => _delete(h), icon: Icon(Icons.delete_outline_rounded, color: Brand.err)),
         ]),
       );
 }

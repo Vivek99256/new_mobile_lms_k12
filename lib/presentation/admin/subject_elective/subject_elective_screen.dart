@@ -8,6 +8,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import '../student_common/student_common.dart';
 import 'subject_elective_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Subject Elective: which optional subject each standard + division offers. List, add, change, delete.
 class SubjectElectiveScreen extends StatefulWidget {
@@ -60,13 +61,13 @@ class _SubjectElectiveScreenState extends State<SubjectElectiveScreen> {
               Text('${r.standard} - ${r.division}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
               const SizedBox(height: 4),
               Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
-                r.hasSubject ? Tag(r.subject.isEmpty ? 'Subject ${r.subjectId}' : r.subject) : const Tag.neutral('No elective'),
+                r.hasSubject ? Tag(r.subject.isEmpty ? 'Subject ${r.subjectId}' : r.subject) : Tag.neutral('No elective'),
                 if (r.code.trim().isNotEmpty) Tag.neutral(r.code.trim()),
               ]),
             ]),
           ),
-          IconButton(tooltip: 'Change', onPressed: () => _open(r), icon: const Icon(Icons.edit_outlined, color: Brand.primaryDark)),
-          IconButton(tooltip: 'Delete', onPressed: () => _delete(r), icon: const Icon(Icons.delete_outline_rounded, color: Brand.err)),
+          IconButton(tooltip: 'Change', onPressed: () => _open(r), icon: Icon(Icons.edit_outlined, color: Brand.primaryDark)),
+          IconButton(tooltip: 'Delete', onPressed: () => _delete(r), icon: Icon(Icons.delete_outline_rounded, color: Brand.err)),
         ]),
       );
 
@@ -74,7 +75,7 @@ class _SubjectElectiveScreenState extends State<SubjectElectiveScreen> {
   Widget build(BuildContext context) {
     Widget body;
     if (_con.loading && _con.items.isEmpty) {
-      body = const Center(child: CircularProgressIndicator());
+      body = const AppLoader();
     } else if (_con.error != null && _con.items.isEmpty) {
       body = KitMessage(icon: Icons.cloud_off_outlined, text: _con.error!, action: 'Try again', onAction: _con.load);
     } else {
@@ -207,7 +208,7 @@ class _ElectiveFormState extends State<_ElectiveForm> {
               const SizedBox(height: 12),
               DropdownField(label: 'Optional subject *', options: _subjects, value: _subject, loading: _loadingSubjects, onChanged: (v) => setState(() => _subject = v)),
               if (!_loadingSubjects && _standardId != null && _subjects.length <= 1)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 6, left: 4),
                   child: Text('No elective subjects are marked for this standard.', style: TextStyle(fontSize: 12, color: Brand.muted)),
                 ),

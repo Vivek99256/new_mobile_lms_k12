@@ -89,7 +89,7 @@ class _CommCardState extends State<_CommCard> with BusyMixin {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(r['student_name']), style: const TextStyle(fontWeight: FontWeight.w800)),
-              Text('${s(r['standard_name'])} - ${s(r['division_name'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('${s(r['standard_name'])} - ${s(r['division_name'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             ]),
           ),
           Pill(replied ? 'Replied' : 'Awaiting reply', color: replied ? const Color(0xFF047857) : const Color(0xFFD97706)),
@@ -188,7 +188,7 @@ class _LeaveCardState extends State<_LeaveCard> with BusyMixin {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(r['student_name']), style: const TextStyle(fontWeight: FontWeight.w800)),
-              Text('Class ${s(r['std_name'])}  |  ${fmtDate(r['apply_date'], out: 'dd-MM-yyyy')}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('Class ${s(r['std_name'])}  |  ${fmtDate(r['apply_date'], out: 'dd-MM-yyyy')}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             ]),
           ),
           if (status.isNotEmpty && done) Pill(status, color: status.toLowerCase().startsWith('appr') ? const Color(0xFF047857) : const Color(0xFFDC2626)),

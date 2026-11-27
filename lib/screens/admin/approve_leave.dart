@@ -84,7 +84,7 @@ class _LeaveCardState extends State<LeaveCard> with SubmitGuard {
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s(r['student_name']), style: const TextStyle(fontWeight: FontWeight.w700)),
-              Text('Standard ${s(r['std_name'])}  |  ${fmtDate(r['apply_date'], out: 'dd-MM-yyyy')}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('Standard ${s(r['std_name'])}  |  ${fmtDate(r['apply_date'], out: 'dd-MM-yyyy')}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             ]),
           ),
           if (replied) Pill(s(r['status']), color: s(r['status']).toLowerCase().startsWith('approv') ? const Color(0xFF16A34A) : const Color(0xFFDC2626)),

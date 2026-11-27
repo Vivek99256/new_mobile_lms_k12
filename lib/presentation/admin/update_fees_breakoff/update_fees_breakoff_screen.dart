@@ -102,7 +102,7 @@ class _UpdateFeesBreakoffScreenState extends State<UpdateFeesBreakoffScreen> {
                     ),
                     Text(
                       _con.months.where((o) => o.id == _con.month).map((o) => o.label).firstOrNull ?? '',
-                      style: const TextStyle(color: Brand.muted, fontSize: 12.5),
+                      style: TextStyle(color: Brand.muted, fontSize: 12.5),
                     ),
                   ]),
                 ),
@@ -116,7 +116,7 @@ class _UpdateFeesBreakoffScreenState extends State<UpdateFeesBreakoffScreen> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('Find fee structure', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               const SizedBox(height: 4),
-              const Text('Choose the class and billing month, then edit the amounts.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('Choose the class and billing month, then edit the amounts.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               const SizedBox(height: 12),
               CascadeFilter(api: widget.args.api, withDivision: false, onChanged: _con.setCascade),
               gap(6),
@@ -129,7 +129,7 @@ class _UpdateFeesBreakoffScreenState extends State<UpdateFeesBreakoffScreen> {
             ]),
           ),
           if (_con.error != null)
-            Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+            Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
           if (_con.loaded) ...[
             const SizedBox(height: 14),
             SegmentedButton<int>(

@@ -8,6 +8,7 @@ import '../../../ui/theme.dart';
 import '../student_care/care_common.dart';
 import 'icard_html.dart';
 import 'student_icard_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Student I-card: pick a class (and optionally a driver), choose students and a template,
 /// then preview the generated cards.
@@ -68,7 +69,7 @@ class _StudentIcardScreenState extends State<StudentIcardScreen> {
               onPressed: con.selected.isEmpty || con.previewing ? null : _preview,
             ),
       child: con.metaLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : Theme(
               data: Theme.of(context).copyWith(inputDecorationTheme: careInputTheme()),
               child: ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
@@ -108,9 +109,9 @@ class _StudentIcardScreenState extends State<StudentIcardScreen> {
                   ),
                 const SizedBox(height: 12),
                 if (con.searching) const LinearProgressIndicator(minHeight: 3),
-                if (con.error != null) Text(con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
+                if (con.error != null) Text(con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
                 if (con.searched && !con.searching && con.students.isEmpty && con.error == null)
-                  Padding(padding: const EdgeInsets.only(top: 30), child: Center(child: Text(con.info ?? 'No students found.', style: const TextStyle(color: Brand.muted)))),
+                  Padding(padding: const EdgeInsets.only(top: 30), child: Center(child: Text(con.info ?? 'No students found.', style: TextStyle(color: Brand.muted)))),
                 if (con.students.isNotEmpty) ...[
                   CareHero(
                     count: con.students.length,
@@ -138,7 +139,7 @@ class _StudentIcardScreenState extends State<StudentIcardScreen> {
     final cls = [st.standard, st.division].where((e) => e.isNotEmpty).join(' - ');
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Brand.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: on ? Brand.primary : Brand.line, width: on ? 1.5 : 1),
         boxShadow: Brand.softShadow,
@@ -153,9 +154,9 @@ class _StudentIcardScreenState extends State<StudentIcardScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: Brand.ink)),
+                Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: Brand.ink)),
                 const SizedBox(height: 3),
-                Text('GR ${st.enrollmentNo}${cls.isEmpty ? '' : '  ·  $cls'}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                Text('GR ${st.enrollmentNo}${cls.isEmpty ? '' : '  ·  $cls'}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               ]),
             ),
             Icon(on ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded, color: on ? Brand.primary : Brand.border),
@@ -185,7 +186,7 @@ class _IcardPreviewScreen extends StatelessWidget {
             ]),
           ),
           IcardCards(html: html),
-          const Text('Printing is done from the web app; this is a preview.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted, fontSize: 12)),
+          Text('Printing is done from the web app; this is a preview.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted, fontSize: 12)),
         ]),
       );
 }

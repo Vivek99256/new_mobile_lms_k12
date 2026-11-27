@@ -26,7 +26,7 @@ Widget schoolInfoScreen(ScreenArgs a, {required String action, String? fixedTitl
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Text('Principal', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    Text('Principal', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                     Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                   ]),
                 ),
@@ -63,7 +63,7 @@ Widget certificateListScreen(ScreenArgs a) => SimpleList(
             ),
             const SizedBox(width: 14),
             Expanded(child: Text(s(r['certificate_type']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16))),
-            const Icon(Icons.chevron_right_rounded, color: Brand.muted),
+            Icon(Icons.chevron_right_rounded, color: Brand.muted),
           ]),
         );
       },
@@ -122,7 +122,7 @@ class _ClassworkScreenState extends State<ClassworkScreen> {
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(s(r['title']), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-                  Text(fmtDate(r['created_at'], out: 'dd-MM-yyyy').isEmpty ? '-' : fmtDate(r['created_at'], out: 'dd-MM-yyyy'), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                  Text(fmtDate(r['created_at'], out: 'dd-MM-yyyy').isEmpty ? '-' : fmtDate(r['created_at'], out: 'dd-MM-yyyy'), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                 ]),
               ),
               AttachmentButton(s(r['file_path']), label: 'Open'),
@@ -186,7 +186,9 @@ class _WrtProgressScreenState extends State<WrtProgressScreen> {
     if (_searching) return;
     setState(() => _searching = true);
     try {
-      final res = await widget.args.api.post('/get_wrtreportAPI', body: {'from_date': _fmt(_from), 'to_date': _fmt(_to), 'exam_type': _exam});
+      // The student's own report: the school and student come from the token (the staff report is
+      // behind the staff-only guard and takes a student_id from the request).
+      final res = await widget.args.api.post('/student/api/wrt_report', body: {'from_date': _fmt(_from), 'to_date': _fmt(_to), 'exam_type': _exam});
       if (!mounted) return;
       if (LegacyApi.ok(res)) {
         final d = res['data'];
@@ -225,7 +227,7 @@ class _WrtProgressScreenState extends State<WrtProgressScreen> {
                 const Icon(Icons.description_outlined, color: Brand.primary),
                 const SizedBox(width: 12),
                 Expanded(child: Text(s(_report!['title']), style: const TextStyle(color: Brand.primary, fontWeight: FontWeight.w800, fontSize: 15))),
-                const Icon(Icons.open_in_new_rounded, color: Brand.muted),
+                Icon(Icons.open_in_new_rounded, color: Brand.muted),
               ]),
             ),
         ]),

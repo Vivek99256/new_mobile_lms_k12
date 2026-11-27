@@ -42,7 +42,7 @@ class _OnlineFeesCollectScreenState extends State<OnlineFeesCollectScreen> {
           if (_con.error != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
-              child: Text(_con.error!, textAlign: TextAlign.center, style: const TextStyle(color: Brand.err, fontSize: 13, fontWeight: FontWeight.w600)),
+              child: Text(_con.error!, textAlign: TextAlign.center, style: TextStyle(color: Brand.err, fontSize: 13, fontWeight: FontWeight.w600)),
             ),
           SizedBox(
             width: double.infinity,
@@ -100,7 +100,7 @@ class _OnlineFeesCollectScreenState extends State<OnlineFeesCollectScreen> {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text('${i + 1}. ${_steps[i].$2}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                         const SizedBox(height: 2),
-                        Text(_steps[i].$3, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                        Text(_steps[i].$3, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                       ]),
                     ),
                   ]),
@@ -113,13 +113,13 @@ class _OnlineFeesCollectScreenState extends State<OnlineFeesCollectScreen> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('Send this link to parents', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
               const SizedBox(height: 4),
-              const Text('Parents open it, enter their mobile number and pay. No account or login is needed.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+              Text('Parents open it, enter their mobile number and pay. No account or login is needed.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
               const SizedBox(height: 10),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(color: Brand.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: Brand.line)),
-                child: Text(_con.payLink, style: const TextStyle(color: Brand.primaryDark, fontWeight: FontWeight.w600, fontSize: 13)),
+                child: Text(_con.payLink, style: TextStyle(color: Brand.primaryDark, fontWeight: FontWeight.w600, fontSize: 13)),
               ),
               const SizedBox(height: 10),
               OutlinedButton.icon(

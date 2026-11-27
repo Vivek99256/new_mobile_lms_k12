@@ -7,6 +7,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'care_common.dart';
 import 'student_care_controller.dart';
+import '../../../ui/app_loader.dart';
 
 /// Student Vaccination / Height Weight / Health: one screen driven by a [CareSpec],
 /// the same way the web builds all three from `StudentCareModule`.
@@ -63,7 +64,7 @@ class _StudentCareScreenState extends State<StudentCareScreen> {
       title: widget.args.item.label.isEmpty ? spec.title : widget.args.item.label,
       bottom: _con.loading || _con.error != null ? null : PrimaryButton(label: 'Add ${spec.singular.toLowerCase()}', onPressed: () => _openForm()),
       child: _con.loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _con.error != null
               ? KitMessage(icon: Icons.error_outline_rounded, text: _con.error!, action: 'Try again', onAction: _con.load)
               : RefreshIndicator(
@@ -73,7 +74,7 @@ class _StudentCareScreenState extends State<StudentCareScreen> {
                     const SizedBox(height: 12),
                     CareSearchBar(hint: 'Search records', onChanged: (v) => setState(() => _filter = v)),
                     const SizedBox(height: 12),
-                    if (shown.isEmpty) const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No records yet.', style: TextStyle(color: Brand.muted)))),
+                    if (shown.isEmpty) Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No records yet.', style: TextStyle(color: Brand.muted)))),
                     for (final r in shown) Padding(padding: const EdgeInsets.only(bottom: 10), child: _card(r)),
                   ]),
                 ),
@@ -102,11 +103,11 @@ class _StudentCareScreenState extends State<StudentCareScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(r.studentName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
+              Text(r.studentName, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
               const SizedBox(height: 4),
               Wrap(spacing: 6, children: [
                 Tag(fmtDate(r['date'])),
-                if (hasDocument) const Tag.info('Document attached'),
+                if (hasDocument) Tag.info('Document attached'),
               ]),
             ]),
           ),
@@ -244,7 +245,7 @@ class _CareFormScreenState extends State<CareFormScreen> with SubmitGuard {
             onChanged: (v) => setState(() => _file = v),
           ),
           if (existing.isNotEmpty && _file == null)
-            const Padding(padding: EdgeInsets.only(top: 6, left: 4), child: Text('A document is already attached. Choose a file to replace it.', style: TextStyle(color: Brand.muted, fontSize: 12))),
+            Padding(padding: EdgeInsets.only(top: 6, left: 4), child: Text('A document is already attached. Choose a file to replace it.', style: TextStyle(color: Brand.muted, fontSize: 12))),
         ]);
       case CareKind.text:
         return TextInput(label: f.label, controller: _text[f.key]!);

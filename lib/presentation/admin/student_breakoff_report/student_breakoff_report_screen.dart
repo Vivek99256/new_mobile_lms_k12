@@ -63,7 +63,7 @@ class _StudentBreakoffReportScreenState extends State<StudentBreakoffReportScree
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Text('Choose class', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
             const SizedBox(height: 4),
-            const Text('Pick a class to see each student fee structure. (A whole school takes too long to calculate.)', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text('Pick a class to see each student fee structure. (A whole school takes too long to calculate.)', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             const SizedBox(height: 12),
             CascadeFilter(api: widget.args.api, onChanged: _con.setCascade),
             gap(10),
@@ -75,11 +75,11 @@ class _StudentBreakoffReportScreenState extends State<StudentBreakoffReportScree
         ),
         const SizedBox(height: 12),
         if (_con.busy) const LinearProgressIndicator(minHeight: 3),
-        if (_con.error != null) Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
+        if (_con.error != null) Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600)),
         if (_con.searched && !_con.busy && _con.error == null && _con.students.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 30),
-            child: Center(child: Text(_con.message?.isNotEmpty == true ? _con.message! : 'No students found.', textAlign: TextAlign.center, style: const TextStyle(color: Brand.muted))),
+            child: Center(child: Text(_con.message?.isNotEmpty == true ? _con.message! : 'No students found.', textAlign: TextAlign.center, style: TextStyle(color: Brand.muted))),
           ),
         if (_con.students.isNotEmpty) ...[
           Container(
@@ -103,10 +103,10 @@ class _StudentBreakoffReportScreenState extends State<StudentBreakoffReportScree
               hintText: 'Search name, GR no or father',
               prefixIcon: const Icon(Icons.search_rounded),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Brand.card,
               contentPadding: EdgeInsets.zero,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
             ),
           ),
           const SizedBox(height: 12),
@@ -132,7 +132,7 @@ class _StudentBreakoffReportScreenState extends State<StudentBreakoffReportScree
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+        decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(18), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           InkWell(
             onTap: () => setState(() => open ? _open.remove(index) : _open.add(index)),
@@ -145,7 +145,7 @@ class _StudentBreakoffReportScreenState extends State<StudentBreakoffReportScree
                   Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(st.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-                      Text('GR ${st.enrollmentNo}${st.father.isEmpty ? '' : '  ·  ${st.father}'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                      Text('GR ${st.enrollmentNo}${st.father.isEmpty ? '' : '  ·  ${st.father}'}', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                     ]),
                   ),
                   Icon(open ? Icons.expand_less_rounded : Icons.expand_more_rounded, color: Brand.ink3),
@@ -165,23 +165,23 @@ class _StudentBreakoffReportScreenState extends State<StudentBreakoffReportScree
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(14, 4, 14, 12),
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: Brand.line))),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: Brand.line))),
               child: st.months.isEmpty
-                  ? const Padding(padding: EdgeInsets.only(top: 10), child: Text('No fee structure set for this student.', style: TextStyle(color: Brand.muted)))
+                  ? Padding(padding: EdgeInsets.only(top: 10), child: Text('No fee structure set for this student.', style: TextStyle(color: Brand.muted)))
                   : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       for (final mo in st.months) ...[
                         Padding(
                           padding: const EdgeInsets.only(top: 12, bottom: 4),
                           child: Row(children: [
                             Expanded(child: Text(_con.monthLabel(mo.id), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5))),
-                            Text('Rs ${mo.amount}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: Brand.primaryDark)),
+                            Text('Rs ${mo.amount}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: Brand.primaryDark)),
                           ]),
                         ),
                         for (final h in mo.heads.where((h) => h.amount != 0 || h.paid != 0))
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2),
                             child: Row(children: [
-                              Expanded(child: Text(h.title, style: const TextStyle(fontSize: 13, color: Brand.ink2))),
+                              Expanded(child: Text(h.title, style: TextStyle(fontSize: 13, color: Brand.ink2))),
                               Text('Rs ${h.amount}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                               if (h.paid > 0) Padding(padding: const EdgeInsets.only(left: 8), child: Tag.ok('paid ${h.paid}')),
                             ]),

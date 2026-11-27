@@ -86,7 +86,7 @@ class _StudentRequestFormScreenState extends State<StudentRequestFormScreen> {
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(st.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
-                  Text([if (st.gr.isNotEmpty) 'GR ${st.gr}', st.cls].where((e) => e.isNotEmpty).join('  ·  '), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                  Text([if (st.gr.isNotEmpty) 'GR ${st.gr}', st.cls].where((e) => e.isNotEmpty).join('  ·  '), style: TextStyle(color: Brand.muted, fontSize: 12)),
                 ]),
               ),
             ]),
@@ -147,7 +147,7 @@ class _StudentRequestFormScreenState extends State<StudentRequestFormScreen> {
             ]),
           ),
           if (_con.formError != null)
-            Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.formError!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
+            Padding(padding: const EdgeInsets.only(top: 12), child: Text(_con.formError!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600))),
           if (showList) ...[
             gap(12),
             if (_con.types.isEmpty)
@@ -155,7 +155,7 @@ class _StudentRequestFormScreenState extends State<StudentRequestFormScreen> {
                 padding: const EdgeInsets.all(12),
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(color: Brand.warn0, borderRadius: BorderRadius.circular(12)),
-                child: const Text(
+                child: Text(
                   'No request types are configured for this academic year, so a request type cannot be chosen yet. Add them in the Student Change Request Type master first.',
                   style: TextStyle(color: Brand.warn, fontSize: 12.5, fontWeight: FontWeight.w600),
                 ),

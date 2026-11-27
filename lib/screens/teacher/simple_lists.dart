@@ -17,7 +17,7 @@ String time12(String hms) {
   return d == null ? t : DateFormat('h:mm a').format(d);
 }
 
-Widget _title(String t) => Text(t, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Brand.text));
+Widget _title(String t) => Text(t, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Brand.text));
 
 class TMessageScreen extends StatelessWidget {
   const TMessageScreen({super.key, required this.args});
@@ -86,7 +86,7 @@ class VirtualClassroomScreen extends StatelessWidget {
                 Expanded(child: _title(s(r['subject_name']))),
                 if (s(r['to_time']).isNotEmpty) Pill('Until ${time12(s(r['to_time']))}', color: const Color(0xFF047857)),
               ]),
-              if (s(r['teacher_name']).isNotEmpty) Text('By ${s(r['teacher_name'])}', style: const TextStyle(color: Brand.muted)),
+              if (s(r['teacher_name']).isNotEmpty) Text('By ${s(r['teacher_name'])}', style: TextStyle(color: Brand.muted)),
               gap(6),
               KV('When', '$date ${time12(s(r['from_time']))}'.trim()),
               KV('Class', s(r['standard_name'])),
@@ -126,7 +126,7 @@ class TeacherResourceScreen extends StatelessWidget {
               Expanded(child: _title(s(r['title']))),
               attachmentButton(c, s(r['file_name'])),
             ]),
-            if (s(r['teacher_name']).isNotEmpty) Text('By ${s(r['teacher_name'])}', style: const TextStyle(color: Brand.muted)),
+            if (s(r['teacher_name']).isNotEmpty) Text('By ${s(r['teacher_name'])}', style: TextStyle(color: Brand.muted)),
             gap(4),
             KV('Subject', s(r['subject_name'])),
             KV('Chapter', s(r['chapter_name'])),
@@ -156,7 +156,7 @@ class SocialCollaborativeScreen extends StatelessWidget {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('${s(r['student_name'])} asked', style: const TextStyle(fontWeight: FontWeight.w800)),
-                    Text(fmtDate(r['created_at'], out: 'MMM dd, yyyy hh:mm a'), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                    Text(fmtDate(r['created_at'], out: 'MMM dd, yyyy hh:mm a'), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                   ]),
                 ),
               ]),
@@ -176,7 +176,7 @@ class SocialCollaborativeScreen extends StatelessWidget {
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text('${s(x['student_name'])} replied', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                           if (s(x['message']).isNotEmpty) Text(s(x['message']), style: const TextStyle(fontSize: 13)),
-                          Text(s(x['comment_date']), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+                          Text(s(x['comment_date']), style: TextStyle(color: Brand.muted, fontSize: 12)),
                         ]),
                       ),
                     ]),
@@ -210,11 +210,11 @@ class NotificationReportScreen extends StatelessWidget {
               Expanded(child: _title(s(r['stu_name']))),
               if (s(r['NOTIFICATION_TYPE']).isNotEmpty) Pill(s(r['NOTIFICATION_TYPE'])),
             ]),
-            Text('${s(r['std_name'])} - ${s(r['div_name'])}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text('${s(r['std_name'])} - ${s(r['div_name'])}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
             gap(6),
             Text(s(r['NOTIFICATION_DESCRIPTION'])),
             gap(4),
-            Text(s(r['NOTOFICATION_DATE']), style: const TextStyle(color: Brand.muted, fontSize: 12)),
+            Text(s(r['NOTOFICATION_DATE']), style: TextStyle(color: Brand.muted, fontSize: 12)),
           ]),
         ),
       );
@@ -290,7 +290,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Row(children: [
             if (s(r['event_type']).isNotEmpty) Pill(s(r['event_type']), color: _typeColor(s(r['event_type']))),
             const Spacer(),
-            Text(fmtDate(r['school_date'], out: 'dd MMMM yyyy'), style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+            Text(fmtDate(r['school_date'], out: 'dd MMMM yyyy'), style: TextStyle(color: Brand.muted, fontSize: 12.5)),
           ]),
           gap(6),
           _title(s(r['title'])),

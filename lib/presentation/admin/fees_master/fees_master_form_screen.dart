@@ -7,6 +7,7 @@ import '../../../ui/design.dart';
 import '../../../ui/theme.dart';
 import 'fees_master_controller.dart';
 import 'fees_master_spec.dart';
+import '../../../ui/app_loader.dart';
 
 /// Add / Edit form of a Fees (Master), drawn from its [FeesMasterSpec]. Pops with true after a save.
 class FeesMasterFormScreen extends StatefulWidget {
@@ -57,10 +58,10 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
         filled: true,
         fillColor: Brand.surface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.primary, width: 1.6)),
-        labelStyle: const TextStyle(color: Brand.ink3, fontSize: 14),
+        labelStyle: TextStyle(color: Brand.ink3, fontSize: 14),
       );
 
   Widget _field(MField f) {
@@ -80,7 +81,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(f.label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5)),
-            subtitle: f.hint == null ? null : Text(f.hint!, style: const TextStyle(fontSize: 12, color: Brand.muted)),
+            subtitle: f.hint == null ? null : Text(f.hint!, style: TextStyle(fontSize: 12, color: Brand.muted)),
             value: _con.toggles[f.key] ?? false,
             onChanged: (v) => _con.setToggle(f.key, v),
           ),
@@ -97,7 +98,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
                 opacity: 0.65,
                 child: Stack(alignment: Alignment.centerRight, children: [
                   AbsorbPointer(child: input),
-                  const Padding(padding: EdgeInsets.only(right: 14), child: Icon(Icons.lock_outline_rounded, size: 18, color: Brand.muted)),
+                  Padding(padding: EdgeInsets.only(right: 14), child: Icon(Icons.lock_outline_rounded, size: 18, color: Brand.muted)),
                 ]),
               )
             : input;
@@ -107,7 +108,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         body,
         if (f.hint != null && f.kind != MKind.toggle)
-          Padding(padding: const EdgeInsets.only(top: 5, left: 4), child: Text(f.hint!, style: const TextStyle(fontSize: 12, color: Brand.muted))),
+          Padding(padding: const EdgeInsets.only(top: 5, left: 4), child: Text(f.hint!, style: TextStyle(fontSize: 12, color: Brand.muted))),
       ]),
     );
   }
@@ -122,7 +123,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
       ]),
       const SizedBox(height: 10),
       if (opts.isEmpty)
-        Text(f.dependsOn != null ? 'Select the option above first.' : 'Nothing to choose from.', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+        Text(f.dependsOn != null ? 'Select the option above first.' : 'Nothing to choose from.', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
       Wrap(spacing: 8, runSpacing: 8, children: [
         for (final o in opts)
           ChoiceChip(
@@ -146,12 +147,12 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
+          decoration: BoxDecoration(color: Brand.card, borderRadius: BorderRadius.circular(20), border: Border.all(color: Brand.line), boxShadow: Brand.softShadow),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               IconTile(icon, size: 30),
               const SizedBox(width: 10),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
+              Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: Brand.ink)),
             ]),
             const SizedBox(height: 14),
             ...children,
@@ -175,7 +176,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(children: [
-                const Expanded(child: Text('Class is already set.', style: TextStyle(color: Brand.muted))),
+                Expanded(child: Text('Class is already set.', style: TextStyle(color: Brand.muted))),
                 TextButton(onPressed: () => _con.setChangeClass(true), child: const Text('Change class')),
               ]),
             )
@@ -231,7 +232,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
         title: widget.spec.title,
         bottom: _con.loading ? null : formBar(label: _con.editing ? 'Save changes' : 'Save', busy: _con.saving, onPressed: _save),
         child: _con.loading
-            ? const Center(child: CircularProgressIndicator())
+            ? const AppLoader()
             : Theme(
                 data: Theme.of(context).copyWith(inputDecorationTheme: _inputTheme),
                 child: ListView(padding: const EdgeInsets.fromLTRB(16, 14, 16, 24), children: [
@@ -241,7 +242,7 @@ class _FeesMasterFormScreenState extends State<FeesMasterFormScreen> {
                       margin: const EdgeInsets.only(bottom: 14),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(color: Brand.err0, borderRadius: BorderRadius.circular(12)),
-                      child: Text(_con.error!, style: const TextStyle(color: Brand.err, fontWeight: FontWeight.w600, fontSize: 13)),
+                      child: Text(_con.error!, style: TextStyle(color: Brand.err, fontWeight: FontWeight.w600, fontSize: 13)),
                     ),
                   ..._sections(),
                 ]),

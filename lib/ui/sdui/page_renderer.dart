@@ -200,7 +200,7 @@ class _NodeView extends StatelessWidget {
         return Divider(
           height: 1,
           thickness: (_num(node.props['thickness']) ?? 1),
-          color: parseColor(node.props['color']) ?? const Color(0xFFE5E7EB),
+          color: parseColor(node.props['color']) ?? Brand.line,
         );
       case 'spacer':
         return SizedBox(height: node.h ?? 16);
@@ -280,9 +280,9 @@ class _ImageBlock extends StatelessWidget {
         ? BoxFit.contain
         : BoxFit.cover;
     final placeholder = Container(
-      color: const Color(0xFFF1F5F9),
+      color: Brand.field,
       alignment: Alignment.center,
-      child: const Icon(Icons.image_outlined, color: Color(0xFFCBD5E1)),
+      child: Icon(Icons.image_outlined, color: Brand.border),
     );
     return ClipRRect(
       borderRadius: BorderRadius.circular(_num(p['borderRadius']) ?? 0),
@@ -753,7 +753,7 @@ class _ListBlockState extends State<_ListBlock> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Brand.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Brand.border),
       ),
@@ -780,7 +780,7 @@ class _ListBlockState extends State<_ListBlock> {
               _str(_map(_p['searchAction'])['endpoint']).isNotEmpty)
             FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF1E293B),
+                backgroundColor: Brand.ink,
                 minimumSize: const Size.fromHeight(44),
               ),
               onPressed: _searching ? null : _search,
@@ -796,12 +796,12 @@ class _ListBlockState extends State<_ListBlock> {
             ),
           const SizedBox(height: 10),
           if (!_searched)
-            const Text(
+            Text(
               'Search to load records.',
               style: TextStyle(color: Brand.muted, fontSize: 13),
             )
           else if (_items.isEmpty)
-            const Text(
+            Text(
               'No records found.',
               style: TextStyle(color: Brand.muted, fontSize: 13),
             )
@@ -1051,7 +1051,7 @@ class _RowView extends StatelessWidget {
       decoration: BoxDecoration(
         color: Brand.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: Brand.field),
       ),
       child: Row(
         children: [
@@ -1071,7 +1071,7 @@ class _RowView extends StatelessWidget {
                 if (subLabel != null && subLabel!.isNotEmpty)
                   Text(
                     subLabel!,
-                    style: const TextStyle(color: Brand.muted, fontSize: 12),
+                    style: TextStyle(color: Brand.muted, fontSize: 12),
                   ),
               ],
             ),

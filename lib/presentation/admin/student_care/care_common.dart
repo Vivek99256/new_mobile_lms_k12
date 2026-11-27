@@ -96,8 +96,8 @@ InputDecorationTheme careInputTheme() => InputDecorationTheme(
       filled: true,
       fillColor: Brand.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.primary, width: 1.6)),
     );
 
@@ -156,10 +156,10 @@ class CareSearchBar extends StatelessWidget {
           hintText: hint,
           prefixIcon: const Icon(Icons.search_rounded),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Brand.card,
           contentPadding: EdgeInsets.zero,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Brand.line)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Brand.line)),
         ),
       );
 }
@@ -174,9 +174,9 @@ class CareFact extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(color: Brand.surface, borderRadius: BorderRadius.circular(12)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-          Text(label, style: const TextStyle(color: Brand.muted, fontSize: 11, fontWeight: FontWeight.w600)),
+          Text(label, style: TextStyle(color: Brand.muted, fontSize: 11, fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
-          Text(value.isEmpty ? '-' : value, style: const TextStyle(color: Brand.ink, fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(value.isEmpty ? '-' : value, style: TextStyle(color: Brand.ink, fontSize: 13, fontWeight: FontWeight.w600)),
         ]),
       );
 }
@@ -196,7 +196,7 @@ class CareMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PopupMenuButton<String>(
-        icon: const Icon(Icons.more_vert_rounded, color: Brand.muted),
+        icon: Icon(Icons.more_vert_rounded, color: Brand.muted),
         onSelected: (v) => v == 'edit' ? onEdit() : onDelete(),
         itemBuilder: (_) => const [
           PopupMenuItem(value: 'edit', child: Text('Edit')),
@@ -219,7 +219,7 @@ class StudentPickerField extends StatelessWidget {
     final picked = await showModalBottomSheet<CareStudent>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Brand.card,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (_) => _StudentSearchSheet(api: api),
     );
@@ -325,25 +325,25 @@ class _StudentSearchSheetState extends State<_StudentSearchSheet> {
           if (_busy) const LinearProgressIndicator(minHeight: 2),
           Expanded(
             child: _error != null
-                ? Center(child: Text(_error!, style: const TextStyle(color: Brand.err)))
+                ? Center(child: Text(_error!, style: TextStyle(color: Brand.err)))
                 : _results.isEmpty
                     ? Center(
                         child: Text(
                           _asked.isEmpty ? 'Type at least 2 characters.' : 'No students found.',
-                          style: const TextStyle(color: Brand.muted),
+                          style: TextStyle(color: Brand.muted),
                         ),
                       )
                     : ListView.separated(
                         padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
                         itemCount: _results.length,
-                        separatorBuilder: (_, _) => const Divider(height: 1, color: Brand.line),
+                        separatorBuilder: (_, _) => Divider(height: 1, color: Brand.line),
                         itemBuilder: (_, i) {
                           final st = _results[i];
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
                             leading: PersonAvatar(url: '', name: st.name, radius: 20),
                             title: Text(st.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                            subtitle: Text('GR ${st.enrollmentNo}', style: const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                            subtitle: Text('GR ${st.enrollmentNo}', style: TextStyle(color: Brand.muted, fontSize: 12.5)),
                             onTap: () => Navigator.pop(context, st),
                           );
                         },
