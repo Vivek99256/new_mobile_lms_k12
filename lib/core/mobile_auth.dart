@@ -189,6 +189,15 @@ class MobileAuthService {
     }
   }
 
+  /// The phone has biometric hardware / a screen lock, even if no fingerprint or face is enrolled yet.
+  Future<bool> biometricSupported() async {
+    try {
+      return await _local.isDeviceSupported() || await _local.canCheckBiometrics;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Asks the phone to check the person (Face ID / fingerprint). False if cancelled or failed.
   Future<bool> authenticate(String reason) async {
     try {

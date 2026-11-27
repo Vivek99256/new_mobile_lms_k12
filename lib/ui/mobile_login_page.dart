@@ -45,6 +45,9 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
 
   BiometricKind? _bio;
   bool _hasDevice = false;
+  bool _bioSupported = false; // the phone can do biometrics (it may not have one set up yet)
+  bool _enableNext = false; // turn biometrics on right after the next successful mPIN sign-in
+  String? _hint;
   MobileSignIn? _sign;
 
   int _resendIn = 0;
@@ -83,11 +86,15 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
   /// Shows the mPIN keypad for [_mobile]; when biometrics are on for it, asks for them straight away.
   Future<void> _enterPinStep({bool auto = false}) async {
     final bio = await _svc.availableBiometric();
+    final supported = await _svc.biometricSupported();
     final token = await _svc.deviceToken(_mobile);
     if (!mounted) return;
     setState(() {
       _bio = bio;
+      _bioSupported = supported;
       _hasDevice = bio != null && token != null && token.isNotEmpty;
+      _enableNext = false;
+      _hint = null;
       _pin = '';
       _error = null;
       _step = _Step.pin;
@@ -318,12 +325,41 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
     }
   }
 
-  /// Offers to turn biometrics on, once, right after a successful mPIN sign-in.
-  Future<void> _maybeOfferBiometric(MobileSignIn sign) async {
+  /// The lower-left key of the keypad. With biometrics on it signs in; otherwise it is how to turn them on.
+  void _onBiometricKey() {
+    if (_hasDevice) {
+      _biometricLogin();
+      return;
+    }
+    final bio = _bio;
+    if (bio != null) {
+      // Turning them on needs the mPIN once: ask for it, and offer biometrics straight after.
+      setState(() {
+        _enableNext = true;
+        _error = null;
+        _hint = 'Enter your mPIN to turn on ${bio.label}.';
+      });
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "No fingerprint or Face ID is set up on this phone. Add one in the phone's Settings, then come back.",
+        ),
+      ),
+    );
+  }
+
+  /// Offers to turn biometrics on, once, right after a successful mPIN sign-in. [force] is for a person who asked
+  /// for it with the keypad's biometric key, so an earlier "Not now" does not hide it.
+  Future<void> _maybeOfferBiometric(
+    MobileSignIn sign, {
+    bool force = false,
+  }) async {
     final bio = await _svc.availableBiometric();
     if (bio == null || !mounted) return;
     if (await _svc.deviceToken(_mobile) != null ||
-        await _svc.biometricDeclined(_mobile))
+        (!force && await _svc.biometricDeclined(_mobile)))
       return;
     if (!mounted) return;
     final enable = await showModalBottomSheet<bool>(
@@ -351,7 +387,8 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
     required bool offerBiometric,
   }) async {
     await _svc.saveLastMobile(_mobile);
-    if (offerBiometric) await _maybeOfferBiometric(sign);
+    if (offerBiometric) await _maybeOfferBiometric(sign, force: _enableNext);
+    _enableNext = false;
     if (!mounted) return;
     if (sign.profiles.length == 1) {
       await _select(sign, sign.profiles.first);
@@ -696,12 +733,39 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
           total: MobileAuthService.pinLength,
           busy: _busy,
         ),
-        const SizedBox(height: 24),
+        if (_hint != null && _enableNext && !creating)
+          Padding(
+            padding: const EdgeInsets.only(top: 14),
+            child: Text(
+              _hint!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Brand.primary,
+                fontWeight: FontWeight.w600,
+                height: 1.35,
+              ),
+            ),
+          )
+        else if (!creating && !_hasDevice && _bioSupported)
+          Padding(
+            padding: const EdgeInsets.only(top: 14),
+            child: Text(
+              'Tap the ${(_bio ?? BiometricKind.generic).label.toLowerCase()} key to sign in faster next time.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Brand.ink3, fontSize: 13, height: 1.35),
+            ),
+          ),
+        const SizedBox(height: 18),
         _Keypad(
           onDigit: _onDigit,
           onBackspace: _onBackspace,
-          biometric: !creating && _hasDevice ? _bio : null,
-          onBiometric: _biometricLogin,
+          // Shown whenever the phone can do biometrics: it signs in when they are on, else it turns them on.
+          biometric: !creating && (_hasDevice || _bioSupported)
+              ? (_bio ?? BiometricKind.generic)
+              : null,
+          biometricOn: _hasDevice,
+          biometricArmed: _enableNext,
+          onBiometric: _onBiometricKey,
         ),
         const SizedBox(height: 14),
         if (!creating) ...[
@@ -753,7 +817,7 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
         if (_busy)
           const Padding(
             padding: EdgeInsets.only(top: 18),
-            child: const AppLoader(),
+            child: AppLoader(),
           ),
       ],
     );
@@ -851,10 +915,18 @@ class _Keypad extends StatelessWidget {
     required this.onBackspace,
     required this.biometric,
     required this.onBiometric,
+    this.biometricOn = true,
+    this.biometricArmed = false,
   });
   final ValueChanged<String> onDigit;
   final VoidCallback onBackspace, onBiometric;
   final BiometricKind? biometric;
+
+  /// Biometric sign-in is already on for this number (the key signs in); otherwise the key turns it on.
+  final bool biometricOn;
+
+  /// The person tapped the key to turn biometrics on and now has to enter the mPIN.
+  final bool biometricArmed;
 
   Widget _key(Widget child, VoidCallback? onTap, String label) => Semantics(
     button: true,
@@ -912,10 +984,14 @@ class _Keypad extends StatelessWidget {
                         ? Icons.face_retouching_natural_rounded
                         : Icons.fingerprint_rounded,
                     size: 32,
-                    color: Brand.primary,
+                    color: biometricOn || biometricArmed
+                        ? Brand.primary
+                        : Brand.ink3,
                   ),
                   onBiometric,
-                  'Sign in with ${bio.label}',
+                  biometricOn
+                      ? 'Sign in with ${bio.label}'
+                      : 'Enable ${bio.label}',
                 ),
           _digit('0'),
           _key(

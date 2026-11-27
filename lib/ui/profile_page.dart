@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../core/api_client.dart';
 import '../core/auth_controller.dart';
 import '../core/config.dart';
 import '../core/dashboard_cache.dart';
@@ -246,6 +247,7 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const _SwitchProfileSection(),
+          const _BiometricSection(),
           const GroupLabel('Appearance'),
           const SoftCard(clip: true, child: _ThemeChoice()),
           const SizedBox(height: 20),
@@ -573,6 +575,150 @@ class _SwitchProfileSectionState extends State<_SwitchProfileSection> {
         child: Column(children: [
           for (var i = 0; i < ordered.length; i++) tile(ordered[i], last: i == ordered.length - 1),
         ]),
+      ),
+      const SizedBox(height: 20),
+    ]);
+  }
+}
+
+/// Asks for the mPIN in a small dialog; null when cancelled.
+Future<String?> _askMpin(BuildContext context, {String action = 'Open'}) => showDialog<String>(
+  context: context,
+  builder: (ctx) {
+    final ctl = TextEditingController();
+    return AlertDialog(
+      title: const Text('Enter your mPIN', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+      content: TextField(
+        controller: ctl,
+        autofocus: true,
+        obscureText: true,
+        keyboardType: TextInputType.number,
+        maxLength: MobileAuthService.pinLength,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 24, letterSpacing: 12, fontWeight: FontWeight.w700),
+        decoration: const InputDecoration(counterText: ''),
+        onSubmitted: (v) => Navigator.pop(ctx, v),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+        FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(100, 44)),
+          onPressed: () => Navigator.pop(ctx, ctl.text),
+          child: Text(action),
+        ),
+      ],
+    );
+  },
+);
+
+/// Fingerprint / Face ID sign-in on or off for this phone. Only shown to someone who signed in with a mobile
+/// number, on a phone that can do biometrics. Turning it on needs the mPIN once.
+class _BiometricSection extends StatefulWidget {
+  const _BiometricSection();
+
+  @override
+  State<_BiometricSection> createState() => _BiometricSectionState();
+}
+
+class _BiometricSectionState extends State<_BiometricSection> {
+  String? _mobile;
+  bool _supported = false;
+  BiometricKind? _kind; // null = nothing enrolled on the phone
+  bool _on = false;
+  bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final svc = context.read<MobileAuthService>();
+    final mobile = await svc.lastMobile();
+    if (mobile == null) return; // signed in by email: no mobile login to secure
+    final supported = await svc.biometricSupported();
+    final kind = await svc.availableBiometric();
+    final token = await svc.deviceToken(mobile);
+    if (!mounted) return;
+    setState(() {
+      _mobile = mobile;
+      _supported = supported;
+      _kind = kind;
+      _on = kind != null && token != null && token.isNotEmpty;
+    });
+  }
+
+  Future<void> _toggle(bool want) async {
+    final mobile = _mobile;
+    if (mobile == null || _busy) return;
+    final svc = context.read<MobileAuthService>();
+    final messenger = ScaffoldMessenger.of(context);
+    final kind = _kind;
+
+    if (!want) {
+      final token = await svc.deviceToken(mobile);
+      if (token != null) await svc.revokeDevice(mobile, token);
+      await svc.clearDeviceToken(mobile);
+      if (mounted) setState(() => _on = false);
+      messenger.showSnackBar(const SnackBar(content: Text('Fingerprint / Face ID sign-in is off.')));
+      return;
+    }
+
+    if (kind == null) {
+      messenger.showSnackBar(const SnackBar(
+        content: Text("No fingerprint or Face ID is set up on this phone. Add one in the phone's Settings first."),
+      ));
+      return;
+    }
+    final pin = await _askMpin(context, action: 'Turn on');
+    if (pin == null || pin.length != MobileAuthService.pinLength || !mounted) return;
+    setState(() => _busy = true);
+    String? error;
+    try {
+      final sign = await svc.pinLogin(mobile, pin);
+      if (!await svc.authenticate('Confirm to turn on ${kind.label} sign-in')) {
+        error = '${kind.label} was not confirmed, so it stays off.';
+      } else {
+        final token = await svc.registerDevice(sign.ticket);
+        if (token.isEmpty) {
+          error = 'Could not turn on ${kind.label}. Try again.';
+        } else {
+          await svc.saveDeviceToken(mobile, token);
+        }
+      }
+    } on ApiException catch (e) {
+      error = e.message;
+    }
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      _on = error == null;
+    });
+    messenger.showSnackBar(SnackBar(content: Text(error ?? '${kind.label} sign-in is on.')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_mobile == null || !_supported) return const SizedBox.shrink();
+    final label = (_kind ?? BiometricKind.generic).label;
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      const GroupLabel('Security'),
+      SoftCard(
+        clip: true,
+        child: SwitchListTile(
+          value: _on,
+          onChanged: _busy ? null : _toggle,
+          secondary: Icon(
+            _kind == BiometricKind.face ? Icons.face_retouching_natural_rounded : Icons.fingerprint_rounded,
+            color: _on ? Brand.primary : Brand.ink3,
+          ),
+          title: Text('Sign in with $label', style: const TextStyle(fontWeight: FontWeight.w600)),
+          subtitle: Text(
+            _kind == null ? 'Set up a fingerprint or Face ID in the phone settings first' : 'Skip the mPIN on this phone',
+            style: TextStyle(fontSize: 12.5, color: Brand.ink3),
+          ),
+        ),
       ),
       const SizedBox(height: 20),
     ]);
